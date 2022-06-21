@@ -1,2 +1,6 @@
-include
+include/SDL2
 lib
+game
+obj
+.vscode
+test.*
