@@ -18,7 +18,7 @@ SDL_LIBRARY = $(shell sdl2-config --libs)
 # === ARGUMENTS ================================
 
 # Which libraries to include
-LIBS = -l SDL2-2.0.0
+LIBS = -lSDL2-2.0.0 -lSDL2_image
 
 # Additional compilation arguments
 COMPILER_FLAGS = -std=c++17 -Wall -Wextra -pedantic
@@ -29,13 +29,13 @@ COMPILATION_ARGS = -I $(INCLUDE_DIRECTORY) $(SDL_INCLUDE) $(COMPILER_FLAGS)
 # === FILES ===================================
 
 # Header files
-_DEPS = Game.h
+_DEPS = Game.h State.h
 
 # Generate header filepaths
 DEPS = $(patsubst %,$(INCLUDE_DIRECTORY)/%,$(_DEPS))
 
 # Object files
-_OBJS = main.o Game.o
+_OBJS = main.o Game.o State.o
 
 # Generate object filepaths
 OBJS = $(patsubst %,$(OBJECT_DIRECTORY)/%,$(_OBJS))
