@@ -9,7 +9,7 @@ using namespace std;
 // === EXTERNAL METHODS =================================
 
 // Initializes SDL
-auto InitializeSDL(string title, int width, int height) -> pair<unique_ptr<SDL_Window>, unique_ptr<SDL_Renderer>>
+auto InitializeSDL(string title, int width, int height) -> pair<SDL_Window *, SDL_Renderer *>
 {
   cout << "Initializing SDL..." << endl;
 
@@ -51,16 +51,15 @@ auto InitializeSDL(string title, int width, int height) -> pair<unique_ptr<SDL_W
 
   // === GAME WINDOW
 
-  auto gameWindow = unique_ptr<SDL_Window>(SDL_CreateWindow(
-      title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, 0));
+  auto gameWindow = SDL_CreateWindow(
+      title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, 0);
 
   // Catch any errors
   if (gameWindow == nullptr)
     throw runtime_error("Failed to create SDL window. Reported error: " + string(SDL_GetError()));
 
   // Create renderer
-  auto renderer = unique_ptr<SDL_Renderer>(SDL_CreateRenderer(
-      gameWindow.get(), -1, SDL_RENDERER_ACCELERATED));
+  auto renderer = SDL_CreateRenderer(gameWindow, -1, SDL_RENDERER_ACCELERATED);
 
   // Catch any errors
   if (renderer == nullptr)
@@ -91,7 +90,10 @@ void ExitSDL(SDL_Window *window, SDL_Renderer *renderer)
 // Game instance
 unique_ptr<Game> Game::gameInstance = nullptr;
 
+// === PRIVATE METHODS =======================================
+
 Game::Game(string title, int width, int height)
+    : window(nullptr, SDL_DestroyWindow), renderer(nullptr, SDL_DestroyRenderer)
 {
   // === SINGLETON CHECK
 
@@ -102,9 +104,11 @@ Game::Game(string title, int width, int height)
   // === INIT SDL
 
   // Retrieve the window & the renderer from the initializer
-  tie(window, renderer) = InitializeSDL(title, width, height);
+  auto pointers = InitializeSDL(title, width, height);
 
   // === INITIALIZE STATE
+  window.reset(pointers.first);
+  renderer.reset(pointers.second);
 
   state = make_unique<GameState>();
 }
@@ -112,12 +116,13 @@ Game::Game(string title, int width, int height)
 Game::~Game()
 {
   // Quit SDL
-  ExitSDL(window.get(), renderer.get());
+  // Release the pointers, as we will destroy them in the method
+  ExitSDL(window.release(), renderer.release());
 }
 
 // === PUBLIC METHODS =================================
 
-int Game::GetInstance()
+Game &Game::GetInstance()
 {
   // If it doesn't exist...
   if (!gameInstance)
@@ -127,19 +132,27 @@ int Game::GetInstance()
   }
 
   // Return the instance
-  return 1;
-}
-
-GameState &Game::GetState() const
-{
-  return *state;
-}
-
-SDL_Renderer &Game::GetRenderer() const
-{
-  return *renderer;
+  return *gameInstance;
 }
 
 void Game::Run()
 {
+  // Find out how many ms to wait to achieve the configured framerate
+  const int frameDelay = 1000 / Game::frameRate;
+
+  // Loop while exit not requested
+  while (state->QuitRequested() == false)
+  {
+    // Update the state
+    state->Update(0);
+
+    // Render the state
+    state->Render();
+
+    // Render the window
+    SDL_RenderPresent(GetRenderer());
+
+    // Delay the frame to obey the framerate
+    SDL_Delay(frameDelay);
+  }
 }

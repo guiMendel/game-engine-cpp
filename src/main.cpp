@@ -10,7 +10,8 @@ int main()
   // cout << "Hello there! " << Test::getAbo() << endl;
   cout << "Hello there! " << endl;
 
-  Game::GetInstance();
+  // Get game instance & run
+  Game::GetInstance().Run();
 
   return 0;
 }

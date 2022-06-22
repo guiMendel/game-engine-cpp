@@ -48,7 +48,7 @@ Exemplo do conteudo do arquivo:
 O makefile deve incluir as seguintes flags no momento de montar o codigo executavel:
 
 ```bash
--lSDL2-2.0.0 -lSDL2_image
+-lSDL2-2.0.0 -lSDL2_image -lSDL2_mixer
 ```
 
 E recomenda-se que inclua tambem:
