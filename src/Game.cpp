@@ -3,8 +3,10 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include "Game.h"
+#include "Helper.h"
 
 using namespace std;
+using namespace Helper;
 
 // === EXTERNAL METHODS =================================
 
@@ -19,8 +21,7 @@ auto InitializeSDL(string title, int width, int height) -> pair<SDL_Window *, SD
   auto encounteredError = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER);
 
   // Catch any errors
-  if (encounteredError)
-    throw runtime_error("Failed to initialize SDL. Reported error: " + string(SDL_GetError()));
+  Assert(!encounteredError, "Failed to initialize SDL");
 
   // === SDL IMAGE
 
@@ -29,8 +30,7 @@ auto InitializeSDL(string title, int width, int height) -> pair<SDL_Window *, SD
   int returnedFlags = IMG_Init(requestedFlags);
 
   // Check if everything went alright
-  if ((returnedFlags & requestedFlags) != requestedFlags)
-    throw runtime_error("Failed to initialize SDL-image. Reported error: " + string(IMG_GetError()));
+  Assert((returnedFlags & requestedFlags) == requestedFlags, "Failed to initialize SDL-image", IMG_GetError());
 
   // === SDL MIXER
 
@@ -43,8 +43,7 @@ auto InitializeSDL(string title, int width, int height) -> pair<SDL_Window *, SD
       MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024);
 
   // Catch any errors
-  if (encounteredError)
-    throw runtime_error("Failed to initialize SDL-mixer. Reported error: " + string(Mix_GetError()));
+  Assert(!encounteredError, "Failed to initialize SDL-mixer", Mix_GetError());
 
   // Allocate more sound channels
   Mix_AllocateChannels(32);
@@ -55,15 +54,13 @@ auto InitializeSDL(string title, int width, int height) -> pair<SDL_Window *, SD
       title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, 0);
 
   // Catch any errors
-  if (gameWindow == nullptr)
-    throw runtime_error("Failed to create SDL window. Reported error: " + string(SDL_GetError()));
+  Assert(gameWindow != nullptr, "Failed to create SDL window");
 
   // Create renderer
   auto renderer = SDL_CreateRenderer(gameWindow, -1, SDL_RENDERER_ACCELERATED);
 
   // Catch any errors
-  if (renderer == nullptr)
-    throw runtime_error("Failed to create SDL renderer. Reported error: " + string(SDL_GetError()));
+  Assert(renderer != nullptr, "Failed to create SDL renderer");
 
   cout << "Done!" << endl;
 
@@ -99,7 +96,7 @@ Game::Game(string title, int width, int height)
 
   // Check for invalid existing instance
   if (Game::gameInstance)
-    throw invalid_argument("Tried to instantiate another Game instance");
+    throw runtime_error("Tried to instantiate another Game instance");
 
   // === INIT SDL
 

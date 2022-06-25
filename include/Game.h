@@ -4,15 +4,12 @@
 #include <SDL.h>
 #include <memory>
 #include "GameState.h"
+#include "Helper.h"
 
 // Class with the main game logic
 class Game
 {
 public:
-  // Alias for unique pointer with destructor function
-  template <class T>
-  using auto_ptr = std::unique_ptr<T, void (*)(T *)>;
-
   // === CONFIGURATION
 
   // Defines the maximum frames per second
@@ -41,10 +38,10 @@ private:
   std::unique_ptr<GameState> state;
 
   // The window we'll be rendering to (with destructor function)
-  auto_ptr<SDL_Window> window;
+  Helper::auto_ptr<SDL_Window> window;
 
   // Renderer for the window (with destructor function)
-  auto_ptr<SDL_Renderer> renderer;
+  Helper::auto_ptr<SDL_Renderer> renderer;
 
   // Singleton constructor
   Game(std::string title, int width, int height);

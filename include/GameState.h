@@ -2,12 +2,13 @@
 #define __GAME_STATE__
 
 #include <SDL.h>
+#include "Sprite.h"
 
 // Class that defines a state of the game
 class GameState
 {
 private:
-  // Sprite background;
+  Sprite background;
 
   // Music music;
 

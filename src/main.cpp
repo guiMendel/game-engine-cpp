@@ -6,12 +6,16 @@ using namespace std;
 
 int main()
 {
-
-  // cout << "Hello there! " << Test::getAbo() << endl;
-  cout << "Hello there! " << endl;
-
   // Get game instance & run
-  Game::GetInstance().Run();
+  try
+  {
+    Game::GetInstance().Run();
+  }
+  // Catch any runtime errors
+  catch (const runtime_error &error)
+  {
+    cerr << "=> ERROR: " << error.what() << endl;
+  }
 
   return 0;
 }
