@@ -32,7 +32,7 @@ COMPILATION_ARGS = -I $(INCLUDE_DIRECTORY) $(SDL_INCLUDE) $(COMPILER_FLAGS)
 # === FILES ===================================
 
 # Header files
-_DEPS = Game.h GameState.h Sprite.h Helper.h Music.h
+_DEPS = Game.h GameState.h Sprite.h Helper.h Music.h Vector2.h Rectangle.h
 
 # Generate header filepaths
 DEPS = $(patsubst %,$(INCLUDE_DIRECTORY)/%,$(_DEPS))
