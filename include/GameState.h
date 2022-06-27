@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include "Sprite.h"
+#include "Music.h"
 
 // Class that defines a state of the game
 class GameState
@@ -10,7 +11,7 @@ class GameState
 private:
   Sprite background;
 
-  // Music music;
+  Music music;
 
   // Indicates that the game must exit
   bool quitRequested;
@@ -19,7 +20,6 @@ public:
   GameState()
   {
     quitRequested = false;
-    // background = new Sprite();
   }
 
   // Whether the game should exit

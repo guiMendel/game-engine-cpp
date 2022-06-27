@@ -5,7 +5,7 @@
 using namespace std;
 using namespace Helper;
 
-void Sprite::Open(const string fileName)
+void Sprite::Load(const string fileName)
 {
   // No need to unload previous sprite, since we are using unique ptr, which does this for us
 

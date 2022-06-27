@@ -17,11 +17,11 @@ public:
   // Constructor with image file name
   Sprite(const std::string fileName) : texture(nullptr, SDL_DestroyTexture)
   {
-    Open(fileName);
+    Load(fileName);
   }
 
   // Loads the file image to the sprite
-  void Open(const std::string fileName);
+  void Load(const std::string fileName);
 
   // Sets which rectangle of the image to be displayed
   void SetClip(int x, int y, int width, int height);
@@ -33,7 +33,7 @@ public:
 
   int GetHeight() const { return height; }
 
-  bool IsOpen() const { return texture != nullptr; }
+  bool IsLoaded() const { return texture != nullptr; }
 
 private:
   // The loaded texture

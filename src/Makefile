@@ -29,13 +29,13 @@ COMPILATION_ARGS = -I $(INCLUDE_DIRECTORY) $(SDL_INCLUDE) $(COMPILER_FLAGS)
 # === FILES ===================================
 
 # Header files
-_DEPS = Game.h GameState.h Sprite.h Helper.h
+_DEPS = Game.h GameState.h Sprite.h Helper.h Music.h
 
 # Generate header filepaths
 DEPS = $(patsubst %,$(INCLUDE_DIRECTORY)/%,$(_DEPS))
 
 # Object files
-_OBJS = main.o Game.o GameState.o Sprite.o
+_OBJS = main.o Game.o GameState.o Sprite.o Music.o
 
 # Generate object filepaths
 OBJS = $(patsubst %,$(OBJECT_DIRECTORY)/%,$(_OBJS))
