@@ -14,5 +14,5 @@ void GameState::Update(float deltaTime)
 
 void GameState::Render()
 {
-  // background.Render();
+  background.Render(0, 0);
 }

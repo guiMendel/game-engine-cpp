@@ -17,9 +17,12 @@ private:
   bool quitRequested;
 
 public:
-  GameState()
+  GameState() : background("../assets/ocean.jpg"), music("../assets/stageState.ogg")
   {
     quitRequested = false;
+
+    // Play the music
+    music.Play();
   }
 
   // Whether the game should exit

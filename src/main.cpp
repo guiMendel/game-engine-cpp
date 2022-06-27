@@ -9,7 +9,9 @@ int main(int argc, char **argv)
   // Get game instance & run
   try
   {
-    Game::GetInstance().Run();
+    Game &gameInstance = Game::GetInstance();
+
+    gameInstance.Run();
   }
   // Catch any runtime errors
   catch (const runtime_error &error)

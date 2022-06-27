@@ -15,6 +15,13 @@ public:
   // Defines the maximum frames per second
   static const int frameRate = 30;
 
+  // Defines the resolution width
+  static const int screenWidth = 1024;
+  // Defines the resolution height
+  static const int screenHeight = 600;
+
+  // === FUNCTIONS
+
   // Gets the game instance if it exists or creates one if it doesn't
   static Game &GetInstance();
 

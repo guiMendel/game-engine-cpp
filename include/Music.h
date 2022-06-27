@@ -15,7 +15,7 @@ public:
   Music(const std::string filename) : music(nullptr, Mix_FreeMusic) { Load(filename); }
 
   // Plays the given music (-1 loops forever)
-  void Play(const int times);
+  void Play(const int times = -1);
 
   // Fades out the currently playing music. Thw fade out window is in ms
   void FadeOut(const int fadeWindow = 1500) { Mix_FadeOutMusic(fadeWindow); }

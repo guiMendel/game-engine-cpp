@@ -4,3 +4,4 @@ game
 obj
 .vscode
 test.*
+.DS_Store

@@ -13,8 +13,6 @@ using namespace Helper;
 // Initializes SDL
 auto InitializeSDL(string title, int width, int height) -> pair<SDL_Window *, SDL_Renderer *>
 {
-  cout << "Initializing SDL..." << endl;
-
   // === BASE SDL
 
   // Initialize SDL & all it's necessary subsystems
@@ -34,9 +32,8 @@ auto InitializeSDL(string title, int width, int height) -> pair<SDL_Window *, SD
 
   // === SDL MIXER
 
-  // Commented out, still no need to initialize anything other than wav, which ships out of the box
   // Initialize the mixer
-  // Mix_Init();
+  Mix_Init(MIX_INIT_OGG);
 
   // Initialize open audio
   encounteredError = Mix_OpenAudio(
@@ -61,8 +58,6 @@ auto InitializeSDL(string title, int width, int height) -> pair<SDL_Window *, SD
 
   // Catch any errors
   Assert(renderer != nullptr, "Failed to create SDL renderer");
-
-  cout << "Done!" << endl;
 
   return make_pair(gameWindow, renderer);
 }
@@ -106,8 +101,6 @@ Game::Game(string title, int width, int height)
   // === INITIALIZE STATE
   window.reset(pointers.first);
   renderer.reset(pointers.second);
-
-  state = make_unique<GameState>();
 }
 
 Game::~Game()
@@ -122,14 +115,17 @@ Game::~Game()
 Game &Game::GetInstance()
 {
   // If it doesn't exist...
-  if (!gameInstance)
+  if (gameInstance == nullptr)
   {
     // Create it
-    gameInstance = unique_ptr<Game>(new Game("The Watch Penguins", 600, 600));
+    gameInstance.reset(new Game("GuilhermeMendel-170143970", screenWidth, screenHeight));
+
+    // Set a starting state
+    gameInstance->state = make_unique<GameState>();
   }
 
   // Return the instance
-  return *gameInstance;
+  return *Game::gameInstance;
 }
 
 void Game::Run()

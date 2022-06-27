@@ -3,7 +3,7 @@
 
 using namespace Helper;
 
-void Music::Play(const int times = -1)
+void Music::Play(const int times)
 {
   // Catch no music loaded
   Assert(IsLoaded(), "Tried playing a music track that was never loaded");
