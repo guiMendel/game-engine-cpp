@@ -1,13 +1,16 @@
-# Which compile to use
+# Which compiler to use
 CC = g++
 
 # === DIRECTORY LOCATIONS =======================
 
 # Where to find the include folder
-INCLUDE_DIRECTORY = ../include
+INCLUDE_DIRECTORY = ./include
 
 # Where to find the objects folder
-OBJECT_DIRECTORY = obj
+OBJECT_DIRECTORY = ./src/obj
+
+# Where to find source code
+SOURCE_DIRECTORY = ./src
 
 # SDL Include Directory
 SDL_INCLUDE = $(shell sdl2-config --cflags)
@@ -43,7 +46,7 @@ OBJS = $(patsubst %,$(OBJECT_DIRECTORY)/%,$(_OBJS))
 # === RULES ===================================
 
 # Define how to make .o files, and make them dependent on their .c counterparts and the h files
-$(OBJECT_DIRECTORY)/%.o: %.cpp $(DEPS)
+$(OBJECT_DIRECTORY)/%.o: $(SOURCE_DIRECTORY)/%.cpp $(DEPS)
 	mkdir -p $(OBJECT_DIRECTORY); $(CC) -c -o $@ $< $(COMPILATION_ARGS)
 	
 # Makes the game
@@ -53,4 +56,4 @@ game: $(OBJS)
 .PHONY: clean
 
 clean:
-	rm -f -r $(OBJECT_DIRECTORY)
+	rm -f -r $(OBJECT_DIRECTORY); rm -f game

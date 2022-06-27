@@ -17,7 +17,7 @@ private:
   bool quitRequested;
 
 public:
-  GameState() : background("../assets/ocean.jpg"), music("../assets/stageState.ogg")
+  GameState() : background("./assets/ocean.jpg"), music("./assets/stageState.ogg")
   {
     quitRequested = false;
 
