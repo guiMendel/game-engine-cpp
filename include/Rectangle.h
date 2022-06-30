@@ -2,6 +2,7 @@
 #define __RECTANGLE__
 
 #include <initializer_list>
+#include <SDL.h>
 #include "Vector2.h"
 
 class Rectangle
@@ -51,6 +52,9 @@ public:
   {
     return vector.x >= x && vector.x <= x + width && vector.y >= y && vector.y <= y + height;
   }
+
+  // Convert to sdl rect
+  operator SDL_Rect() const { return SDL_Rect{(int)x, (int)y, (int)width, (int)height}; }
 };
 
 #endif

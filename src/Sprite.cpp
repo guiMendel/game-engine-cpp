@@ -31,12 +31,16 @@ void Sprite::Load(const string fileName)
 void Sprite::SetClip(int x, int y, int width, int height)
 {
   clipRect = {x, y, width, height};
+
+  // Also set the object dimensions
+  associatedObject.box.width = width;
+  associatedObject.box.height = height;
 }
 
-void Sprite::Render(int x, int y)
+void Sprite::Render()
 {
   // Get destination rectangle
-  SDL_Rect destinationRect = {x, y, clipRect.w, clipRect.h};
+  SDL_Rect destinationRect(associatedObject.box);
 
   // Put the texture in the renderer
   SDL_RenderCopy(

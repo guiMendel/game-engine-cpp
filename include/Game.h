@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <memory>
+#include "GameObject.h"
 #include "GameState.h"
 #include "Helper.h"
 

@@ -5,17 +5,19 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Helper.h"
+#include "Component.h"
 
-class Sprite
+class Sprite : public Component
 {
 public:
   // Since we are using unique ptrs, no need to define destructor
 
   // Default constructor
-  Sprite() : texture(nullptr, SDL_DestroyTexture) {}
+  Sprite(GameObject &associatedObject)
+      : Component(associatedObject), texture(nullptr, SDL_DestroyTexture) {}
 
   // Constructor with image file name
-  Sprite(const std::string fileName) : texture(nullptr, SDL_DestroyTexture)
+  Sprite(GameObject &associatedObject, const std::string fileName) : Sprite(associatedObject)
   {
     Load(fileName);
   }
@@ -26,14 +28,21 @@ public:
   // Sets which rectangle of the image to be displayed
   void SetClip(int x, int y, int width, int height);
 
-  // Renders the sprite to the screen
-  void Render(int x, int y);
-
   int GetWidth() const { return width; }
 
   int GetHeight() const { return height; }
 
   bool IsLoaded() const { return texture != nullptr; }
+
+  // === COMPONENT OVERRIDES
+
+  void Update(float deltaTime) override {}
+
+  // Renders the sprite to the screen
+  void Render() override;
+
+  // Determines if is from a certain type
+  virtual bool Is(std::string type) override { return type == typeid(*this).name(); }
 
 private:
   // The loaded texture

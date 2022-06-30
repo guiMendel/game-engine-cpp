@@ -12,7 +12,7 @@ public:
   Music() : music(nullptr, Mix_FreeMusic) {}
 
   // Construct from music filename
-  Music(const std::string filename) : music(nullptr, Mix_FreeMusic) { Load(filename); }
+  Music(const std::string filename) : Music() { Load(filename); }
 
   // Plays the given music (-1 loops forever)
   void Play(const int times = -1);
