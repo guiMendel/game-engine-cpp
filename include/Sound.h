@@ -37,8 +37,7 @@ public:
 
   void Update(float deltaTime) override {}
 
-  // Renders the Sound to the screen
-  void Render() override;
+  void Render() override {}
 
   // Determines if is from a certain type
   virtual bool Is(std::string type) override { return type == typeid(*this).name(); }

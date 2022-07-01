@@ -2,6 +2,8 @@
 #include <string>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include <cstdlib>
+#include <ctime>
 #include "Game.h"
 #include "Helper.h"
 
@@ -99,8 +101,13 @@ Game::Game(string title, int width, int height)
   auto pointers = InitializeSDL(title, width, height);
 
   // === INITIALIZE STATE
+
   window.reset(pointers.first);
   renderer.reset(pointers.second);
+
+  // === INIT RANDOMNESS
+
+  srand(time(NULL));
 }
 
 Game::~Game()

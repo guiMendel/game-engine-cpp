@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Helper.h"
+#include "GameObject.h"
 #include "Component.h"
 
 class Sprite : public Component

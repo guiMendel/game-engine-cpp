@@ -14,6 +14,9 @@ public:
   // Base constructor
   GameObject() : isDead(false) {}
 
+  // With dimensions
+  GameObject(int x, int y, int width = 0, int height = 0) : box(x, y, width, height), isDead(false) {}
+
   // Base destructor
   // Components are smart pointers, they free themselves
   ~GameObject() { components.clear(); }
@@ -39,7 +42,11 @@ public:
   void RequestDestroy() { isDead = true; }
 
   // Adds a new component
-  void AddComponent(Component *component) { components.emplace_back(component); }
+  Component &AddComponent(Component *component)
+  {
+    components.emplace_back(component);
+    return *components.back();
+  }
 
   // Removes an existing component
   void RemoveComponent(Component *component);
