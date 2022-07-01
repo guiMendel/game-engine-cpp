@@ -35,7 +35,7 @@ auto InitializeSDL(string title, int width, int height) -> pair<SDL_Window *, SD
   // === SDL MIXER
 
   // Initialize the mixer
-  Mix_Init(MIX_INIT_OGG);
+  Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
 
   // Initialize open audio
   encounteredError = Mix_OpenAudio(

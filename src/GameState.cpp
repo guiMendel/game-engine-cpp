@@ -3,7 +3,7 @@
 #include "Face.h"
 #include "Vector2.h"
 #include "Sound.h"
-
+#include <iostream>
 using namespace std;
 
 void GameState::LoadAssets()
@@ -46,14 +46,14 @@ void GameState::AddObject(int mouseX, int mouseY)
   auto newObject = make_unique<GameObject>(mouseX, mouseY);
 
   // Give it a sprite
-  auto &sprite = (Sprite &)newObject->AddComponent(new Sprite(*newObject, "./assets/penguinface.png"));
+  auto &sprite = (Sprite &)newObject->AddComponent(new Sprite(*newObject, "./assets/image/penguinface.png"));
 
   // Center it on mouse coordinates
   newObject->box.x -= sprite.GetWidth();
   newObject->box.y -= sprite.GetHeight();
 
   // Give it a sound component
-  newObject->AddComponent(new Sound(*newObject, "./assets/boom.wav"));
+  newObject->AddComponent(new Sound(*newObject, "./assets/sound/boom.wav"));
 
   // Give it a face component
   newObject->AddComponent(new Face(*newObject));
@@ -89,6 +89,8 @@ void GameState::Input()
       {
         // Get the game object pointer (dereference the iterator)
         auto &gameObject = *gameObjectIterator;
+
+        cout << gameObject->box.width << " " << gameObject->box.height << endl;
 
         // Disregard if it was not clicked
         if (gameObject->box.Contains({(float)mouseX, (float)mouseY}) == false)
