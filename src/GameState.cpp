@@ -48,7 +48,7 @@ void GameState::AddObject(int mouseX, int mouseY)
   // Give it a sprite
   auto &sprite = newObject->AddComponent<Sprite>("./assets/image/penguinface.png");
 
-  // Center it on mouse coordinates
+  // Center it with image dimensions
   newObject->box.x -= sprite.GetWidth();
   newObject->box.y -= sprite.GetHeight();
 
