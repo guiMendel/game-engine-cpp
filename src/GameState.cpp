@@ -90,11 +90,9 @@ void GameState::Input()
         // Get the game object pointer (dereference the iterator)
         auto &gameObject = *gameObjectIterator;
 
-        cout << gameObject->box.width << " " << gameObject->box.height << endl;
-
         // Disregard if it was not clicked
         if (gameObject->box.Contains({(float)mouseX, (float)mouseY}) == false)
-          return;
+          continue;
 
         // Try to get a Face component
         Face *face = (Face *)gameObject->GetComponent("Face");

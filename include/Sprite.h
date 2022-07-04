@@ -43,7 +43,7 @@ public:
   void Render() override;
 
   // Determines if is from a certain type
-  virtual bool Is(std::string type) override { return type == typeid(*this).name(); }
+  virtual bool Is(std::string type) override { return type == "Sprite"; }
 
 private:
   // The loaded texture
