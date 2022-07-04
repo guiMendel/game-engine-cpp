@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "GameObject.h"
+#include "Sound.h"
 
 using namespace std;
 
@@ -30,4 +31,34 @@ auto GameObject::GetComponent(std::string type) -> Component *
     return nullptr;
 
   return componentPosition->get();
+}
+
+void GameObject::DestroyInMs(int milliseconds)
+{
+  // If there is sound to play, play it
+  auto soundComponent = GetComponent<Sound>();
+
+  // If no sound to play, destroy immediately
+  if (soundComponent == nullptr)
+  {
+    RequestDestroy();
+    return;
+  }
+
+  // Otherwise, play sound
+  soundComponent->Play(
+      [this]()
+      { RequestDestroy(); },
+      1);
+
+  // Remove all components except Sound
+  auto soundIterator = find_if(
+      components.begin(), components.end(), [](unique_ptr<Component> &component)
+      { return dynamic_cast<Sound *>(component.get()) != nullptr; });
+
+  components.erase(components.begin(), soundIterator);
+
+  if (components.size() <= 1)
+    return;
+  components.erase(components.begin() + 1, components.end());
 }

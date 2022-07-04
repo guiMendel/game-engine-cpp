@@ -1,6 +1,7 @@
 #include "Sound.h"
 
 using namespace Helper;
+using namespace std;
 
 void Sound::Play(const int times)
 {
@@ -9,6 +10,12 @@ void Sound::Play(const int times)
 
   // Play and memorize channel
   channel = Mix_PlayChannel(-1, chunk.get(), times - 1);
+}
+
+void Sound::Play(function<void()> callback, const int times)
+{
+  finishCallback = callback;
+  Play(times);
 }
 
 void Sound::Stop()

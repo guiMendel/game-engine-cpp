@@ -9,14 +9,6 @@ void Face::Damage(int damage)
   if (hitPoints > 0)
     return;
 
-  associatedObject.RequestDestroy();
-
-  // If there is sound to play, play it
-  //  associatedObject.GetComponent<Sound>();
-  Sound *soundComponent = (Sound *)associatedObject.GetComponent("Sound");
-
-  if (soundComponent == nullptr)
-    return;
-
-  soundComponent->Play();
+  // associatedObject.RequestDestroy();
+  associatedObject.DestroyInMs(3000);
 }

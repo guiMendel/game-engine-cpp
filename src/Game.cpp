@@ -112,6 +112,9 @@ Game::Game(string title, int width, int height)
 
 Game::~Game()
 {
+  // Shut down the game state before shutting down sdl
+  state.reset();
+
   // Quit SDL
   // Release the pointers, as we will destroy them in the method
   ExitSDL(window.release(), renderer.release());

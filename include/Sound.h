@@ -2,6 +2,8 @@
 #define __SOUND__
 
 #include <SDL_mixer.h>
+#include <iostream>
+#include <functional>
 #include "GameObject.h"
 #include "Component.h"
 #include "Helper.h"
@@ -27,6 +29,7 @@ public:
 
   // Plays audio
   void Play(const int times = 1);
+  void Play(std::function<void()> callback, const int times = 1);
 
   // Stops playing
   void Stop();
@@ -35,7 +38,18 @@ public:
 
   // === COMPONENT OVERRIDES
 
-  void Update(float deltaTime) override {}
+  void Update(float deltaTime) override
+  {
+    // TEMPORARY
+    // Do nothing is this channel is playing
+    if (Mix_Playing(channel) || !finishCallback)
+      return;
+
+    // Otherwise, call the callback
+    finishCallback();
+
+    finishCallback = nullptr;
+  }
 
   void Render() override {}
 
@@ -43,6 +57,9 @@ public:
   virtual bool Is(std::string type) override { return type == "Sound"; }
 
 private:
+  // Callback to execute when sound stops playing
+  std::function<void()> finishCallback;
+
   // The loaded audio chunk
   // No need for destructor to free it!
   Helper::auto_ptr<Mix_Chunk> chunk;

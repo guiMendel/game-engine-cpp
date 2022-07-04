@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <iostream>
 #include <SDL.h>
 #include "GameObject.h"
 #include "Sprite.h"
