@@ -46,17 +46,17 @@ void GameState::AddObject(int mouseX, int mouseY)
   auto newObject = make_unique<GameObject>(mouseX, mouseY);
 
   // Give it a sprite
-  auto &sprite = (Sprite &)newObject->AddComponent(new Sprite(*newObject, "./assets/image/penguinface.png"));
+  auto &sprite = newObject->AddComponent<Sprite>("./assets/image/penguinface.png");
 
   // Center it on mouse coordinates
   newObject->box.x -= sprite.GetWidth();
   newObject->box.y -= sprite.GetHeight();
 
   // Give it a sound component
-  newObject->AddComponent(new Sound(*newObject, "./assets/sound/boom.wav"));
+  newObject->AddComponent<Sound>("./assets/sound/boom.wav");
 
   // Give it a face component
-  newObject->AddComponent(new Face(*newObject));
+  newObject->AddComponent<Face>();
 
   // Store it
   gameObjects.emplace_back(newObject.release());
@@ -95,7 +95,8 @@ void GameState::Input()
           continue;
 
         // Try to get a Face component
-        Face *face = (Face *)gameObject->GetComponent("Face");
+        auto face = gameObject->GetComponent<Face>();
+        // Face *face = (Face *)gameObject->GetComponent("Face");
 
         // Disregard if it doesn't have one
         if (face == nullptr)

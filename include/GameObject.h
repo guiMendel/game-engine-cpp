@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <utility>
 #include "GameObject.h"
 #include "Component.h"
 #include "Rectangle.h"
@@ -42,21 +43,35 @@ public:
   void RequestDestroy() { isDead = true; }
 
   // Adds a new component
-  Component &AddComponent(Component *component)
+  template <class T, typename... Args>
+  T &AddComponent(Args &&...args)
   {
-    components.emplace_back(component);
-    return *components.back();
+    components.emplace_back(new T(*this, std::forward<Args>(args)...));
+    return dynamic_cast<T &>(*components.back());
   }
 
   // Removes an existing component
   void RemoveComponent(Component *component);
 
-  // Gets pointer to a component of the given type
+  // Gets pointer to a component of the given type (non dynamic way)
   auto GetComponent(std::string type) -> Component *;
 
   // Gets pointer to a component of the given type
+  // Needs to be in header file so the compiler knows how to build the necessary methods
   template <class T>
-  auto GetComponent() -> Component *;
+  auto GetComponent() -> T *
+  {
+    // Find the position of the component that is of the requested type
+    auto componentPosition = std::find_if(
+        components.begin(), components.end(), [](std::unique_ptr<Component> &component)
+        { return dynamic_cast<T *>(component.get()) != nullptr; });
+
+    // Detect if not present
+    if (componentPosition == components.end())
+      return nullptr;
+
+    return dynamic_cast<T *>(componentPosition->get());
+  }
 
   // The rectangle that specifies where this object exists in game space
   Rectangle box;

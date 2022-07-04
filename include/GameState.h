@@ -17,7 +17,7 @@ public:
     quitRequested = false;
 
     // Get a background sprite
-    background.AddComponent(new Sprite(background, "./assets/image/ocean.jpg"));
+    background.AddComponent<Sprite>("./assets/image/ocean.jpg");
 
     // Play the music
     music.Play();

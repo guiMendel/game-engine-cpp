@@ -33,12 +33,12 @@ auto GameObject::GetComponent(std::string type) -> Component *
 }
 
 // template <class T>
-// auto GameObject::GetComponent() -> Component *
+// auto GameObject::GetComponent() -> T *
 // {
 //   // Find the position of the component that is of the requested type
 //   auto componentPosition = find_if(
-//       components.begin(), components.end(), [T](unique_ptr<Component> component)
-//       { return dynamic_cast<T *>(component.get()) != nullptr });
+//       components.begin(), components.end(), [](unique_ptr<Component> &component)
+//       { return dynamic_cast<T *>(component.get()) != nullptr; });
 
 //   // Detect if not present
 //   if (componentPosition == components.end())
