@@ -35,12 +35,15 @@ public:
 
   bool IsLoaded() const { return texture != nullptr; }
 
+  // Renders the sprite to the provided position
+  void Render(int x, int y);
+
   // === COMPONENT OVERRIDES
 
   void Update(float deltaTime) override {}
 
-  // Renders the sprite to the screen
-  void Render() override;
+  // Renders the sprite to the associated object's position
+  void Render() override { Render(associatedObject.box.x, associatedObject.box.y); }
 
   // Determines if is from a certain type
   virtual bool Is(std::string type) override { return type == "Sprite"; }

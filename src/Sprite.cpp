@@ -37,10 +37,10 @@ void Sprite::SetClip(int x, int y, int width, int height)
   associatedObject.box.height = height;
 }
 
-void Sprite::Render()
+void Sprite::Render(int x, int y)
 {
   // Get destination rectangle
-  SDL_Rect destinationRect(associatedObject.box);
+  SDL_Rect destinationRect{(int)x, (int)y, clipRect.w, clipRect.h};
 
   // Put the texture in the renderer
   SDL_RenderCopy(
