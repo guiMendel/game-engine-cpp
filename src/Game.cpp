@@ -6,6 +6,7 @@
 #include <ctime>
 #include "Game.h"
 #include "Helper.h"
+#include "Resources.h"
 
 using namespace std;
 using namespace Helper;
@@ -158,4 +159,7 @@ void Game::Run()
     // Delay the frame to obey the framerate
     SDL_Delay(frameDelay);
   }
+
+  // Clear resources
+  Resources::ClearAllResources();
 }

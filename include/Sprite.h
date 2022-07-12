@@ -15,7 +15,7 @@ public:
 
   // Default constructor
   Sprite(GameObject &associatedObject)
-      : Component(associatedObject), texture(nullptr, SDL_DestroyTexture) {}
+      : Component(associatedObject), texture(nullptr) {}
 
   // Constructor with image file name
   Sprite(GameObject &associatedObject, const std::string fileName) : Sprite(associatedObject)
@@ -47,7 +47,7 @@ public:
 
 private:
   // The loaded texture
-  Helper::auto_ptr<SDL_Texture> texture;
+  SDL_Texture *texture;
 
   // Dimensions
   int width, height;
