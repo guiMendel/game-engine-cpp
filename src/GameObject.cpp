@@ -19,20 +19,6 @@ void GameObject::RemoveComponent(Component *component)
   components.erase(componentPosition);
 }
 
-auto GameObject::GetComponent(std::string type) -> Component *
-{
-  // Find the position of the component that is of the requested type
-  auto componentPosition = find_if(
-      components.begin(), components.end(), [type](unique_ptr<Component> &component)
-      { return component->Is(type); });
-
-  // Detect if not present
-  if (componentPosition == components.end())
-    return nullptr;
-
-  return componentPosition->get();
-}
-
 void GameObject::DestroyInMs(int milliseconds)
 {
   // If there is sound to play, play it

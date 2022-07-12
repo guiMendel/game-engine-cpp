@@ -6,6 +6,7 @@
 #include <iostream>
 #include <SDL.h>
 #include "GameObject.h"
+#include "TileMap.h"
 #include "Sprite.h"
 #include "Music.h"
 
@@ -13,16 +14,7 @@
 class GameState
 {
 public:
-  GameState() : music("./assets/music/main.mp3")
-  {
-    quitRequested = false;
-
-    // Get a background sprite
-    background.AddComponent<Sprite>("./assets/image/ocean.jpg");
-
-    // Play the music
-    music.Play();
-  }
+  GameState();
 
   // Clear objects on destroy
   ~GameState() { gameObjects.clear(); }
@@ -44,7 +36,14 @@ private:
   // Adds a new game object
   void AddObject(int mouseX, int mouseY);
 
+  // Object with background image
   GameObject background;
+
+  // Object with tilemap
+  GameObject tilemapObject;
+
+  // Tilemap reference
+  TileMap *tilemap;
 
   Music music;
 

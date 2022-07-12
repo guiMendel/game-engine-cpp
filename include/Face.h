@@ -19,9 +19,6 @@ public:
   void Update(float deltaTime) override {}
   void Render() override {}
 
-  // Determines if is from a certain type
-  virtual bool Is(std::string type) override { return type == "Face"; }
-
 private:
   // How many hitPoints it has left
   int hitPoints{30};

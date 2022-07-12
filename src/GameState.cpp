@@ -3,8 +3,27 @@
 #include "Face.h"
 #include "Vector2.h"
 #include "Sound.h"
+#include "TileMap.h"
+#include "TileSet.h"
 #include <iostream>
 using namespace std;
+
+GameState::GameState() : music("./assets/music/main.mp3")
+{
+  quitRequested = false;
+
+  // Get a background sprite
+  background.AddComponent<Sprite>("./assets/image/ocean.jpg");
+
+  // Get the Tileset
+  TileSet *tileset = new TileSet(64, 64, "./assets/image/tileset.png");
+
+  // Get a tilemap
+  tilemap = &tilemapObject.AddComponent<TileMap>("./assets/map/tileMap.txt", tileset);
+
+  // Play the music
+  music.Play();
+}
 
 void GameState::LoadAssets()
 {
@@ -34,6 +53,9 @@ void GameState::Render()
 {
   // Render state background
   background.Render();
+
+  // Render tilemap
+  tilemapObject.Render();
 
   // Render objects
   for (auto &gameObject : gameObjects)

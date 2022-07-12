@@ -45,9 +45,6 @@ public:
   // Renders the sprite to the associated object's position
   void Render() override { Render(associatedObject.box.x, associatedObject.box.y); }
 
-  // Determines if is from a certain type
-  virtual bool Is(std::string type) override { return type == "Sprite"; }
-
 private:
   // The loaded texture
   Helper::auto_ptr<SDL_Texture> texture;

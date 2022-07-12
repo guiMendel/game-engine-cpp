@@ -1,3 +1,5 @@
+#include <ctype.h>
+#include <algorithm>
 #include <fstream>
 #include "TileMap.h"
 #include "Helper.h"
@@ -24,23 +26,34 @@ void TileMap::Load(std::string filename)
 
   auto mapDimensions = SplitString(line, ",");
 
-  // Extract the dimensions
-  mapWidth = stoi(mapDimensions[0]);
-  mapHeight = stoi(mapDimensions[1]);
-  mapDepth = stoi(mapDimensions[2]);
+  try
+  {
+    // Extract the dimensions
+    mapWidth = stoi(mapDimensions[0]);
+    mapHeight = stoi(mapDimensions[1]);
+    mapDepth = stoi(mapDimensions[2]);
 
-  // Loop through each item of each line
-  while (getline(mapFile, line))
-    for (auto item : SplitString(line, ","))
-    {
-      // Disregard empty strings
-      if (item.empty())
-        continue;
+    // Loop through each item of each line
+    while (getline(mapFile, line))
+      for (auto item : SplitString(line, ","))
+      {
+        // Disregard empty or whitespace only strings
+        if (item.empty() || item.find_first_not_of(" \t\n\v\f\r") == std::string::npos)
+          continue;
 
-      // Convert from string and subtract 1 (so that empty tiles are mapped to -1)
-      // Push the result to the matrix
-      tileMatrix.push_back(stoi(item) - 1);
-    }
+        // Convert from string and subtract 1 (so that empty tiles are mapped to -1)
+        // Push the result to the matrix
+        tileMatrix.push_back(stoi(item) - 1);
+      }
+  }
+  // Catch stoi errors
+  catch (const invalid_argument &error)
+  {
+    // Clean up file
+    mapFile.close();
+
+    throw runtime_error("Map file at " + filename + " has invalid syntax");
+  }
 
   // Close file
   mapFile.close();
@@ -54,6 +67,10 @@ void TileMap::RenderLayer(int layer, int cameraX, int cameraY)
   // For each tile in matrix
   for (int i = layerOffset; i < layerOffset + mapWidth * mapHeight; i++)
   {
+    // Skip empty tiles
+    if (tileMatrix[i] == -1)
+      continue;
+
     // X coord where to render it
     int x = (i % mapWidth) * tileSet->GetTileWidth();
 

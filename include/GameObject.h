@@ -53,9 +53,6 @@ public:
   // Removes an existing component
   void RemoveComponent(Component *component);
 
-  // Gets pointer to a component of the given type (non dynamic way)
-  auto GetComponent(std::string type) -> Component *;
-
   // Gets pointer to a component of the given type
   // Needs to be in header file so the compiler knows how to build the necessary methods
   template <class T>

@@ -39,7 +39,7 @@ namespace Helper
     size_t last = 0;
 
     // While there are delimiters to go
-    while ((next = text.find(delimiter, last)) != string::npos)
+    while ((next = text.find(delimiter, last)) != std::string::npos)
     {
       // Push the item right before the found delimiter
       items.push_back(text.substr(last, next - last));
@@ -54,6 +54,7 @@ namespace Helper
 
     return items;
   }
+
 }
 
 #endif

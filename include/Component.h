@@ -15,9 +15,6 @@ public:
   // Called once per frame to render to the screen
   virtual void Render() = 0;
 
-  // Determines if is from a certain type
-  virtual bool Is(std::string type) = 0;
-
   Component(GameObject &associatedObject) : associatedObject(associatedObject) {}
 
   // Destructor to be overriden
