@@ -65,10 +65,12 @@ void TileMap::RenderLayer(int layer, int cameraX, int cameraY)
   int layerOffset = layer * mapWidth * mapHeight;
 
   // For each tile in matrix
-  for (int i = layerOffset; i < layerOffset + mapWidth * mapHeight; i++)
+  for (int i = 0; i < mapWidth * mapHeight; i++)
   {
+    int matrixIndex = i + layerOffset;
+
     // Skip empty tiles
-    if (tileMatrix[i] == -1)
+    if (tileMatrix[matrixIndex] == -1)
       continue;
 
     // X coord where to render it
@@ -78,6 +80,15 @@ void TileMap::RenderLayer(int layer, int cameraX, int cameraY)
     int y = (i / mapWidth) * tileSet->GetTileHeight();
 
     // Render it
-    tileSet->RenderTile(tileMatrix[i], x - cameraX, y - cameraY);
+    tileSet->RenderTile(tileMatrix[matrixIndex], x - cameraX, y - cameraY);
+  }
+}
+
+void TileMap::Render()
+{
+  // Render each layer
+  for (int layer = 0; layer < mapDepth; ++layer)
+  {
+    RenderLayer(layer);
   }
 }

@@ -36,14 +36,7 @@ public:
 
   // === OVERRIDES
 
-  void Render() override
-  {
-    // Render each layer
-    for (int layer = 0; layer < mapDepth; ++layer)
-    {
-      RenderLayer(layer);
-    }
-  }
+  void Render() override;
 
   void Update(float deltaTime) override {}
 

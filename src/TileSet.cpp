@@ -1,7 +1,9 @@
+#include <iostream>
 #include "TileSet.h"
 #include "Sprite.h"
 #include "Helper.h"
 
+using namespace std;
 using namespace Helper;
 
 TileSet::TileSet(int tileWidth, int tileHeight, std::string filename) : tileWidth(tileWidth), tileHeight(tileHeight)
