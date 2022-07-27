@@ -9,6 +9,7 @@
 #include "TileMap.h"
 #include "Sprite.h"
 #include "Music.h"
+#include "InputManager.h"
 
 // Class that defines a state of the game
 class GameState
@@ -30,9 +31,6 @@ public:
   void Render();
 
 private:
-  // Get input
-  void Input();
-
   // Adds a new game object
   void AddObject(int mouseX, int mouseY);
 
@@ -44,6 +42,9 @@ private:
 
   // Tilemap reference
   TileMap *tilemap;
+
+  // Reference to input manager
+  InputManager &inputManager;
 
   Music music;
 

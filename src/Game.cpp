@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "Helper.h"
 #include "Resources.h"
+#include "InputManager.h"
 
 using namespace std;
 using namespace Helper;
@@ -144,9 +145,15 @@ void Game::Run()
   // Find out how many ms to wait to achieve the configured framerate
   const int frameDelay = 1000 / Game::frameRate;
 
+  // Get the input manager
+  InputManager& inputManager = InputManager::GetInstance();
+
   // Loop while exit not requested
   while (state->QuitRequested() == false)
   {
+    // Get input
+    inputManager.Update();
+    
     // Update the state
     state->Update(0);
 

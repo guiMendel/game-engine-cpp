@@ -2,6 +2,7 @@
 #define __COMPONENT__
 
 #include "GameObject.h"
+#include "InputManager.h"
 #include <string>
 
 class GameObject;
@@ -15,7 +16,8 @@ public:
   // Called once per frame to render to the screen
   virtual void Render() = 0;
 
-  Component(GameObject &associatedObject) : associatedObject(associatedObject) {}
+  Component(GameObject &associatedObject)
+      : associatedObject(associatedObject), inputManager(InputManager::GetInstance()) {}
 
   // Destructor to be overriden
   virtual ~Component() {}
@@ -23,6 +25,9 @@ public:
 protected:
   // The associated game object
   GameObject &associatedObject;
+
+  // Reference to input manager
+  InputManager &inputManager;
 };
 
 #endif
