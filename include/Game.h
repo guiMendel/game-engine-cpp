@@ -35,12 +35,23 @@ public:
   // Starts the game
   void Run();
 
+  float GetDeltaTime() const { return deltaTime; }
+
   // Explicit destructor
   ~Game();
 
 private:
+  // Calculates the delta time
+  void CalculateDeltaTime();
+
   // Game instance
   static std::unique_ptr<Game> gameInstance;
+
+  // Start time of current frame, in milliseconds
+  int frameStart{(int)SDL_GetTicks()};
+
+  // Time elapsed since last frame
+  float deltaTime;
 
   // Current state
   std::unique_ptr<GameState> state;

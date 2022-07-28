@@ -122,6 +122,18 @@ Game::~Game()
   ExitSDL(window.release(), renderer.release());
 }
 
+void Game::CalculateDeltaTime()
+{
+  // Get this frame's start time
+  float newFrameStart = SDL_GetTicks();
+
+  // Calculate & convert delta time from ms to s
+  deltaTime = (newFrameStart - frameStart) / 1000;
+
+  // Update frame start variable
+  frameStart = newFrameStart;
+}
+
 // === PUBLIC METHODS =================================
 
 Game &Game::GetInstance()
@@ -146,16 +158,19 @@ void Game::Run()
   const int frameDelay = 1000 / Game::frameRate;
 
   // Get the input manager
-  InputManager& inputManager = InputManager::GetInstance();
+  InputManager &inputManager = InputManager::GetInstance();
 
   // Loop while exit not requested
   while (state->QuitRequested() == false)
   {
+    // Calculate frame's delta time
+    CalculateDeltaTime();
+    
     // Get input
     inputManager.Update();
-    
+
     // Update the state
-    state->Update(0);
+    state->Update(deltaTime);
 
     // Render the state
     state->Render();
