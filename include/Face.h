@@ -17,7 +17,7 @@ public:
   // === OVERRIDES
 
   void Update(float deltaTime) override;
-  void Render() override {}
+  void Render([[maybe_unused]] Vector2 offset) override {}
 
 private:
   // How many hitPoints it has left

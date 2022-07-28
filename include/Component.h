@@ -3,6 +3,7 @@
 
 #include "GameObject.h"
 #include "InputManager.h"
+#include "Vector2.h"
 #include <string>
 
 class GameObject;
@@ -14,7 +15,7 @@ public:
   virtual void Update([[maybe_unused]] float deltaTime) = 0;
 
   // Called once per frame to render to the screen
-  virtual void Render() = 0;
+  virtual void Render(Vector2 offset) = 0;
 
   Component(GameObject &associatedObject)
       : associatedObject(associatedObject), inputManager(InputManager::GetInstance()) {}

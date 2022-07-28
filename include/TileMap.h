@@ -27,8 +27,10 @@ public:
   // Returns a reference to the tile at the given position
   int &At(int x, int y, int z = 0) { return tileMatrix[x + y * mapWidth + z * mapWidth * mapHeight]; }
 
+  int &At(Vector2 position, int layer) { return At((int)position.x, (int)position.y, layer); }
+
   // Renders a given layer
-  void RenderLayer(int layer, int cameraX = 0, int cameraY = 0);
+  void RenderLayer(int layer, Vector2 offset);
 
   int GetWidth() const { return mapWidth; }
   int GetHeight() const { return mapHeight; }
@@ -36,7 +38,7 @@ public:
 
   // === OVERRIDES
 
-  void Render() override;
+  void Render(Vector2 offset) override;
 
   void Update([[maybe_unused]] float deltaTime) override {}
 

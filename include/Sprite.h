@@ -35,15 +35,13 @@ public:
 
   bool IsLoaded() const { return texture != nullptr; }
 
-  // Renders the sprite to the provided position
-  void Render(int x, int y);
+  // Renders the sprite using the associated object's position
+  void Render(Vector2 offset) override { Render(offset, associatedObject.box.Coordinates()); }
 
-  // === COMPONENT OVERRIDES
+  // Renders the sprite to the provided position, ignoring the associated object's position
+  void Render(Vector2 offset, Vector2 position);
 
   void Update([[maybe_unused]] float deltaTime) override {}
-
-  // Renders the sprite to the associated object's position
-  void Render() override { Render(associatedObject.box.x, associatedObject.box.y); }
 
 private:
   // The loaded texture

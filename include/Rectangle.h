@@ -45,6 +45,8 @@ public:
     return Rectangle(x - vector.x, y - vector.y, width, height);
   }
 
+  Vector2 Coordinates() const { return Vector2(x, y); }
+
   Vector2 GetCenter() const { return Vector2(x + width / 2, y + height / 2); }
 
   // Indicates if a given coordinate is contained by the rectangle

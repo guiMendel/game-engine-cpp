@@ -30,11 +30,13 @@ public:
   }
 
   // Renders to the screen every frame
-  void Render()
+  void Render(Vector2 offset)
   {
     for (const auto &component : components)
-      component->Render();
+      component->Render(offset);
   }
+
+  void Render() { Render(Vector2::Zero()); }
 
   // Whether is dead
   bool IsDead() const { return isDead; }

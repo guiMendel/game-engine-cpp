@@ -20,7 +20,7 @@ TileSet::TileSet(int tileWidth, int tileHeight, std::string filename) : tileWidt
   columns = tileSet->GetWidth() / tileWidth;
 }
 
-void TileSet::RenderTile(unsigned index, int x, int y)
+void TileSet::RenderTile(unsigned index, Vector2 offset, Vector2 position)
 {
   // Ensure valid index
   Assert(index >= 0 && (int)index < rows * columns, "Invalid index");
@@ -35,5 +35,5 @@ void TileSet::RenderTile(unsigned index, int x, int y)
   tileSet->SetClip(tileColumn * tileWidth, tileRow * tileHeight, tileWidth, tileHeight);
 
   // Render it to the correct position
-  tileSet->Render(x, y);
+  tileSet->Render(offset, position);
 }

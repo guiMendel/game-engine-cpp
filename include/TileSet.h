@@ -12,7 +12,7 @@ public:
   TileSet(int tileWidth, int tileHeight, std::string filename);
 
   // Render a tile
-  void RenderTile(unsigned index, int x, int y);
+  void RenderTile(unsigned index, Vector2 offset, Vector2 position);
 
   // Get the width of each tile
   int GetTileWidth() const { return tileWidth; }

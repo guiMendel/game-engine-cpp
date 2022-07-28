@@ -5,6 +5,7 @@
 #include "Sound.h"
 #include "TileMap.h"
 #include "TileSet.h"
+#include "Camera.h"
 #include <iostream>
 using namespace std;
 
@@ -52,6 +53,9 @@ void GameState::Update(float deltaTime)
     AddObject((int)position.x, (int)position.y);
   }
 
+  // Update camera
+  Camera::GetInstance().Update(deltaTime);
+
   // Update game objects
   for (auto &gameObject : gameObjects)
     gameObject->Update(deltaTime);
@@ -72,12 +76,15 @@ void GameState::Render()
   // Render state background
   background.Render();
 
+  // Get camera position
+  Vector2 cameraPosition = Camera::GetInstance().position;
+
   // Render tilemap
-  tilemapObject.Render();
+  tilemapObject.Render(cameraPosition);
 
   // Render objects
   for (auto &gameObject : gameObjects)
-    gameObject->Render();
+    gameObject->Render(cameraPosition);
 }
 
 void GameState::AddObject(int mouseX, int mouseY)

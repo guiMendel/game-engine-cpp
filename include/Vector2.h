@@ -30,6 +30,13 @@ public:
 
   // === ALGEBRAIC OPERATIONS
 
+  Vector2 operator=(const Vector2 &other)
+  {
+    x = other.x;
+    y = other.y;
+    return *this;
+  }
+
   Vector2 operator+(const Vector2 &other) const { return Vector2(x + other.x, y + other.y); }
 
   Vector2 operator-(const Vector2 &other) const { return Vector2(x - other.x, y - other.y); }
@@ -42,11 +49,41 @@ public:
 
   Vector2 operator/(float value) const { return Vector2(x / value, y / value); }
 
+  Vector2 operator+=(const Vector2 &other) { return *this = *this + other; }
+
+  Vector2 operator-=(const Vector2 &other) { return *this = *this - other; }
+
+  Vector2 operator*=(const Vector2 &other) { return *this = *this * other; }
+
+  Vector2 operator/=(const Vector2 &other) { return *this = *this / other; }
+
+  Vector2 operator*=(float value) { return *this = *this * value; }
+
+  Vector2 operator/=(float value) { return *this = *this / value; }
+
   // === OTHER OPERATIONS
 
   float SqrMagnitude() const { return x * x + y * y; }
 
   float Magnitude() const { return sqrt(SqrMagnitude()); }
+
+  void SetMagnitude(float magnitude)
+  {
+    float angle = Angle();
+    x = magnitude * cos(angle);
+    y = magnitude * sin(angle);
+  }
+
+  // Sets the magnitude to either it's current value or the given value, in case the current one is greater
+  void CapMagnitude(float value)
+  {
+    // Check that it does not exceed the limits
+    if (SqrMagnitude() > value * value)
+    {
+      // Cap it
+      SetMagnitude(value);
+    }
+  }
 
   Vector2 Normalized() const { return Vector2(*this) / Magnitude(); }
 
@@ -58,9 +95,20 @@ public:
     return Vector2(x * cos(angle) - y * sin(angle), y * cos(angle) - x * sin(angle));
   }
 
+  explicit operator bool() const { return x != 0 && y != 0; }
+
   // === OPERATORS BETWEEN 2 VEC2S
 
   static float Distance(const Vector2 &v1, const Vector2 &v2) { return (v1 - v2).Magnitude(); }
+
+  // === STATIC GETTERS
+
+  static Vector2 Up() { return Vector2(0, 1); }
+  static Vector2 Left() { return Vector2(-1, 0); }
+  static Vector2 Down() { return Vector2(0, -1); }
+  static Vector2 Right() { return Vector2(1, 0); }
+  static Vector2 Zero() { return Vector2(0, 0); }
+  static Vector2 One() { return Vector2(1, 1); }
 };
 
 #endif
