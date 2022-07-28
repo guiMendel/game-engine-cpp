@@ -61,8 +61,6 @@ void InputManager::Update()
     {
       Uint8 symbol = event.key.keysym.sym;
 
-      cout << symbol << endl;
-
       keyState[symbol] = false;
       keyUpdate[symbol] = updateCounter;
     }

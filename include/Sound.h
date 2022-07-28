@@ -38,7 +38,7 @@ public:
 
   // === COMPONENT OVERRIDES
 
-  void Update(float deltaTime) override
+  void Update([[maybe_unused]] float deltaTime) override
   {
     // TEMPORARY
     // Do nothing is this channel is playing

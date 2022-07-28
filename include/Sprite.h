@@ -40,7 +40,7 @@ public:
 
   // === COMPONENT OVERRIDES
 
-  void Update(float deltaTime) override {}
+  void Update([[maybe_unused]] float deltaTime) override {}
 
   // Renders the sprite to the associated object's position
   void Render() override { Render(associatedObject.box.x, associatedObject.box.y); }

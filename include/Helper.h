@@ -12,7 +12,7 @@ namespace Helper
   using auto_ptr = std::unique_ptr<T, void (*)(T *)>;
 
   // Throws exception if condition is false
-  static void Assert(bool condition, std::string message, std::string explanation)
+  [[maybe_unused]] static void Assert(bool condition, std::string message, std::string explanation)
   {
     if (condition == false)
     {
@@ -21,13 +21,13 @@ namespace Helper
   }
 
   // Throws exception if condition is false
-  static void Assert(bool condition, std::string message)
+  [[maybe_unused]] static void Assert(bool condition, std::string message)
   {
     Assert(condition, message, SDL_GetError());
   }
 
   // Splits the given string into an array of strings, using the given delimiter as the separator token
-  static auto SplitString(std::string text, std::string delimiter) -> std::vector<std::string>
+  [[maybe_unused]] static auto SplitString(std::string text, std::string delimiter) -> std::vector<std::string>
   {
     // Will hold the results
     std::vector<std::string> items;

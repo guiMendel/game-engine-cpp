@@ -19,7 +19,7 @@ void GameObject::RemoveComponent(Component *component)
   components.erase(componentPosition);
 }
 
-void GameObject::DestroyInMs(int milliseconds)
+void GameObject::DestroyAfterSoundPlay()
 {
   // If there is sound to play, play it
   auto soundComponent = GetComponent<Sound>();
@@ -42,9 +42,13 @@ void GameObject::DestroyInMs(int milliseconds)
       components.begin(), components.end(), [](unique_ptr<Component> &component)
       { return dynamic_cast<Sound *>(component.get()) != nullptr; });
 
+  // Remove up until sound
   components.erase(components.begin(), soundIterator);
 
+  // See if there's more
   if (components.size() <= 1)
     return;
+
+  // Remove from sound on
   components.erase(components.begin() + 1, components.end());
 }

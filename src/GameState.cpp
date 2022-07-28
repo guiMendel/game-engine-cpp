@@ -57,7 +57,7 @@ void GameState::Update(float deltaTime)
     gameObject->Update(deltaTime);
 
   // Check for dead objects
-  for (int i = 0; i < gameObjects.size(); i++)
+  for (int i = 0; i < (int)gameObjects.size(); i++)
   {
     if (gameObjects[i]->IsDead() == false)
       continue;

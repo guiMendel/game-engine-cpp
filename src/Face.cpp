@@ -10,10 +10,10 @@ void Face::Damage(int damage)
     return;
 
   // associatedObject.RequestDestroy();
-  associatedObject.DestroyInMs(3000);
+  associatedObject.DestroyAfterSoundPlay();
 }
 
-void Face::Update(float deltaTime)
+void Face::Update([[maybe_unused]] float deltaTime)
 {
   // Disregard if it was not clicked
   if (

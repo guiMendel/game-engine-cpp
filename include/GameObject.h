@@ -73,13 +73,10 @@ public:
   // The rectangle that specifies where this object exists in game space
   Rectangle box;
 
-  // Temporary method to play sound & destroy in some ms
-  void DestroyInMs(int milliseconds);
+  // Temporary method to play sound & destroy after done playing
+  void DestroyAfterSoundPlay();
 
 private:
-  // Temporary: check if channel is done
-  int checkChannel{-1};
-
   // Vector with all components of this object
   std::vector<std::unique_ptr<Component>> components;
 

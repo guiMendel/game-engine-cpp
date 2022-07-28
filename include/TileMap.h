@@ -38,7 +38,7 @@ public:
 
   void Render() override;
 
-  void Update(float deltaTime) override {}
+  void Update([[maybe_unused]] float deltaTime) override {}
 
 private:
   std::vector<int> tileMatrix;
