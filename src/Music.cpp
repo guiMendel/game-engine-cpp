@@ -30,6 +30,4 @@ Music::~Music()
 {
   // Stops any music being played
   FadeOut();
-
-  // No need to free unique_ptr here
 }

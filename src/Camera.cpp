@@ -27,8 +27,8 @@ void Camera::Update(float deltaTime)
     frameSpeedChange.CapMagnitude(speed.Magnitude());
   }
 
-  if (frameSpeedChange)
-    cout << (string)frameSpeedChange << endl;
+  // if (frameSpeedChange)
+  //   cout << (string)frameSpeedChange << endl;
 
   // Move
   Move(frameSpeedChange, deltaTime);

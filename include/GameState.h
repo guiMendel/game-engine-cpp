@@ -55,7 +55,7 @@ private:
   bool quitRequested;
 
   // Array with all of the state's objects
-  std::vector<std::unique_ptr<GameObject>> gameObjects;
+  std::vector<std::shared_ptr<GameObject>> gameObjects;
 };
 
 #endif

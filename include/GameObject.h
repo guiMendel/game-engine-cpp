@@ -63,7 +63,7 @@ public:
   {
     // Find the position of the component that is of the requested type
     auto componentPosition = std::find_if(
-        components.begin(), components.end(), [](std::unique_ptr<Component> &component)
+        components.begin(), components.end(), [](std::shared_ptr<Component> component)
         { return dynamic_cast<T *>(component.get()) != nullptr; });
 
     // Detect if not present
@@ -81,7 +81,7 @@ public:
 
 private:
   // Vector with all components of this object
-  std::vector<std::unique_ptr<Component>> components;
+  std::vector<std::shared_ptr<Component>> components;
 
   // Whether is dead
   bool isDead;

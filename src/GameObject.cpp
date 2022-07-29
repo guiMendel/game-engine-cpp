@@ -8,7 +8,7 @@ void GameObject::RemoveComponent(Component *component)
 {
   // Find it's position
   auto componentPosition = find_if(
-      components.begin(), components.end(), [component](unique_ptr<Component> &otherComponent)
+      components.begin(), components.end(), [component](shared_ptr<Component> otherComponent)
       { return otherComponent.get() == component; });
 
   // Detect if not present
@@ -39,7 +39,7 @@ void GameObject::DestroyAfterSoundPlay()
 
   // Remove all components except Sound
   auto soundIterator = find_if(
-      components.begin(), components.end(), [](unique_ptr<Component> &component)
+      components.begin(), components.end(), [](shared_ptr<Component> component)
       { return dynamic_cast<Sound *>(component.get()) != nullptr; });
 
   // Remove up until sound
