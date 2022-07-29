@@ -35,17 +35,6 @@ private:
   // Adds a new game object
   void AddObject(Vector2 coordinates);
 
-  // Object with background image
-  GameObject background;
-
-  Sprite* backgroundSprite;
-
-  // Object with tilemap
-  GameObject tilemapObject;
-
-  // Tilemap reference
-  TileMap *tilemap;
-
   // Reference to input manager
   InputManager &inputManager;
 

@@ -6,21 +6,45 @@
 #include "TileMap.h"
 #include "TileSet.h"
 #include "Camera.h"
+#include "CameraFollower.h"
 #include <iostream>
 using namespace std;
+
+shared_ptr<GameObject> CreateBackgroundObject()
+{
+  auto background = make_shared<GameObject>();
+
+  // Get a background sprite
+  background->AddComponent<Sprite>("./assets/image/ocean.jpg");
+
+  // Make it follow the camera
+  background->AddComponent<CameraFollower>();
+
+  return background;
+}
+
+shared_ptr<GameObject> CreateTilemapObject()
+{
+  // Get the Tileset
+  TileSet *tileset = new TileSet(64, 64, "./assets/image/tileset.png");
+
+  auto tilemap = make_shared<GameObject>();
+
+  // Get a tilemap
+  tilemap->AddComponent<TileMap>("./assets/map/tileMap.txt", tileset);
+
+  return tilemap;
+}
 
 GameState::GameState() : inputManager(InputManager::GetInstance()), music("./assets/music/main.mp3")
 {
   quitRequested = false;
 
-  // Get a background sprite
-  backgroundSprite = &background.AddComponent<Sprite>("./assets/image/ocean.jpg");
+  // Add a background
+  gameObjects.push_back(CreateBackgroundObject());
 
-  // Get the Tileset
-  TileSet *tileset = new TileSet(64, 64, "./assets/image/tileset.png");
-
-  // Get a tilemap
-  tilemap = &tilemapObject.AddComponent<TileMap>("./assets/map/tileMap.txt", tileset);
+  // Add a tilemap
+  gameObjects.push_back(CreateTilemapObject());
 
   // Play the music
   music.Play();
@@ -73,12 +97,6 @@ void GameState::Update(float deltaTime)
 
 void GameState::Render()
 {
-  // Render state background
-  backgroundSprite->Render(true);
-
-  // Render tilemap
-  tilemapObject.Render();
-
   // Render objects
   for (auto &gameObject : gameObjects)
     gameObject->Render();

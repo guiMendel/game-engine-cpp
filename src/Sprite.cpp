@@ -28,13 +28,10 @@ void Sprite::SetClip(int x, int y, int width, int height)
   associatedObject.box.height = height;
 }
 
-void Sprite::Render(Vector2 position, bool ignoreCameraPosition)
+void Sprite::Render(Vector2 position)
 {
   // Get the real position
-  Vector2 offsetPosition =
-      ignoreCameraPosition
-          ? position
-          : Camera::GetInstance().WorldToScreen(position);
+  Vector2 offsetPosition = Camera::GetInstance().WorldToScreen(position);
 
   // Get destination rectangle
   SDL_Rect destinationRect{

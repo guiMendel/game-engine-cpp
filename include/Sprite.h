@@ -38,13 +38,8 @@ public:
   // Renders the sprite using the associated object's position
   void Render() override { Render(associatedObject.box.Coordinates()); }
 
-  void Render(bool ignoreCameraPosition)
-  {
-    Render(associatedObject.box.Coordinates(), ignoreCameraPosition);
-  }
-
   // Renders the sprite to the provided position, ignoring the associated object's position
-  void Render(Vector2 position, bool ignoreCameraPosition = false);
+  void Render(Vector2 position);
 
   void Update([[maybe_unused]] float deltaTime) override {}
 

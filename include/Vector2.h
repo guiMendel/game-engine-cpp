@@ -62,6 +62,8 @@ public:
 
   Vector2 operator/=(float value) { return *this = *this / value; }
 
+  Vector2 operator-() const { return Vector2(*this) * -1; }
+
   // === OTHER OPERATIONS
 
   float SqrMagnitude() const { return x * x + y * y; }

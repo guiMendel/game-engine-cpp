@@ -47,6 +47,12 @@ public:
     return Rectangle(x - vector.x, y - vector.y, width, height);
   }
 
+  Rectangle operator=(const Vector2 &vector) {
+    x = vector.x;
+    y = vector.y;
+    return *this;
+  }
+
   Vector2 Coordinates() const { return Vector2(x, y); }
 
   Vector2 GetCenter() const { return Vector2(x + width / 2, y + height / 2); }
