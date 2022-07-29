@@ -11,6 +11,9 @@
 class TileMap : public Component
 {
 public:
+  // Defines the intensity of the parallax effect. 0 means no effect
+  const float parallaxIntensity = 0.75;
+
   // Default constructor
   TileMap(GameObject &associatedObject, std::string filename, TileSet *tileSet)
       : Component(associatedObject), tileSet(tileSet)
