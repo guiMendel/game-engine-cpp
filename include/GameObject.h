@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "Rectangle.h"
+#include "Vector2.h"
 
 class GameObject
 {
@@ -16,7 +17,9 @@ public:
   GameObject() : isDead(false) {}
 
   // With dimensions
-  GameObject(int x, int y, int width = 0, int height = 0) : box(x, y, width, height), isDead(false) {}
+  GameObject(Vector2 coordinates) : box(coordinates, 0, 0), isDead(false) {}
+
+  GameObject(Rectangle box) : box(box), isDead(false) {}
 
   // Base destructor
   // Components are smart pointers, they free themselves
@@ -30,13 +33,11 @@ public:
   }
 
   // Renders to the screen every frame
-  void Render(Vector2 offset)
+  void Render()
   {
     for (const auto &component : components)
-      component->Render(offset);
+      component->Render();
   }
-
-  void Render() { Render(Vector2::Zero()); }
 
   // Whether is dead
   bool IsDead() const { return isDead; }

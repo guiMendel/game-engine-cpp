@@ -1,6 +1,7 @@
 #ifndef __VECTOR2__
 #define __VECTOR2__
 
+#include <string>
 #include <initializer_list>
 #include <cmath>
 

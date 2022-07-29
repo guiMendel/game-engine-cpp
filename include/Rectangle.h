@@ -24,6 +24,8 @@ public:
 
   Rectangle(float x, float y, float width, float height) : x(x), y(y), width(width), height(height) {}
 
+  Rectangle(const Vector2 &coordinates, float width, float height) : x(coordinates.x), y(coordinates.y), width(width), height(height) {}
+
   Rectangle() : x(0), y(0), width(0), height(0) {}
 
   Rectangle(std::initializer_list<float> list)

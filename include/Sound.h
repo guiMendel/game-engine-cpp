@@ -51,7 +51,7 @@ public:
     finishCallback = nullptr;
   }
 
-  void Render([[maybe_unused]] Vector2 offset) override {}
+  void Render() override {}
 
 private:
   // Callback to execute when sound stops playing

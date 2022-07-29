@@ -1,6 +1,7 @@
 #ifndef __INPUT_MANAGER__
 #define __INPUT_MANAGER__
 
+#include "Vector2.h"
 #include <iostream>
 #include <unordered_map>
 #include <SDL.h>
@@ -42,6 +43,7 @@ public:
 
   int GetMouseX() const { return mouseX; }
   int GetMouseY() const { return mouseY; }
+  Vector2 GetMouseWorldCoordinates() const;
 
   bool QuitRequested() const { return quitRequested; }
 

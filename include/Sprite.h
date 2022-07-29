@@ -36,10 +36,15 @@ public:
   bool IsLoaded() const { return texture != nullptr; }
 
   // Renders the sprite using the associated object's position
-  void Render(Vector2 offset) override { Render(offset, associatedObject.box.Coordinates()); }
+  void Render() override { Render(associatedObject.box.Coordinates()); }
+
+  void Render(bool ignoreCameraPosition)
+  {
+    Render(associatedObject.box.Coordinates(), ignoreCameraPosition);
+  }
 
   // Renders the sprite to the provided position, ignoring the associated object's position
-  void Render(Vector2 offset, Vector2 position);
+  void Render(Vector2 position, bool ignoreCameraPosition = false);
 
   void Update([[maybe_unused]] float deltaTime) override {}
 

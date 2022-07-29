@@ -18,8 +18,7 @@ void Face::Update([[maybe_unused]] float deltaTime)
   // Disregard if it was not clicked
   if (
       inputManager.MouseRelease(LEFT_MOUSE_BUTTON) == false ||
-      associatedObject.box.Contains(
-          {(float)inputManager.GetMouseX(), (float)inputManager.GetMouseY()}) == false)
+      associatedObject.box.Contains(inputManager.GetMouseWorldCoordinates()) == false)
     return;
 
   // Apply damage

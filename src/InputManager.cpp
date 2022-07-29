@@ -1,4 +1,5 @@
 #include "InputManager.h"
+#include "Camera.h"
 #include <SDL.h>
 
 using namespace std;
@@ -67,4 +68,9 @@ void InputManager::Update()
       keyUpdate[symbol] = updateCounter;
     }
   }
+}
+
+Vector2 InputManager::GetMouseWorldCoordinates() const
+{
+  return Camera::GetInstance().ScreenToWorld({(float)mouseX, (float)mouseY});
 }

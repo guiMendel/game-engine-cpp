@@ -32,6 +32,18 @@ public:
   // Update frame
   void Update(float deltaTime);
 
+  // Convert coordinates
+  Vector2 ScreenToWorld(const Vector2 &screenCoordinates) const
+  {
+    return screenCoordinates - position;
+  }
+
+  // Convert coordinates
+  Vector2 WorldToScreen(const Vector2 &worldCoordinates) const
+  {
+    return worldCoordinates + position;
+  }
+
   static Camera &GetInstance()
   {
     static Camera instance;

@@ -14,7 +14,7 @@ GameState::GameState() : inputManager(InputManager::GetInstance()), music("./ass
   quitRequested = false;
 
   // Get a background sprite
-  background.AddComponent<Sprite>("./assets/image/ocean.jpg");
+  backgroundSprite = &background.AddComponent<Sprite>("./assets/image/ocean.jpg");
 
   // Get the Tileset
   TileSet *tileset = new TileSet(64, 64, "./assets/image/tileset.png");
@@ -47,10 +47,10 @@ void GameState::Update(float deltaTime)
     // Get it's position relative to mouse
     Vector2 position =
         Vector2(200, 0).Rotated(rotation) +
-        Vector2(inputManager.GetMouseX(), inputManager.GetMouseY());
+        inputManager.GetMouseWorldCoordinates();
 
     // Insert it
-    AddObject((int)position.x, (int)position.y);
+    AddObject(position);
   }
 
   // Update camera
@@ -74,23 +74,20 @@ void GameState::Update(float deltaTime)
 void GameState::Render()
 {
   // Render state background
-  background.Render();
-
-  // Get camera position
-  Vector2 cameraPosition = Camera::GetInstance().position;
+  backgroundSprite->Render(true);
 
   // Render tilemap
-  tilemapObject.Render(cameraPosition);
+  tilemapObject.Render();
 
   // Render objects
   for (auto &gameObject : gameObjects)
-    gameObject->Render(cameraPosition);
+    gameObject->Render();
 }
 
-void GameState::AddObject(int mouseX, int mouseY)
+void GameState::AddObject(Vector2 coordinates)
 {
   // Create new object
-  auto newObject = make_unique<GameObject>(mouseX, mouseY);
+  auto newObject = make_unique<GameObject>(coordinates);
 
   // Give it a sprite
   auto &sprite = newObject->AddComponent<Sprite>("./assets/image/penguinface.png");

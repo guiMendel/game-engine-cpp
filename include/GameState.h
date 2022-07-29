@@ -10,6 +10,7 @@
 #include "Sprite.h"
 #include "Music.h"
 #include "InputManager.h"
+#include "Vector2.h"
 
 // Class that defines a state of the game
 class GameState
@@ -32,10 +33,12 @@ public:
 
 private:
   // Adds a new game object
-  void AddObject(int mouseX, int mouseY);
+  void AddObject(Vector2 coordinates);
 
   // Object with background image
   GameObject background;
+
+  Sprite* backgroundSprite;
 
   // Object with tilemap
   GameObject tilemapObject;

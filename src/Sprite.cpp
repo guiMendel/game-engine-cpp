@@ -1,6 +1,7 @@
 #include "Sprite.h"
 #include "Resources.h"
 #include "Game.h"
+#include "Camera.h"
 #include <string>
 
 using namespace std;
@@ -27,10 +28,13 @@ void Sprite::SetClip(int x, int y, int width, int height)
   associatedObject.box.height = height;
 }
 
-void Sprite::Render(Vector2 offset, Vector2 position)
+void Sprite::Render(Vector2 position, bool ignoreCameraPosition)
 {
   // Get the real position
-  Vector2 offsetPosition = position + offset;
+  Vector2 offsetPosition =
+      ignoreCameraPosition
+          ? position
+          : Camera::GetInstance().WorldToScreen(position);
 
   // Get destination rectangle
   SDL_Rect destinationRect{

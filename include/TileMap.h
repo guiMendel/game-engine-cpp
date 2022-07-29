@@ -30,7 +30,7 @@ public:
   int &At(Vector2 position, int layer) { return At((int)position.x, (int)position.y, layer); }
 
   // Renders a given layer
-  void RenderLayer(int layer, Vector2 offset);
+  void RenderLayer(int layer);
 
   int GetWidth() const { return mapWidth; }
   int GetHeight() const { return mapHeight; }
@@ -38,7 +38,7 @@ public:
 
   // === OVERRIDES
 
-  void Render(Vector2 offset) override;
+  void Render() override;
 
   void Update([[maybe_unused]] float deltaTime) override {}
 
