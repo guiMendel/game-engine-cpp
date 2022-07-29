@@ -85,9 +85,19 @@ public:
     }
   }
 
-  Vector2 Normalized() const { return Vector2(*this) / Magnitude(); }
+  Vector2 Normalized() const
+  {
+    float magnitude = Magnitude();
+
+    if (!magnitude)
+      return Vector2::Zero();
+
+    return Vector2(*this) / magnitude;
+  }
 
   float Angle() const { return atan2(y, x); }
+
+  float AngleDegrees() const { return Angle() * 180 / M_PI; }
 
   // Returns a vector rotated by the given angle, in radians
   Vector2 Rotated(float angle) const
@@ -95,7 +105,12 @@ public:
     return Vector2(x * cos(angle) - y * sin(angle), y * cos(angle) - x * sin(angle));
   }
 
-  explicit operator bool() const { return x != 0 && y != 0; }
+  explicit operator bool() const { return x != 0 || y != 0; }
+
+  explicit operator std::string() const
+  {
+    return "{ x: " + std::to_string(x) + ", y: " + std::to_string(y) + " }";
+  }
 
   // === OPERATORS BETWEEN 2 VEC2S
 

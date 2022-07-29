@@ -28,7 +28,7 @@ void InputManager::Update()
     // On click event
     else if (event.type == SDL_MOUSEBUTTONDOWN)
     {
-      Uint8 button = event.button.button;
+      auto button = event.button.button;
 
       mouseState[button] = true;
       mouseUpdate[button] = updateCounter;
@@ -37,7 +37,7 @@ void InputManager::Update()
     // On un-click event
     else if (event.type == SDL_MOUSEBUTTONUP)
     {
-      Uint8 button = event.button.button;
+      auto button = event.button.button;
 
       mouseState[button] = false;
       mouseUpdate[button] = updateCounter;
@@ -49,7 +49,9 @@ void InputManager::Update()
       // Ignore repetitions
       if (!event.key.repeat)
       {
-        Uint8 symbol = event.key.keysym.sym;
+        auto symbol = event.key.keysym.sym;
+
+        // cout << "Pressed: " << (long long)symbol << ", Up key is: " << UP_ARROW_KEY << endl;
 
         keyState[symbol] = true;
         keyUpdate[symbol] = updateCounter;
@@ -59,7 +61,7 @@ void InputManager::Update()
     // On keyboard event
     else if (event.type == SDL_KEYUP)
     {
-      Uint8 symbol = event.key.keysym.sym;
+      auto symbol = event.key.keysym.sym;
 
       keyState[symbol] = false;
       keyUpdate[symbol] = updateCounter;
