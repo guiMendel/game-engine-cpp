@@ -13,20 +13,18 @@ OBJECT_DIRECTORY = ./src/obj
 SOURCE_DIRECTORY = ./src
 
 # SDL Include Directory
-SDL_INCLUDE = -IC:\SDL2\include\SDL2
-# SDL_INCLUDE = $(shell sdl2-config --cflags)
+SDL_INCLUDE = $(shell sdl2-config --cflags)
 
 # SDL Library Directory
-SDL_LIBRARY = -LC:\SDL2\lib
-# SDL_LIBRARY = $(shell sdl2-config --libs)
+SDL_LIBRARY = $(shell sdl2-config --libs)
 
 # === ARGUMENTS ================================
 
 # Which libraries to include
-LIBS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer
+LIBS = -lSDL2-2.0.0 -lSDL2_image -lSDL2_mixer
 
 # Additional compilation arguments
-COMPILER_FLAGS = -std=c++17 -Wall -Wextra -pedantic -Wl,-subsystem,windows
+COMPILER_FLAGS = -std=c++17 -Wall -Wextra -pedantic
 
 # Compilation arguments
 COMPILATION_ARGS = -I $(INCLUDE_DIRECTORY) $(SDL_INCLUDE) $(COMPILER_FLAGS)
@@ -58,4 +56,4 @@ game: $(OBJS)
 .PHONY: clean
 
 clean:
-	rm -fr $(OBJECT_DIRECTORY)
+	rm -f -r $(OBJECT_DIRECTORY); rm -f game
