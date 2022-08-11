@@ -1,6 +1,6 @@
 include/SDL2
 lib
-game
+game*
 obj
 .vscode
 test.*

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <algorithm>
 #include <utility>
 #include "GameObject.h"
 #include "Component.h"

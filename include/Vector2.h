@@ -1,6 +1,10 @@
 #ifndef __VECTOR2__
 #define __VECTOR2__
 
+// Get access to Math constants (https://stackoverflow.com/questions/26065359/m-pi-flagged-as-undeclared-identifier)
+#define _USE_MATH_DEFINES
+
+
 #include <string>
 #include <initializer_list>
 #include <cmath>

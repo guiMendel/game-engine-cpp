@@ -23,7 +23,7 @@ TileSet::TileSet(int tileWidth, int tileHeight, std::string filename) : tileWidt
 void TileSet::RenderTile(unsigned index, Vector2 position)
 {
   // Ensure valid index
-  Assert(index >= 0 && (int)index < rows * columns, "Invalid index");
+  Assert((int)index < rows * columns, "Invalid index");
 
   // Get to which row this tile belongs
   int tileRow = index / columns;

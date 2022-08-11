@@ -1,7 +1,9 @@
 #ifndef __HELPER__
 #define __HELPER__
 
+#include <stdexcept>
 #include <vector>
+#include <memory>
 #include <string>
 #include <SDL.h>
 
