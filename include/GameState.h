@@ -31,9 +31,14 @@ public:
 
   void Render();
 
-private:
   // Adds a new game object
-  void AddObject(Vector2 coordinates);
+  std::weak_ptr<GameObject> AddObject(GameObject *gameObject);
+
+  std::weak_ptr<GameObject> GetPointer(GameObject *gameObject);
+
+  void Start();
+  
+private:
 
   // Reference to input manager
   InputManager &inputManager;
@@ -45,6 +50,9 @@ private:
 
   // Array with all of the state's objects
   std::vector<std::shared_ptr<GameObject>> gameObjects;
+
+  // Whether the state has executed the start method
+  bool started;
 };
 
 #endif

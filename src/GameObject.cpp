@@ -4,6 +4,14 @@
 
 using namespace std;
 
+void GameObject::Start()
+{
+  for (auto component : components)
+    component->Start();
+
+  started = true;
+}
+
 void GameObject::RemoveComponent(Component *component)
 {
   // Find it's position

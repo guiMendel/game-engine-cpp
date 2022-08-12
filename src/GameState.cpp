@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <math.h>
 #include "GameState.h"
 #include "Face.h"
@@ -102,72 +103,45 @@ void GameState::Render()
     gameObject->Render();
 }
 
-void GameState::AddObject(Vector2 coordinates)
+std::weak_ptr<GameObject> GameState::AddObject(GameObject *rawGameObject)
 {
-  // Create new object
-  auto newObject = make_unique<GameObject>(coordinates);
-
-  // Give it a sprite
-  auto &sprite = newObject->AddComponent<Sprite>("./assets/image/penguinface.png");
-
-  // Center it with image dimensions
-  newObject->box.x -= sprite.GetWidth();
-  newObject->box.y -= sprite.GetHeight();
-
-  // Give it a sound component
-  newObject->AddComponent<Sound>("./assets/sound/boom.wav");
-
-  // Give it a face component
-  newObject->AddComponent<Face>();
+  // Get shared_ptr
+  auto gameObject = make_shared<GameObject>(rawGameObject);
 
   // Store it
-  gameObjects.emplace_back(newObject.release());
+  gameObjects.push_back(gameObject);
+
+  // Call it's start method
+  if (started)
+    gameObject->Start();
+
+  return weak_ptr(gameObject);
 }
 
-// void GameState::Input()
-// {
-//   SDL_Event event;
-//   int mouseX, mouseY;
+std::weak_ptr<GameObject> GameState::GetPointer(GameObject *targetObject)
+{
+  // Find this pointer in the list
+  auto foundObjectIterator = find_if(
+      gameObjects.begin(), gameObjects.end(),
+      [targetObject](const auto gameObject)
+      { return gameObject.get() == targetObject; });
 
-//   // Get mouse coords
-//   SDL_GetMouseState(&mouseX, &mouseY);
+  // Catch nonexistent
+  if (foundObjectIterator == gameObjects.end())
+  {
+    // Return empty pointer
+    return weak_ptr<GameObject>();
+  }
 
-//   // If there are any input events in the SDL stack pile, this function returns 1 and sets the argument to next event
-//   while (SDL_PollEvent(&event))
-//   {
+  return weak_ptr(*foundObjectIterator);
+}
 
-//     // Quit on quit event
-//     if (event.type == SDL_QUIT)
-//       quitRequested = true;
+void GameState::Start()
+{
+  LoadAssets();
 
-//     // On click event
-//     if (event.type == SDL_MOUSEBUTTONDOWN)
-//     {
-//     }
+  for (auto gameObject : gameObjects)
+    gameObject->Start();
 
-//     // On keyboard event
-//     if (event.type == SDL_KEYDOWN)
-//     {
-//       // Esc closes the game
-//       if (event.key.keysym.sym == SDLK_ESCAPE)
-//       {
-//         quitRequested = true;
-//       }
-
-//       // Other keys create a new object
-//       else
-//       {
-//         // Rotate it in a range from -90 to 90 degrees
-//         float rotation = -M_PI + M_PI * (rand() % 1001) / 500.0;
-
-//         // Get it's position relative to mouse
-//         Vector2 position =
-//             Vector2(200, 0).Rotated(rotation) +
-//             Vector2(mouseX, mouseY);
-
-//         // Insert it
-//         AddObject((int)position.x, (int)position.y);
-//       }
-//     }
-//   }
-// }
+  started = true;
+}

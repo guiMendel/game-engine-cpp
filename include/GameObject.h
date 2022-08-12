@@ -11,6 +11,8 @@
 #include "Rectangle.h"
 #include "Vector2.h"
 
+using namespace std;
+
 class GameObject
 {
 public:
@@ -50,7 +52,13 @@ public:
   template <class T, typename... Args>
   T &AddComponent(Args &&...args)
   {
-    components.emplace_back(new T(*this, std::forward<Args>(args)...));
+    auto component = make_shared<T>(new T(*this, std::forward<Args>(args)...));
+
+    components.push_back(component);
+
+    // Start it
+    if (started) component->Start();
+
     return dynamic_cast<T &>(*components.back());
   }
 
@@ -80,12 +88,18 @@ public:
   // Temporary method to play sound & destroy after done playing
   void DestroyAfterSoundPlay();
 
+  // Initialize
+  void Start();
+
 private:
   // Vector with all components of this object
   std::vector<std::shared_ptr<Component>> components;
 
   // Whether is dead
   bool isDead;
+
+  // Whether has already run started
+  bool started;
 };
 
 #endif

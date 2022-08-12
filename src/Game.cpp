@@ -160,6 +160,9 @@ void Game::Run()
   // Get the input manager
   InputManager &inputManager = InputManager::GetInstance();
 
+  // Start the state
+  state->Start();
+
   // Loop while exit not requested
   while (state->QuitRequested() == false)
   {

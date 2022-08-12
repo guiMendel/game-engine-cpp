@@ -23,6 +23,8 @@ public:
   // Destructor to be overriden
   virtual ~Component() {}
 
+  virtual void Start() {}
+
 protected:
   // The associated game object
   GameObject &associatedObject;
