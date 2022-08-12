@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <math.h>
 #include "GameState.h"
-#include "Face.h"
 #include "Vector2.h"
 #include "Sound.h"
 #include "TileMap.h"
@@ -63,21 +62,6 @@ void GameState::Update(float deltaTime)
     quitRequested = true;
   }
 
-  // On space press, create face
-  if (inputManager.KeyRelease(SPACE_KEY))
-  {
-    // Rotate it in a range from -90 to 90 degrees
-    float rotation = -M_PI + M_PI * (rand() % 1001) / 500.0;
-
-    // Get it's position relative to mouse
-    Vector2 position =
-        Vector2(200, 0).Rotated(rotation) +
-        inputManager.GetMouseWorldCoordinates();
-
-    // Insert it
-    AddObject(position);
-  }
-
   // Update camera
   Camera::GetInstance().Update(deltaTime);
 
@@ -106,7 +90,7 @@ void GameState::Render()
 std::weak_ptr<GameObject> GameState::AddObject(GameObject *rawGameObject)
 {
   // Get shared_ptr
-  auto gameObject = make_shared<GameObject>(rawGameObject);
+  auto gameObject = shared_ptr<GameObject>(rawGameObject);
 
   // Store it
   gameObjects.push_back(gameObject);

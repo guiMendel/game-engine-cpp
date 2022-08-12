@@ -52,12 +52,13 @@ public:
   template <class T, typename... Args>
   T &AddComponent(Args &&...args)
   {
-    auto component = make_shared<T>(new T(*this, std::forward<Args>(args)...));
+    auto component = make_shared<T>(*this, std::forward<Args>(args)...);
 
     components.push_back(component);
 
     // Start it
-    if (started) component->Start();
+    if (started)
+      component->Start();
 
     return dynamic_cast<T &>(*components.back());
   }
