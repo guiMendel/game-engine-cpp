@@ -11,10 +11,12 @@ class Minion : public Component
 {
 public:
   // Speed at which to orbit the host alien, in radians
-  const float angularSpeed = 0.5;
+  const float angularSpeed{0.5};
 
-  // Orbit radius
-  const float orbitRadius = 120;
+  // Speed at which the radius changes
+  const float radiusFloatSpeed{1};
+
+  const float radiusLimits[2]{90, 160};
 
   Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPointer, float startingArc = 0);
 
@@ -28,7 +30,14 @@ private:
   // Alien object around which to orbit
   std::weak_ptr<GameObject> hostPointer;
 
+  // Where in the orbit's circumference the minion currently is
   float arc;
+
+  // Distance from the orbit center
+  float orbitRadius;
+
+  // Whether to float away or towards the center (1 or -1)
+  float floatDirection{1};
 };
 
 #endif
