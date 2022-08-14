@@ -7,6 +7,9 @@
 #include "TileSet.h"
 #include "Camera.h"
 #include "CameraFollower.h"
+#include "Alien.h"
+#include "Movement.h"
+#include "Health.h"
 #include <iostream>
 using namespace std;
 
@@ -36,6 +39,28 @@ shared_ptr<GameObject> CreateTilemapObject()
   return tilemap;
 }
 
+shared_ptr<GameObject> CreateAlienObject()
+{
+  auto alien = make_shared<GameObject>(Vector2(512, 300));
+
+  // Get alien sprite
+  auto sprite = alien->AddComponent<Sprite>("./assets/image/alien.png");
+
+  // Get alien behavior
+  alien->AddComponent<Alien>(0);
+
+  // Get movement
+  alien->AddComponent<Movement>(175);
+
+  // Get health
+  alien->AddComponent<Health>();
+
+  // Center it
+  sprite.CenterObject();
+
+  return alien;
+}
+
 GameState::GameState() : inputManager(InputManager::GetInstance()), music("./assets/music/main.mp3")
 {
   quitRequested = false;
@@ -48,6 +73,9 @@ GameState::GameState() : inputManager(InputManager::GetInstance()), music("./ass
 
   // Play the music
   music.Play();
+
+  // Add an alien
+  gameObjects.push_back(CreateAlienObject());
 }
 
 void GameState::LoadAssets()
@@ -72,7 +100,7 @@ void GameState::Update(float deltaTime)
   // Check for dead objects
   for (int i = 0; i < (int)gameObjects.size(); i++)
   {
-    if (gameObjects[i]->IsDead() == false)
+    if (gameObjects[i]->DestroyRequested() == false)
       continue;
 
     // If is dead, delete

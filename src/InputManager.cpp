@@ -52,8 +52,6 @@ void InputManager::Update()
       {
         auto symbol = event.key.keysym.sym;
 
-        // cout << "Pressed: " << (long long)symbol << ", Up key is: " << UP_ARROW_KEY << endl;
-
         keyState[symbol] = true;
         keyUpdate[symbol] = updateCounter;
       }

@@ -37,6 +37,15 @@ public:
 
   // === OPERATIONS
 
+  Rectangle operator=(const Rectangle &other)
+  {
+    x = other.x;
+    y = other.y;
+    width = other.width;
+    height = other.height;
+    return *this;
+  }
+
   Rectangle operator+(const Vector2 &vector) const
   {
     return Rectangle(x + vector.x, y + vector.y, width, height);
@@ -47,11 +56,16 @@ public:
     return Rectangle(x - vector.x, y - vector.y, width, height);
   }
 
-  Rectangle operator=(const Vector2 &vector) {
+  Rectangle operator=(const Vector2 &vector)
+  {
     x = vector.x;
     y = vector.y;
     return *this;
   }
+
+  Rectangle operator+=(const Vector2 &vector) { return *this = *this + vector; }
+
+  Rectangle operator-=(const Vector2 &vector) { return *this = *this - vector; }
 
   Vector2 Coordinates() const { return Vector2(x, y); }
 
@@ -65,6 +79,8 @@ public:
 
   // Convert to sdl rect
   operator SDL_Rect() const { return SDL_Rect{(int)x, (int)y, (int)width, (int)height}; }
+
+  explicit operator Vector2() const { return Vector2{x, y}; }
 };
 
 #endif

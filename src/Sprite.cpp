@@ -24,8 +24,8 @@ void Sprite::SetClip(int x, int y, int width, int height)
   clipRect = {x, y, width, height};
 
   // Also set the object dimensions
-  associatedObject.box.width = width;
-  associatedObject.box.height = height;
+  gameObject.box.width = width;
+  gameObject.box.height = height;
 }
 
 void Sprite::Render(Vector2 position)
@@ -43,4 +43,11 @@ void Sprite::Render(Vector2 position)
       texture,
       &clipRect,
       &destinationRect);
+}
+
+void Sprite::CenterObject()
+{
+  gameObject.box = Vector2(
+      gameObject.box.x - gameObject.box.width / 2,
+      gameObject.box.y - gameObject.box.height / 2);
 }

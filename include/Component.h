@@ -5,6 +5,7 @@
 #include "InputManager.h"
 #include "Vector2.h"
 #include <string>
+#include <memory>
 
 class GameObject;
 
@@ -18,7 +19,7 @@ public:
   virtual void Render() = 0;
 
   Component(GameObject &associatedObject)
-      : associatedObject(associatedObject), inputManager(InputManager::GetInstance()) {}
+      : gameObject(associatedObject), inputManager(InputManager::GetInstance()) {}
 
   // Destructor to be overriden
   virtual ~Component() {}
@@ -27,7 +28,7 @@ public:
 
 protected:
   // The associated game object
-  GameObject &associatedObject;
+  GameObject &gameObject;
 
   // Reference to input manager
   InputManager &inputManager;

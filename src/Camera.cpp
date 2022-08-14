@@ -15,8 +15,6 @@ void Camera::Update(float deltaTime)
   // Get displacement from input, taking delta time in consideration
   auto frameSpeedChange = GetInputSpeedChange() * acceleration * deltaTime;
 
-  // cout << (string)speed << endl;
-
   // If it's null and speed isn't, set it to the gravity
   if (speed && !frameSpeedChange)
   {
@@ -26,9 +24,6 @@ void Camera::Update(float deltaTime)
     // Cap to the current speed value
     frameSpeedChange.CapMagnitude(speed.Magnitude());
   }
-
-  // if (frameSpeedChange)
-  //   cout << (string)frameSpeedChange << endl;
 
   // Move
   Move(frameSpeedChange, deltaTime);
@@ -68,30 +63,13 @@ Vector2 GetInputSpeedChange()
   // Catch button presses
   for (size_t i = 0; i < LENGTH(keyDirectionMap); ++i)
   {
-
     // Check if this direction is pressed
     if (inputManager.IsKeyDown(keyDirectionMap[i]))
     {
-      // string direction;
-
-      // if (i == 0)
-      //   direction = "up";
-      // else if (i == 1)
-      //   direction = "left";
-      // else if (i == 2)
-      //   direction = "down";
-      // else if (i == 3)
-      //   direction = "right";
-
       // If so, add this displacement to the sum
       frameSpeedChange += displacementMap[i];
-
-      // cout << "Pressed " << direction << ", new speed: " << (string)frameSpeedChange << endl;
     }
   }
-
-  // if (frameSpeedChange)
-  //   cout << "Speed change: " << (string)frameSpeedChange << endl;
 
   return frameSpeedChange;
 }

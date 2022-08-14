@@ -4,7 +4,6 @@
 // Get access to Math constants (https://stackoverflow.com/questions/26065359/m-pi-flagged-as-undeclared-identifier)
 #define _USE_MATH_DEFINES
 
-
 #include <string>
 #include <initializer_list>
 #include <cmath>
@@ -121,7 +120,11 @@ public:
 
   // === OPERATORS BETWEEN 2 VEC2S
 
+  static float SqrDistance(const Vector2 &v1, const Vector2 &v2) { return (v1 - v2).SqrMagnitude(); }
+
   static float Distance(const Vector2 &v1, const Vector2 &v2) { return (v1 - v2).Magnitude(); }
+
+  static float AngleBetween(const Vector2 &v1, const Vector2 &v2) { return -(v2 - v1).Angle(); }
 
   // === STATIC GETTERS
 

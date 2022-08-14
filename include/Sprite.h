@@ -36,12 +36,15 @@ public:
   bool IsLoaded() const { return texture != nullptr; }
 
   // Renders the sprite using the associated object's position
-  void Render() override { Render(associatedObject.box.Coordinates()); }
+  void Render() override { Render(gameObject.box.Coordinates()); }
 
   // Renders the sprite to the provided position, ignoring the associated object's position
   void Render(Vector2 position);
 
   void Update([[maybe_unused]] float deltaTime) override {}
+
+  // Shifts coordinates so that the game object becomes centered on where they currently are
+  void CenterObject();
 
 private:
   // The loaded texture
