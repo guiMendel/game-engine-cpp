@@ -1,6 +1,7 @@
 #ifndef __GAME_STATE__
 #define __GAME_STATE__
 
+#include <functional>
 #include <memory>
 #include <vector>
 #include <iostream>
@@ -32,14 +33,33 @@ public:
   void Render();
 
   // Adds a new game object
-  std::weak_ptr<GameObject> AddObject(GameObject *gameObject);
+  std::shared_ptr<GameObject> AddObject(std::shared_ptr<GameObject> gameObject);
 
-  std::weak_ptr<GameObject> GetPointer(GameObject *gameObject);
+  // Creates a new game object
+  template <typename... Args>
+  std::shared_ptr<GameObject> CreateObject(
+      std::function<void(std::shared_ptr<GameObject>)> initializer, Args &&...args)
+  {
+    auto object = make_shared<GameObject>(std::forward<Args>(args)...);
+
+    gameObjects.push_back(object);
+
+    // Initialize it
+    if (initializer)
+      initializer(object);
+
+    // Call it's start method
+    if (started)
+      object->Start();
+
+    return object;
+  }
+
+  std::weak_ptr<GameObject> GetPointer(const GameObject *gameObject);
 
   void Start();
-  
-private:
 
+private:
   // Reference to input manager
   InputManager &inputManager;
 

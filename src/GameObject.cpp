@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "GameObject.h"
 #include "Sound.h"
+#include "Game.h"
 
 using namespace std;
 
@@ -59,4 +60,11 @@ void GameObject::DestroyAfterSoundPlay()
 
   // Remove from sound on
   components.erase(components.begin() + 1, components.end());
+}
+
+std::shared_ptr<GameObject> GameObject::GetShared() const
+{
+  auto &gameState = Game::GetInstance().GetState();
+
+  return gameState.GetPointer(this).lock();
 }

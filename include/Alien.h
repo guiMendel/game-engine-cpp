@@ -16,11 +16,13 @@ public:
   // Movement speed
   const float speed = 10.0;
 
-  Alien(GameObject &associatedObject, int minionCount);
+  Alien(GameObject &associatedObject, int minionCount) : Component(associatedObject), minionCount(minionCount)
+  {
+  }
 
   void Start() override;
   void Update(float deltaTime) override;
-  void Render() override {}
+  void Render() override;
 
 private:
   // Defines the alien's possible actions
@@ -43,6 +45,9 @@ private:
 
   // The actions it's currently assigned to perform
   std::queue<Action> actionQueue;
+
+  // How many minions it should start with
+  int minionCount;
 
   // It's current minions
   std::vector<std::weak_ptr<GameObject>> minions;

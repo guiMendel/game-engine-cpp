@@ -47,7 +47,7 @@ shared_ptr<GameObject> CreateAlienObject()
   auto sprite = alien->AddComponent<Sprite>("./assets/image/alien.png");
 
   // Get alien behavior
-  alien->AddComponent<Alien>(0);
+  alien->AddComponent<Alien>(4);
 
   // Get movement
   alien->AddComponent<Movement>(175);
@@ -115,11 +115,8 @@ void GameState::Render()
     gameObject->Render();
 }
 
-std::weak_ptr<GameObject> GameState::AddObject(GameObject *rawGameObject)
+std::shared_ptr<GameObject> GameState::AddObject(std::shared_ptr<GameObject> gameObject)
 {
-  // Get shared_ptr
-  auto gameObject = shared_ptr<GameObject>(rawGameObject);
-
   // Store it
   gameObjects.push_back(gameObject);
 
@@ -127,10 +124,10 @@ std::weak_ptr<GameObject> GameState::AddObject(GameObject *rawGameObject)
   if (started)
     gameObject->Start();
 
-  return weak_ptr(gameObject);
+  return gameObject;
 }
 
-std::weak_ptr<GameObject> GameState::GetPointer(GameObject *targetObject)
+std::weak_ptr<GameObject> GameState::GetPointer(const GameObject *targetObject)
 {
   // Find this pointer in the list
   auto foundObjectIterator = find_if(

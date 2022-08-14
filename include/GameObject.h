@@ -107,6 +107,9 @@ public:
   // Initialize
   void Start();
 
+  // Returns this object's shared pointer
+  std::shared_ptr<GameObject> GetShared() const;
+
 private:
   // Vector with all components of this object
   std::vector<std::shared_ptr<Component>> components;

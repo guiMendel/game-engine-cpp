@@ -1,13 +1,12 @@
 #include "Alien.h"
 #include "Sprite.h"
 #include "InputManager.h"
+#include "Game.h"
+#include "Minion.h"
+#include "Debug.h"
 #include <iostream>
 
 using namespace std;
-
-Alien::Alien(GameObject &associatedObject, int minionCount) : Component(associatedObject)
-{
-}
 
 void Alien::Start()
 {
@@ -18,6 +17,22 @@ void Alien::Start()
   health->OnDeath.AddListener(
       "deathRemove", [this]()
       { gameObject.RequestDestroy(); });
+
+  // Get game state reference
+  auto &gameState = Game::GetInstance().GetState();
+
+  // Add minions
+  for (int i = 0; i < minionCount; i++)
+    gameState.CreateObject([this, i](shared_ptr<GameObject> minionObject)
+                           {
+      // Give it a sprite
+      minionObject->AddComponent<Sprite>("./assets/image/minion.png");
+
+      // Give it minion behavior
+      minionObject->AddComponent<Minion>(gameObject.GetShared(), 2 * M_PI * i / minionCount);
+      
+      // Add to minions
+      minions.emplace_back(minionObject); });
 }
 
 void Alien::Update([[maybe_unused]] float deltaTime)
@@ -34,6 +49,11 @@ void Alien::Update([[maybe_unused]] float deltaTime)
   // Link mouse buttons to actions
   checkButtonLinkedToAction(LEFT_MOUSE_BUTTON, Action::Type::shoot);
   checkButtonLinkedToAction(RIGHT_MOUSE_BUTTON, Action::Type::move);
+}
+
+void Alien::Render()
+{
+  Debug::DrawPoint(gameObject.box.GetCenter());
 }
 
 void Alien::AddAction(Action::Type actionType)

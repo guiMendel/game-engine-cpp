@@ -71,6 +71,8 @@ public:
 
   Vector2 GetCenter() const { return Vector2(x + width / 2, y + height / 2); }
 
+  void SetCenter(Vector2 coordinates) { *this = Vector2{coordinates.x - width / 2, coordinates.y - height / 2}; }
+
   // Indicates if a given coordinate is contained by the rectangle
   bool Contains(const Vector2 &vector) const
   {

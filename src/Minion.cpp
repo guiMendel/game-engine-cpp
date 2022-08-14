@@ -1,6 +1,6 @@
 #include "Minion.h"
 
-Minion::Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPointer, float startingArc = 0)
+Minion::Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPointer, float startingArc)
     : Component(associatedObject), hostPointer(hostPointer)
 {
   // Initialize arc
@@ -25,5 +25,5 @@ void Minion::Update(float deltaTime)
   Vector2 radialPosition = Vector2::Right(orbitRadius).Rotated(arc);
 
   // Update position
-  gameObject.box = (Vector2)hostLocked->box + radialPosition;
+  gameObject.box.SetCenter((Vector2)hostLocked->box.GetCenter() + radialPosition);
 }

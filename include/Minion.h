@@ -14,7 +14,7 @@ public:
   const float angularSpeed = 0.5;
 
   // Orbit radius
-  const float orbitRadius = 10;
+  const float orbitRadius = 120;
 
   Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPointer, float startingArc = 0);
 
