@@ -128,10 +128,10 @@ public:
 
   // === STATIC GETTERS
 
-  static Vector2 Up() { return Vector2(0, 1); }
-  static Vector2 Left() { return Vector2(-1, 0); }
-  static Vector2 Down() { return Vector2(0, -1); }
-  static Vector2 Right() { return Vector2(1, 0); }
+  static Vector2 Up(float magnitude = 1) { return Vector2(0, magnitude); }
+  static Vector2 Left(float magnitude = 1) { return Vector2(-magnitude, 0); }
+  static Vector2 Down(float magnitude = 1) { return Vector2(0, -magnitude); }
+  static Vector2 Right(float magnitude = 1) { return Vector2(magnitude, 0); }
   static Vector2 Zero() { return Vector2(0, 0); }
   static Vector2 One() { return Vector2(1, 1); }
 };
