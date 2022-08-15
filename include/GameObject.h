@@ -12,6 +12,10 @@
 #include "Rectangle.h"
 #include "Vector2.h"
 
+#define SAMPLE(vector) vector[SAMPLE_INDEX(vector)]
+#define SAMPLE_INDEX(vector) RANDOM_RANGE(0, vector.size())
+#define RANDOM_RANGE(min, max) rand() % (max - min) + min
+
 using namespace std;
 
 class GameObject
@@ -21,9 +25,7 @@ public:
   GameObject() : destroyRequested(false) {}
 
   // With dimensions
-  GameObject(Vector2 coordinates) : box(coordinates, 0, 0) {}
-
-  GameObject(Rectangle box) : box(box) {}
+  GameObject(Vector2 coordinates) : position(coordinates) {}
 
   // Base destructor
   // Components are smart pointers, they free themselves
@@ -99,7 +101,13 @@ public:
   }
 
   // The rectangle that specifies where this object exists in game space
-  Rectangle box;
+  Vector2 position;
+
+  // Scale of the object
+  Vector2 scale{1, 1};
+
+  // Object's rotation, in radians
+  float rotation{0};
 
   // Temporary method to play sound & destroy after done playing
   void DestroyAfterSoundPlay();

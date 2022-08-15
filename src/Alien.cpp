@@ -8,6 +8,9 @@
 
 using namespace std;
 
+// Helper functions
+shared_ptr<GameObject> SampleMinion(vector<weak_ptr<GameObject>> &minions);
+
 void Alien::Start()
 {
   gameObject.RequireComponent<Movement>();
@@ -41,7 +44,6 @@ void Alien::Update([[maybe_unused]] float deltaTime)
   {
     auto inputManager = InputManager::GetInstance();
 
-    // On left mouse button, shoot
     if (inputManager.MousePress(button))
       AddAction(actionType);
   };
@@ -53,7 +55,6 @@ void Alien::Update([[maybe_unused]] float deltaTime)
 
 void Alien::Render()
 {
-  Debug::DrawPoint(gameObject.box.GetCenter());
 }
 
 void Alien::AddAction(Action::Type actionType)
@@ -94,6 +95,37 @@ void Alien::ExecuteActions()
   // If shoot action
   else if (currentAction.type == Action::Type::shoot)
   {
+    // Pick random minion
+    auto minion = SampleMinion(minions);
+
+    // Check that it's valid
+    if (minion)
+    {
+      // Tell it to shoot at the target
+      minion->GetComponent<Minion>()->Shoot(currentAction.position);
+    }
+
     AdvanceActionQueue();
   }
+}
+
+shared_ptr<GameObject> SampleMinion(vector<weak_ptr<GameObject>> &minions)
+{
+  shared_ptr<GameObject> minion;
+
+  // Until either we get a valid minion OR we run out of minions
+  while (!minion && minions.empty() == false)
+  {
+    // Get some valid index
+    int minionIndex = SAMPLE_INDEX(minions);
+
+    // Try to lock it
+    if (!(minion = minions[minionIndex].lock()))
+    {
+      // If failed, remove this minion
+      minions.erase(minions.begin() + minionIndex);
+    }
+  }
+
+  return minion;
 }

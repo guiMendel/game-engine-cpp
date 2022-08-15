@@ -18,16 +18,16 @@ public:
       : Component(associatedObject), texture(nullptr) {}
 
   // Constructor with image file name
-  Sprite(GameObject &associatedObject, const std::string fileName) : Sprite(associatedObject)
+  Sprite(GameObject &associatedObject, const std::string fileName, bool centerObject = true) : Sprite(associatedObject)
   {
-    Load(fileName);
+    Load(fileName, centerObject);
   }
 
   // Loads the file image to the sprite
-  void Load(const std::string fileName);
+  void Load(const std::string fileName, bool center = true);
 
   // Sets which rectangle of the image to be displayed
-  void SetClip(int x, int y, int width, int height);
+  void SetClip(int x, int y, int width, int height, bool center = true);
 
   int GetWidth() const { return width; }
 
@@ -36,15 +36,18 @@ public:
   bool IsLoaded() const { return texture != nullptr; }
 
   // Renders the sprite using the associated object's position
-  void Render() override { Render(gameObject.box.Coordinates()); }
+  void Render() override { Render(gameObject.position + offset); }
 
   // Renders the sprite to the provided position, ignoring the associated object's position
   void Render(Vector2 position);
 
   void Update([[maybe_unused]] float deltaTime) override {}
 
-  // Shifts coordinates so that the game object becomes centered on where they currently are
+  // Shifts offset so that the game object's position is centered on the sprite
   void CenterObject();
+
+  // Offset when rendering based on game object's position
+  Vector2 offset{0, 0};
 
 private:
   // The loaded texture

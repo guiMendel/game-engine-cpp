@@ -27,7 +27,7 @@ void Projectile::Update(float deltaTime)
   Chase();
 
   // Move
-  gameObject.box += speed * deltaTime;
+  gameObject.position += speed * deltaTime;
 }
 
 void Projectile::Chase()
@@ -39,7 +39,7 @@ void Projectile::Chase()
     return;
 
   // Get angle between projectile and target
-  float targetSteer = Vector2::AngleBetween((Vector2)gameObject.box, (Vector2)target->box) - angle;
+  float targetSteer = Vector2::AngleBetween(gameObject.position, target->position) - angle;
 
   // Get angle to steer
   float steerAngle = std::abs(targetSteer) > std::abs(chaseSteering) ? chaseSteering : targetSteer;

@@ -8,16 +8,11 @@ void Movement::Update(float deltaTime)
   if (!speed)
     return;
 
-  gameObject.box += speed * deltaTime;
+  gameObject.position += speed * deltaTime;
 }
 
-void Movement::MoveTo(Vector2 position, std::function<void()> callback, bool recenterCoordinates)
+void Movement::MoveTo(Vector2 position, std::function<void()> callback)
 {
-  if (recenterCoordinates)
-  {
-    position = Vector2(position.x - gameObject.box.width / 2, position.y - gameObject.box.height / 2);
-  }
-
   targetPosition = position;
   followTarget = true;
   targetReachCallback = callback;
@@ -29,10 +24,10 @@ void Movement::FollowTarget(float deltaTime)
     return;
 
   // Check if arrived
-  if (Vector2::SqrDistance((Vector2)gameObject.box, targetPosition) < deltaTime * deltaTime * speed.SqrMagnitude())
+  if (Vector2::SqrDistance(gameObject.position, targetPosition) < deltaTime * deltaTime * speed.SqrMagnitude())
   {
     followTarget = false;
-    gameObject.box = targetPosition;
+    gameObject.position = targetPosition;
     speed = Vector2::Zero();
 
     if (targetReachCallback != nullptr)
@@ -43,7 +38,7 @@ void Movement::FollowTarget(float deltaTime)
 
   // If not arrived, apply speed
   // Get target angle
-  float targetAngle = Vector2::AngleBetween((Vector2)gameObject.box, targetPosition);
+  float targetAngle = Vector2::AngleBetween(gameObject.position, targetPosition);
 
   speed = Vector2::Right().Rotated(targetAngle) * moveSpeed;
 }

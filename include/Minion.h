@@ -20,9 +20,9 @@ public:
   const float radiusLimits[2]{90, 160};
 
   // Projectile speed
-  const float projectileSpeed{30};
+  const float projectileSpeed{300};
 
-  // Projectile time to live
+  // Projectile time to live, in seconds
   const float projectileTimeToLive{5};
 
   // Damage of projectile

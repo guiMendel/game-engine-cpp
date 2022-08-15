@@ -20,8 +20,7 @@ public:
   void Render() override {}
 
   // Start moving towards this target
-  // recenterCoordinates adjusts the given coordinates so that they are relative to the object's center, and not top left
-  void MoveTo(Vector2 position, std::function<void()> callback = nullptr, bool recenterCoordinates = true);
+  void MoveTo(Vector2 position, std::function<void()> callback = nullptr);
 
 private:
   // A target to move towards each frame (if followTarget is true)

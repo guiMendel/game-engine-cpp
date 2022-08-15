@@ -18,7 +18,7 @@ shared_ptr<GameObject> CreateBackgroundObject()
   auto background = make_shared<GameObject>();
 
   // Get a background sprite
-  background->AddComponent<Sprite>("./assets/image/ocean.jpg");
+  background->AddComponent<Sprite>("./assets/image/ocean.jpg", false);
 
   // Make it follow the camera
   background->AddComponent<CameraFollower>();
@@ -105,6 +105,8 @@ void GameState::Update(float deltaTime)
 
     // If is dead, delete
     gameObjects.erase(gameObjects.begin() + i);
+
+    printf("Objects size: was %d, is now %d\n", gameObjects.size() + 1, gameObjects.size());
   }
 }
 
@@ -115,7 +117,7 @@ void GameState::Render()
     gameObject->Render();
 }
 
-std::shared_ptr<GameObject> GameState::AddObject(std::shared_ptr<GameObject> gameObject)
+shared_ptr<GameObject> GameState::AddObject(shared_ptr<GameObject> gameObject)
 {
   // Store it
   gameObjects.push_back(gameObject);
@@ -127,7 +129,7 @@ std::shared_ptr<GameObject> GameState::AddObject(std::shared_ptr<GameObject> gam
   return gameObject;
 }
 
-std::weak_ptr<GameObject> GameState::GetPointer(const GameObject *targetObject)
+weak_ptr<GameObject> GameState::GetPointer(const GameObject *targetObject)
 {
   // Find this pointer in the list
   auto foundObjectIterator = find_if(
@@ -142,7 +144,7 @@ std::weak_ptr<GameObject> GameState::GetPointer(const GameObject *targetObject)
     return weak_ptr<GameObject>();
   }
 
-  return weak_ptr(*foundObjectIterator);
+  return weak_ptr<GameObject>(*foundObjectIterator);
 }
 
 void GameState::Start()

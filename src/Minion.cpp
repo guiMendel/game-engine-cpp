@@ -44,13 +44,13 @@ void Minion::Update(float deltaTime)
   Vector2 radialPosition = Vector2::Right(orbitRadius).Rotated(arc);
 
   // Update position
-  gameObject.box.SetCenter((Vector2)hostLocked->box.GetCenter() + radialPosition);
+  gameObject.position = hostLocked->position + radialPosition;
 }
 
 void Minion::Shoot(Vector2 target)
 {
   // Get angle to target
-  float targetAngle = Vector2::AngleBetween((Vector2)gameObject.box, target);
+  float targetAngle = Vector2::AngleBetween(gameObject.position, target);
 
   // Create the projectile
   Game::GetInstance()
@@ -64,5 +64,5 @@ void Minion::Shoot(Vector2 target)
     // Add projectile behavior
     projectile->AddComponent<Projectile>(
       targetAngle, projectileSpeed, projectileTimeToLive, projectileDamage); },
-          gameObject.box.GetCenter());
+          gameObject.position);
 }

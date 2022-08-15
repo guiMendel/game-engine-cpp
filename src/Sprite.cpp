@@ -7,7 +7,7 @@
 using namespace std;
 using namespace Helper;
 
-void Sprite::Load(const string fileName)
+void Sprite::Load(const string fileName, bool center)
 {
   // Get texture from resource manager
   texture = &Resources::GetTexture(fileName);
@@ -16,16 +16,16 @@ void Sprite::Load(const string fileName)
   SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
 
   // Set the clip to the full image
-  SetClip(0, 0, width, height);
+  SetClip(0, 0, width, height, center);
 }
 
-void Sprite::SetClip(int x, int y, int width, int height)
+void Sprite::SetClip(int x, int y, int width, int height, bool center)
 {
   clipRect = {x, y, width, height};
 
-  // Also set the object dimensions
-  gameObject.box.width = width;
-  gameObject.box.height = height;
+  // Center the object
+  if (center)
+    CenterObject();
 }
 
 void Sprite::Render(Vector2 position)
@@ -47,7 +47,5 @@ void Sprite::Render(Vector2 position)
 
 void Sprite::CenterObject()
 {
-  gameObject.box = Vector2(
-      gameObject.box.x - gameObject.box.width / 2,
-      gameObject.box.y - gameObject.box.height / 2);
+  offset = Vector2(-clipRect.w / 2, -clipRect.h / 2);
 }
