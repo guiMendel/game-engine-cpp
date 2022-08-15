@@ -134,6 +134,7 @@ public:
   static Vector2 Right(float magnitude = 1) { return Vector2(magnitude, 0); }
   static Vector2 Zero() { return Vector2(0, 0); }
   static Vector2 One() { return Vector2(1, 1); }
+  static Vector2 Angled(float angle, float magnitude = 1) { return Vector2::Right(magnitude).Rotated(angle); }
 };
 
 #endif
