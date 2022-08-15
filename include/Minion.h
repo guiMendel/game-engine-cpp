@@ -16,7 +16,17 @@ public:
   // Speed at which the radius changes
   const float radiusFloatSpeed{1};
 
+  // Limits to radius floating
   const float radiusLimits[2]{90, 160};
+
+  // Projectile speed
+  const float projectileSpeed{30};
+
+  // Projectile time to live
+  const float projectileTimeToLive{5};
+
+  // Damage of projectile
+  const float projectileDamage{50};
 
   Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPointer, float startingArc = 0);
 
