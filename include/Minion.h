@@ -31,8 +31,7 @@ public:
   Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPointer, float startingArc = 0);
 
   void Update(float deltaTime) override;
-  void Render() override {}
-  void Start() override {}
+  RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
   void Shoot(Vector2 target);
 

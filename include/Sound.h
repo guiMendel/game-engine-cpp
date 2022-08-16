@@ -51,7 +51,7 @@ public:
     finishCallback = nullptr;
   }
 
-  void Render() override {}
+  RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
 private:
   // Callback to execute when sound stops playing

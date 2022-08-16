@@ -15,9 +15,7 @@ public:
 
   Health(GameObject& associatedObject) : Component(associatedObject) {}
 
-  void Start() override {}
-  void Update([[maybe_unused]] float deltaTime) override {}
-  void Render() override {}
+  RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
 private:
   // Current health status

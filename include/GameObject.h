@@ -22,10 +22,10 @@ class GameObject
 {
 public:
   // Base constructor
-  GameObject() : destroyRequested(false) {}
+  GameObject();
 
   // With dimensions
-  GameObject(Vector2 coordinates) : position(coordinates) {}
+  GameObject(Vector2 coordinates);
 
   // Base destructor
   // Components are smart pointers, they free themselves
@@ -36,13 +36,6 @@ public:
   {
     for (const auto &component : components)
       component->Update(deltaTime);
-  }
-
-  // Renders to the screen every frame
-  void Render()
-  {
-    for (const auto &component : components)
-      component->Render();
   }
 
   // Whether is dead
@@ -61,7 +54,7 @@ public:
 
     // Start it
     if (started)
-      component->Start();
+      component->StartAndRegisterLayer();
 
     return dynamic_cast<T &>(*components.back());
   }
@@ -72,7 +65,7 @@ public:
   // Gets pointer to a component of the given type
   // Needs to be in header file so the compiler knows how to build the necessary methods
   template <class T>
-  auto GetComponent() -> T *
+  auto GetComponent() const -> T *
   {
     // Find the position of the component that is of the requested type
     auto componentIterator = std::find_if(
@@ -88,7 +81,7 @@ public:
 
   // Like GetComponent, but raises if it's not present
   template <class T>
-  auto RequireComponent() -> T *
+  auto RequireComponent() const -> T *
   {
     auto component = GetComponent<T>();
 
@@ -99,6 +92,8 @@ public:
 
     return component;
   }
+
+  auto GetComponent(const Component *componentPointer) -> std::shared_ptr<Component> const; 
 
   // The rectangle that specifies where this object exists in game space
   Vector2 position;
@@ -117,6 +112,9 @@ public:
 
   // Returns this object's shared pointer
   std::shared_ptr<GameObject> GetShared() const;
+
+  // Object's unique identifier
+  const int id;
 
 private:
   // Vector with all components of this object

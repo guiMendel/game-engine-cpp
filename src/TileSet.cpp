@@ -9,7 +9,8 @@ using namespace Helper;
 TileSet::TileSet(int tileWidth, int tileHeight, std::string filename) : tileWidth(tileWidth), tileHeight(tileHeight)
 {
   // Add the sprite component
-  tileSet = &tileSetObject.AddComponent<Sprite>(filename);
+  // Don't give it a render layer. It must only be directly rendered by the tilemap method
+  tileSet = &tileSetObject.AddComponent<Sprite>(filename, RenderLayer::None);
 
   // Avoid awkward situations
   Assert(tileWidth > 0 && tileHeight > 0, "Tile dimensions must be greater than zero");

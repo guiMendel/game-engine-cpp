@@ -32,13 +32,13 @@ COMPILATION_ARGS = -I $(INCLUDE_DIRECTORY) $(SDL_INCLUDE) $(COMPILER_FLAGS)
 # === FILES ===================================
 
 # Header files
-_DEPS = Game.h GameState.h Sprite.h Helper.h Music.h Vector2.h Rectangle.h Component.h GameObject.h Sound.h TileSet.h TileMap.h Resources.h InputManager.h Camera.h CameraFollower.h Movement.h Health.h Alien.h Minion.h Debug.h Projectile.h
+_DEPS = Game.h GameState.h Sprite.h Helper.h Music.h Vector2.h Rectangle.h Component.h GameObject.h Sound.h TileSet.h TileMap.h Resources.h InputManager.h Camera.h CameraFollower.h Movement.h Health.h Alien.h Minion.h Debug.h Projectile.h RenderLayer.h
 
 # Generate header filepaths
 DEPS = $(patsubst %,$(INCLUDE_DIRECTORY)\\%,$(_DEPS))
 
 # Object files
-_OBJS = main.o Game.o GameState.o Sprite.o Music.o GameObject.o Sound.o TileSet.o TileMap.o Resources.o InputManager.o Camera.o Movement.o Alien.o Health.o Minion.o Debug.o Projectile.o
+_OBJS = main.o Game.o GameState.o Sprite.o Music.o Component.o GameObject.o Sound.o TileSet.o TileMap.o Resources.o InputManager.o Camera.o Movement.o Alien.o Health.o Minion.o Debug.o Projectile.o
 
 # Generate object filepaths
 OBJS = $(patsubst %,$(OBJECT_DIRECTORY)\\%,$(_OBJS))

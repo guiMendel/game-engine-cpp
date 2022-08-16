@@ -59,7 +59,7 @@ void Minion::Shoot(Vector2 target)
           [this, targetAngle](std::shared_ptr<GameObject> projectile)
           {
     // Add sprite
-    projectile->AddComponent<Sprite>("./assets/image/minionbullet1.png");
+    projectile->AddComponent<Sprite>("./assets/image/minionbullet1.png", RenderLayer::Projectiles);
     
     // Add projectile behavior
     projectile->AddComponent<Projectile>(

@@ -18,7 +18,7 @@ shared_ptr<GameObject> CreateBackgroundObject()
   auto background = make_shared<GameObject>();
 
   // Get a background sprite
-  background->AddComponent<Sprite>("./assets/image/ocean.jpg", false);
+  background->AddComponent<Sprite>("./assets/image/ocean.jpg", RenderLayer::Background, false);
 
   // Make it follow the camera
   background->AddComponent<CameraFollower>();
@@ -44,7 +44,7 @@ shared_ptr<GameObject> CreateAlienObject()
   auto alien = make_shared<GameObject>(Vector2(512, 300));
 
   // Get alien sprite
-  auto sprite = alien->AddComponent<Sprite>("./assets/image/alien.png");
+  auto sprite = alien->AddComponent<Sprite>("./assets/image/alien.png", RenderLayer::Enemies);
 
   // Get alien behavior
   alien->AddComponent<Alien>(4);
@@ -63,19 +63,6 @@ shared_ptr<GameObject> CreateAlienObject()
 
 GameState::GameState() : inputManager(InputManager::GetInstance()), music("./assets/music/main.mp3")
 {
-  quitRequested = false;
-
-  // Add a background
-  gameObjects.push_back(CreateBackgroundObject());
-
-  // Add a tilemap
-  gameObjects.push_back(CreateTilemapObject());
-
-  // Play the music
-  music.Play();
-
-  // Add an alien
-  gameObjects.push_back(CreateAlienObject());
 }
 
 void GameState::LoadAssets()
@@ -94,17 +81,17 @@ void GameState::Update(float deltaTime)
   Camera::GetInstance().Update(deltaTime);
 
   // Update game objects
-  for (auto &gameObject : gameObjects)
-    gameObject->Update(deltaTime);
+  for (auto &objectPair : gameObjects)
+    objectPair.second->Update(deltaTime);
 
   // Check for dead objects
-  for (int i = 0; i < (int)gameObjects.size(); i++)
+  for (auto &objectPair : gameObjects)
   {
-    if (gameObjects[i]->DestroyRequested() == false)
+    if (objectPair.second->DestroyRequested() == false)
       continue;
 
     // If is dead, delete
-    gameObjects.erase(gameObjects.begin() + i);
+    gameObjects.erase(objectPair.first);
 
     printf("Objects size: was %d, is now %d\n", gameObjects.size() + 1, gameObjects.size());
   }
@@ -112,15 +99,39 @@ void GameState::Update(float deltaTime)
 
 void GameState::Render()
 {
-  // Render objects
-  for (auto &gameObject : gameObjects)
-    gameObject->Render();
+  // Foreach layer
+  for (int layer{0}; layer != (int)RenderLayer::None; layer++)
+  {
+    // Get the layer's components
+    auto &components = layerStructure[(RenderLayer)layer];
+
+    // For each component in this layer
+    auto componentIterator{components.begin()};
+
+    while (componentIterator != components.end())
+    {
+      // Lock the component
+      if (auto component = componentIterator->lock())
+      {
+        // Render it
+        component->Render();
+
+        // Advance
+        componentIterator++;
+      }
+      // If lock fails, it was erased, so remove it
+      else
+      {
+        componentIterator = components.erase(componentIterator);
+      }
+    }
+  }
 }
 
 shared_ptr<GameObject> GameState::AddObject(shared_ptr<GameObject> gameObject)
 {
   // Store it
-  gameObjects.push_back(gameObject);
+  gameObjects[gameObject->id] = gameObject;
 
   // Call it's start method
   if (started)
@@ -134,8 +145,8 @@ weak_ptr<GameObject> GameState::GetPointer(const GameObject *targetObject)
   // Find this pointer in the list
   auto foundObjectIterator = find_if(
       gameObjects.begin(), gameObjects.end(),
-      [targetObject](const auto gameObject)
-      { return gameObject.get() == targetObject; });
+      [targetObject](const auto objectPair)
+      { return objectPair.second.get() == targetObject; });
 
   // Catch nonexistent
   if (foundObjectIterator == gameObjects.end())
@@ -144,15 +155,40 @@ weak_ptr<GameObject> GameState::GetPointer(const GameObject *targetObject)
     return weak_ptr<GameObject>();
   }
 
-  return weak_ptr<GameObject>(*foundObjectIterator);
+  return weak_ptr<GameObject>(foundObjectIterator->second);
 }
 
 void GameState::Start()
 {
+  started = true;
+
   LoadAssets();
 
-  for (auto gameObject : gameObjects)
-    gameObject->Start();
+  // Add a background
+  auto background = CreateBackgroundObject();
+  gameObjects[background->id] = background;
 
-  started = true;
+  // Add a tilemap
+  auto tilemap = CreateTilemapObject();
+  gameObjects[tilemap->id] = tilemap;
+
+  // Play the music
+  music.Play();
+
+  // Add an alien
+  auto alien = CreateAlienObject();
+  gameObjects[alien->id] = alien;
+
+  for (auto &objectPair : gameObjects)
+    objectPair.second->Start();
+}
+
+void GameState::RegisterLayerRenderer(shared_ptr<Component> component)
+{
+  // Simply ignore invalid requests
+  if (!component)
+    return;
+
+  // Add it's entry
+  layerStructure[component->GetRenderLayer()].emplace_back(component);
 }

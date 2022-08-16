@@ -16,8 +16,7 @@ public:
       : Component(associatedObject), moveSpeed(moveSpeed) {}
 
   void Update(float deltaTime) override;
-  void Start() override {}
-  void Render() override {}
+  RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
   // Start moving towards this target
   void MoveTo(Vector2 position, std::function<void()> callback = nullptr);

@@ -60,7 +60,7 @@ void TileMap::Load(std::string filename)
   mapFile.close();
 }
 
-void TileMap::RenderLayer(int layer)
+void TileMap::RenderTileLayer(int layer)
 {
   // Offset to apply to matrix index to account for layer
   int layerOffset = layer * mapWidth * mapHeight;
@@ -99,6 +99,6 @@ void TileMap::Render()
   // Render each layer
   for (int layer = 0; layer < mapDepth; ++layer)
   {
-    RenderLayer(layer);
+    RenderTileLayer(layer);
   }
 }

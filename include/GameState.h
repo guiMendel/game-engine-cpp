@@ -4,6 +4,7 @@
 #include <functional>
 #include <memory>
 #include <vector>
+#include <unordered_map>
 #include <iostream>
 #include <SDL.h>
 #include "GameObject.h"
@@ -12,6 +13,8 @@
 #include "Music.h"
 #include "InputManager.h"
 #include "Vector2.h"
+
+class Component;
 
 // Class that defines a state of the game
 class GameState
@@ -40,9 +43,9 @@ public:
   std::shared_ptr<GameObject> CreateObject(
       std::function<void(std::shared_ptr<GameObject>)> initializer, Args &&...args)
   {
-    auto object = make_shared<GameObject>(std::forward<Args>(args)...);
+    std::shared_ptr<GameObject> object = make_shared<GameObject>(std::forward<Args>(args)...);
 
-    gameObjects.push_back(object);
+    gameObjects[object->id] = object;
 
     // Initialize it
     if (initializer)
@@ -59,6 +62,11 @@ public:
 
   void Start();
 
+  // Supplies a valid unique identifier for a game object
+  int SupplyObjectId() { return nextObjectId++; }
+
+  void RegisterLayerRenderer(std::shared_ptr<Component> component);
+
 private:
   // Reference to input manager
   InputManager &inputManager;
@@ -66,13 +74,22 @@ private:
   Music music;
 
   // Indicates that the game must exit
-  bool quitRequested;
+  bool quitRequested{false};
 
   // Array with all of the state's objects
-  std::vector<std::shared_ptr<GameObject>> gameObjects;
+  std::unordered_map<int, std::shared_ptr<GameObject>> gameObjects;
 
   // Whether the state has executed the start method
-  bool started;
+  bool started{false};
+
+  // ID counter for game objects
+  int nextObjectId{0};
+
+  // Structure that maps each component that renders to it's corresponding render layer
+  std::unordered_map<RenderLayer, std::vector<std::weak_ptr<Component>>>
+      layerStructure;
 };
+
+#include "Component.h"
 
 #endif

@@ -23,6 +23,7 @@ public:
   void Start() override;
   void Update(float deltaTime) override;
   void Render() override;
+  RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
 private:
   // Defines the alien's possible actions

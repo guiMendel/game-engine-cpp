@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "InputManager.h"
 #include "Vector2.h"
+#include "RenderLayer.h"
 #include <string>
 #include <memory>
 
@@ -13,20 +14,26 @@ class Component
 {
 public:
   // Called once per frame
-  virtual void Update([[maybe_unused]] float deltaTime) = 0;
+  virtual void Update([[maybe_unused]] float deltaTime) {}
 
   // Called once per frame to render to the screen
-  virtual void Render() = 0;
+  virtual void Render() {}
 
   Component(GameObject &associatedObject)
       : gameObject(associatedObject), inputManager(InputManager::GetInstance()) {}
 
-  // Destructor to be overriden
-  virtual ~Component() {}
+  // In which render layer this component is
+  // If None, then it's Render method will never be called
+  virtual RenderLayer GetRenderLayer() = 0;
 
-  virtual void Start() {}
+  void StartAndRegisterLayer();
+
+  // Returns this component's shared pointer
+  std::shared_ptr<Component> GetShared() const;
 
 protected:
+  virtual void Start() {}
+
   // The associated game object
   GameObject &gameObject;
 

@@ -17,7 +17,7 @@ public:
     gameObject.position = -Camera::GetInstance().position;
   }
 
-  void Render() override {}
+  RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 };
 
 #endif

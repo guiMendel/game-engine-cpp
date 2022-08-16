@@ -1,7 +1,7 @@
 #ifndef __SPRITE__
 #define __SPRITE__
 
-#include <memory.h>
+#include <memory>
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Helper.h"
@@ -14,11 +14,11 @@ public:
   // Since we are using unique ptrs, no need to define destructor
 
   // Default constructor
-  Sprite(GameObject &associatedObject)
-      : Component(associatedObject), texture(nullptr) {}
+  Sprite(GameObject &associatedObject, RenderLayer renderLayer = RenderLayer::Default)
+      : Component(associatedObject), renderLayer(renderLayer) {}
 
   // Constructor with image file name
-  Sprite(GameObject &associatedObject, const std::string fileName, bool centerObject = true) : Sprite(associatedObject)
+  Sprite(GameObject &associatedObject, const std::string fileName, RenderLayer renderLayer = RenderLayer::Default, bool centerObject = true) : Sprite(associatedObject, renderLayer)
   {
     Load(fileName, centerObject);
   }
@@ -49,15 +49,20 @@ public:
   // Offset when rendering based on game object's position
   Vector2 offset{0, 0};
 
+  RenderLayer GetRenderLayer() override { return renderLayer; }
+
 private:
   // The loaded texture
-  SDL_Texture *texture;
+  SDL_Texture *texture{nullptr};
 
   // Dimensions
-  int width, height;
+  int width{0}, height{0};
 
   // The clipped rectangle of the image to be rendered
   SDL_Rect clipRect;
+
+  // The sprite's layer
+  RenderLayer renderLayer{RenderLayer::Default};
 };
 
 #endif

@@ -3,9 +3,10 @@
 
 #include <SDL.h>
 #include <memory>
-#include "GameObject.h"
-#include "GameState.h"
+// #include "GameObject.h"
 #include "Helper.h"
+
+class GameState;
 
 // Class with the main game logic
 class Game
@@ -27,7 +28,7 @@ public:
   static Game &GetInstance();
 
   // Gets the current game state
-  GameState &GetState() const { return *state; }
+  GameState &GetState() const;
 
   // Gets the renderer
   SDL_Renderer *GetRenderer() const { return renderer.get(); }
@@ -65,5 +66,7 @@ private:
   // Singleton constructor
   Game(std::string title, int width, int height);
 };
+
+#include "GameState.h"
 
 #endif

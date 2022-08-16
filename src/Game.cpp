@@ -168,7 +168,7 @@ void Game::Run()
   {
     // Calculate frame's delta time
     CalculateDeltaTime();
-    
+
     // Get input
     inputManager.Update();
 
@@ -187,4 +187,14 @@ void Game::Run()
 
   // Clear resources
   Resources::ClearAllResources();
+}
+
+GameState &Game::GetState() const
+{
+  if (!state)
+  {
+    throw std::runtime_error("No game state defined");
+  }
+
+  return *state;
 }

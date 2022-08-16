@@ -29,7 +29,7 @@ void Alien::Start()
     gameState.CreateObject([this, i](shared_ptr<GameObject> minionObject)
                            {
       // Give it a sprite
-      minionObject->AddComponent<Sprite>("./assets/image/minion.png");
+      minionObject->AddComponent<Sprite>("./assets/image/minion.png", RenderLayer::Enemies);
 
       // Give it minion behavior
       minionObject->AddComponent<Minion>(gameObject.GetShared(), 2 * M_PI * i / minionCount);

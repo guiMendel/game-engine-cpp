@@ -18,9 +18,9 @@ public:
       std::weak_ptr<GameObject> target = std::weak_ptr<GameObject>(),
       float chaseSteering = 0.5);
 
-  void Start() override {}
+  RenderLayer GetRenderLayer() override { return RenderLayer::None; }
+  
   void Update(float deltaTime) override;
-  void Render() override {}
 
   float GetDamage() { return damage; }
 

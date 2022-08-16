@@ -5,12 +5,21 @@
 
 using namespace std;
 
+// Base constructor
+GameObject::GameObject() : id(Game::GetInstance().GetState().SupplyObjectId())
+{
+}
+
+// With dimensions
+GameObject::GameObject(Vector2 coordinates)
+    : position(coordinates), id(Game::GetInstance().GetState().SupplyObjectId()) {}
+
 void GameObject::Start()
 {
-  for (auto component : components)
-    component->Start();
-
   started = true;
+
+  for (auto component : components)
+    component->StartAndRegisterLayer();
 }
 
 void GameObject::RemoveComponent(Component *component)
@@ -62,9 +71,22 @@ void GameObject::DestroyAfterSoundPlay()
   components.erase(components.begin() + 1, components.end());
 }
 
-std::shared_ptr<GameObject> GameObject::GetShared() const
+shared_ptr<GameObject> GameObject::GetShared() const
 {
   auto &gameState = Game::GetInstance().GetState();
 
   return gameState.GetPointer(this).lock();
+}
+
+auto GameObject::GetComponent(const Component *componentPointer) -> shared_ptr<Component> const
+{
+  auto componentIterator = find_if(
+      components.begin(), components.end(),
+      [componentPointer](shared_ptr<Component> component)
+      { return component.get() == componentPointer; });
+
+  if (componentIterator == components.end())
+    return shared_ptr<Component>();
+
+  return *componentIterator;
 }
