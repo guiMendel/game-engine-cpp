@@ -8,6 +8,17 @@
 using namespace std;
 using namespace Helper;
 
+TileMap::TileMap(
+    GameObject &associatedObject, std::string filename,
+    shared_ptr<TileSet> tileSet, int onlyLayer, RenderLayer renderLayer)
+    : Component(associatedObject), tileSet(tileSet), renderLayer(renderLayer), targetLayer(onlyLayer)
+{
+  Load(filename);
+
+  // Validate target layer
+  Assert(targetLayer < mapDepth, "Target layer must not exceed the depth of the tilemap file configuration");
+}
+
 void TileMap::Load(std::string filename)
 {
   // Flush the current loaded matrix
@@ -96,6 +107,14 @@ void TileMap::RenderTileLayer(int layer)
 
 void TileMap::Render()
 {
+  // If only needs to render one layer, do it and stop
+  if (targetLayer >= 0)
+  {
+    RenderTileLayer(targetLayer);
+
+    return;
+  }
+
   // Render each layer
   for (int layer = 0; layer < mapDepth; ++layer)
   {

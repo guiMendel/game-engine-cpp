@@ -14,12 +14,11 @@ public:
   // Defines the intensity of the parallax effect. 0 means no effect
   const float parallaxIntensity = 0.75;
 
-  // Default constructor
-  TileMap(GameObject &associatedObject, std::string filename, TileSet *tileSet)
-      : Component(associatedObject), tileSet(tileSet)
-  {
-    Load(filename);
-  }
+  // Default constructor. onlyLayer allows to only render a single tilemap layer, but if set to -1 render all of them
+  TileMap(
+      GameObject &associatedObject, std::string filename,
+      std::shared_ptr<TileSet> tileSet, int onlyLayer = -1,
+      RenderLayer renderLayer = RenderLayer::Tilemap);
 
   // Loads a map configuration file
   void Load(std::string filename);
@@ -45,17 +44,23 @@ public:
 
   void Update([[maybe_unused]] float deltaTime) override {}
 
-  RenderLayer GetRenderLayer() override { return RenderLayer::Tilemap; }
+  RenderLayer GetRenderLayer() override { return renderLayer; }
 
 private:
   std::vector<int> tileMatrix;
 
   // Reference to the tileset
-  std::unique_ptr<TileSet> tileSet;
+  std::shared_ptr<TileSet> tileSet;
 
   int mapWidth;
   int mapHeight;
   int mapDepth;
+
+  // Which render layer to render to
+  RenderLayer renderLayer;
+
+  // Which tilemap layer to render (if -1, renders all)
+  int targetLayer;
 };
 
 #endif

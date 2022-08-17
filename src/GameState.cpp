@@ -29,12 +29,15 @@ shared_ptr<GameObject> CreateBackgroundObject()
 shared_ptr<GameObject> CreateTilemapObject()
 {
   // Get the Tileset
-  TileSet *tileset = new TileSet(64, 64, "./assets/image/tileset.png");
+  auto tileset = make_shared<TileSet>(64, 64, "./assets/image/tileset.png");
 
   auto tilemap = make_shared<GameObject>();
 
-  // Get a tilemap
-  tilemap->AddComponent<TileMap>("./assets/map/tileMap.txt", tileset);
+  // Render first tilemap layer below
+  tilemap->AddComponent<TileMap>("./assets/map/tileMap.txt", tileset, 0, RenderLayer::Tilemap);
+
+  // Render second layer above
+  tilemap->AddComponent<TileMap>("./assets/map/tileMap.txt", tileset, 1, RenderLayer::Foreground);
 
   return tilemap;
 }

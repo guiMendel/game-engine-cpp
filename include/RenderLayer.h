@@ -10,6 +10,7 @@ enum class RenderLayer
   Enemies,
   Player,
   Projectiles,
+  Foreground,
   None
 };
 
