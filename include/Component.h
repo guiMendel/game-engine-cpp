@@ -1,7 +1,6 @@
 #ifndef __COMPONENT__
 #define __COMPONENT__
 
-#include "GameObject.h"
 #include "InputManager.h"
 #include "Vector2.h"
 #include "RenderLayer.h"
@@ -40,5 +39,7 @@ protected:
   // Reference to input manager
   InputManager &inputManager;
 };
+
+#include "GameObject.h"
 
 #endif

@@ -11,12 +11,11 @@
 #include "Component.h"
 #include "Rectangle.h"
 #include "Vector2.h"
+#include "Helper.h"
 
 #define SAMPLE(vector) vector[SAMPLE_INDEX(vector)]
 #define SAMPLE_INDEX(vector) RANDOM_RANGE(0, vector.size())
 #define RANDOM_RANGE(min, max) rand() % (max - min) + min
-
-using namespace std;
 
 class GameObject
 {
@@ -48,7 +47,7 @@ public:
   template <class T, typename... Args>
   T &AddComponent(Args &&...args)
   {
-    auto component = make_shared<T>(*this, std::forward<Args>(args)...);
+    auto component = std::make_shared<T>(*this, std::forward<Args>(args)...);
 
     components.push_back(component);
 
@@ -87,13 +86,13 @@ public:
 
     if (component == nullptr)
     {
-      throw std::runtime_error("Required component was not found.\nRequired component typeid name: "s + typeid(T).name());
+      throw std::runtime_error(std::string("Required component was not found.\nRequired component typeid name: ") + typeid(T).name());
     }
 
     return component;
   }
 
-  auto GetComponent(const Component *componentPointer) -> std::shared_ptr<Component> const; 
+  auto GetComponent(const Component *componentPointer) -> std::shared_ptr<Component> const;
 
   // The rectangle that specifies where this object exists in game space
   Vector2 position;

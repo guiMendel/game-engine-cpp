@@ -44,7 +44,7 @@ shared_ptr<GameObject> CreateAlienObject()
   auto alien = make_shared<GameObject>(Vector2(512, 300));
 
   // Get alien sprite
-  auto sprite = alien->AddComponent<Sprite>("./assets/image/alien.png", RenderLayer::Enemies);
+  alien->AddComponent<Sprite>("./assets/image/alien.png", RenderLayer::Enemies);
 
   // Get alien behavior
   alien->AddComponent<Alien>(4);
@@ -54,9 +54,6 @@ shared_ptr<GameObject> CreateAlienObject()
 
   // Get health
   alien->AddComponent<Health>();
-
-  // Center it
-  sprite.CenterObject();
 
   return alien;
 }

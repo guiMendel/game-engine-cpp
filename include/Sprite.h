@@ -14,24 +14,28 @@ public:
   // Since we are using unique ptrs, no need to define destructor
 
   // Default constructor
-  Sprite(GameObject &associatedObject, RenderLayer renderLayer = RenderLayer::Default)
-      : Component(associatedObject), renderLayer(renderLayer) {}
+  Sprite(GameObject &associatedObject, RenderLayer renderLayer = RenderLayer::Default, bool centerObject = true)
+      : Component(associatedObject), centered(centerObject), renderLayer(renderLayer) {}
 
   // Constructor with image file name
-  Sprite(GameObject &associatedObject, const std::string fileName, RenderLayer renderLayer = RenderLayer::Default, bool centerObject = true) : Sprite(associatedObject, renderLayer)
+  Sprite(GameObject &associatedObject, const std::string fileName, RenderLayer renderLayer = RenderLayer::Default, bool centerObject = true) : Sprite(associatedObject, renderLayer, centerObject)
   {
-    Load(fileName, centerObject);
+    Load(fileName);
   }
 
   // Loads the file image to the sprite
-  void Load(const std::string fileName, bool center = true);
+  void Load(const std::string fileName);
 
   // Sets which rectangle of the image to be displayed
-  void SetClip(int x, int y, int width, int height, bool center = true);
+  void SetClip(int x, int y, int width, int height);
 
   int GetWidth() const { return width; }
 
   int GetHeight() const { return height; }
+
+  int GetScaledWidth() const { return clipRect.w * gameObject.scale.x; }
+
+  int GetScaledHeight() const { return clipRect.h * gameObject.scale.y; }
 
   bool IsLoaded() const { return texture != nullptr; }
 
@@ -43,11 +47,11 @@ public:
 
   void Update([[maybe_unused]] float deltaTime) override {}
 
-  // Shifts offset so that the game object's position is centered on the sprite
-  void CenterObject();
-
   // Offset when rendering based on game object's position
   Vector2 offset{0, 0};
+
+  // Whether to center the sprite on the render coordinates
+  bool centered;
 
   RenderLayer GetRenderLayer() override { return renderLayer; }
 
@@ -55,8 +59,11 @@ private:
   // The loaded texture
   SDL_Texture *texture{nullptr};
 
-  // Dimensions
+  // Real dimensions of the loaded image
   int width{0}, height{0};
+
+  // Scaled dimensions
+  int scaledWidth{0}, scaledHeight{0};
 
   // The clipped rectangle of the image to be rendered
   SDL_Rect clipRect;

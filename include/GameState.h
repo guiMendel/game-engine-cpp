@@ -43,7 +43,7 @@ public:
   std::shared_ptr<GameObject> CreateObject(
       std::function<void(std::shared_ptr<GameObject>)> initializer, Args &&...args)
   {
-    std::shared_ptr<GameObject> object = make_shared<GameObject>(std::forward<Args>(args)...);
+    std::shared_ptr<GameObject> object = std::make_shared<GameObject>(std::forward<Args>(args)...);
 
     gameObjects[object->id] = object;
 

@@ -7,7 +7,7 @@
 using namespace std;
 using namespace Helper;
 
-void Sprite::Load(const string fileName, bool center)
+void Sprite::Load(const string fileName)
 {
   // Get texture from resource manager
   texture = &Resources::GetTexture(fileName);
@@ -16,36 +16,36 @@ void Sprite::Load(const string fileName, bool center)
   SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
 
   // Set the clip to the full image
-  SetClip(0, 0, width, height, center);
+  SetClip(0, 0, width, height);
 }
 
-void Sprite::SetClip(int x, int y, int width, int height, bool center)
+void Sprite::SetClip(int x, int y, int width, int height)
 {
   clipRect = {x, y, width, height};
-
-  // Center the object
-  if (center)
-    CenterObject();
 }
 
 void Sprite::Render(Vector2 position)
 {
+  // Offset coordinates if centered
+  if (centered)
+  {
+    position -= Vector2(GetScaledWidth() / 2, GetScaledHeight() / 2);
+  }
+
   // Get the real position
   Vector2 offsetPosition = Camera::GetInstance().WorldToScreen(position);
 
   // Get destination rectangle
   SDL_Rect destinationRect{
-      (int)offsetPosition.x, (int)offsetPosition.y, clipRect.w, clipRect.h};
+      (int)offsetPosition.x, (int)offsetPosition.y, GetScaledWidth(), GetScaledHeight()};
 
   // Put the texture in the renderer
-  SDL_RenderCopy(
+  SDL_RenderCopyEx(
       Game::GetInstance().GetRenderer(),
       texture,
       &clipRect,
-      &destinationRect);
-}
-
-void Sprite::CenterObject()
-{
-  offset = Vector2(-clipRect.w / 2, -clipRect.h / 2);
+      &destinationRect,
+      Helper::RadiansToDegrees(-gameObject.rotation),
+      nullptr,
+      SDL_FLIP_NONE);
 }

@@ -1,6 +1,7 @@
 #ifndef __HELPER__
 #define __HELPER__
 
+#include <cmath>
 #include <stdexcept>
 #include <vector>
 #include <memory>
@@ -56,6 +57,9 @@ namespace Helper
 
     return items;
   }
+
+  [[maybe_unused]] static float RadiansToDegrees(float radians) { return radians / 180 * M_PI; }
+  [[maybe_unused]] static float DegreesToRadians(float degrees) { return degrees * 180 / M_PI; }
 
 }
 
