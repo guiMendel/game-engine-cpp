@@ -16,6 +16,9 @@ public:
   // Movement speed
   const float speed = 10.0;
 
+  // Rotation speed, in radians
+  const float rotationSpeed = 0.2;
+
   Alien(GameObject &associatedObject, int minionCount) : Component(associatedObject), minionCount(minionCount)
   {
   }

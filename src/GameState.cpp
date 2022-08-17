@@ -47,7 +47,7 @@ shared_ptr<GameObject> CreateAlienObject()
   alien->AddComponent<Sprite>("./assets/image/alien.png", RenderLayer::Enemies);
 
   // Get alien behavior
-  alien->AddComponent<Alien>(4);
+  alien->AddComponent<Alien>(6);
 
   // Get movement
   alien->AddComponent<Movement>(175);
@@ -89,8 +89,6 @@ void GameState::Update(float deltaTime)
 
     // If is dead, delete
     gameObjects.erase(objectPair.first);
-
-    printf("Objects size: was %d, is now %d\n", gameObjects.size() + 1, gameObjects.size());
   }
 }
 

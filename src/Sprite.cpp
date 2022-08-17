@@ -45,7 +45,7 @@ void Sprite::Render(Vector2 position)
       texture,
       &clipRect,
       &destinationRect,
-      Helper::RadiansToDegrees(-gameObject.rotation),
+      Helper::RadiansToDegrees(gameObject.rotation),
       nullptr,
       SDL_FLIP_NONE);
 }

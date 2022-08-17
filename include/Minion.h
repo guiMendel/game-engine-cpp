@@ -19,6 +19,9 @@ public:
   // Limits to radius floating
   const float radiusLimits[2]{90, 160};
 
+  // Limits to scale
+  const float scaleLimits[2]{0.75, 1.25};
+
   // Projectile speed
   const float projectileSpeed{300};
 

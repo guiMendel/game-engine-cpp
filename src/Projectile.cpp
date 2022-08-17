@@ -1,5 +1,8 @@
 #include "Projectile.h"
 #include <cmath>
+#include <string>
+
+using namespace std;
 
 Projectile::Projectile(
     GameObject &associatedObject,
@@ -7,10 +10,12 @@ Projectile::Projectile(
     float speed,
     float timeToLive,
     float damage,
-    std::weak_ptr<GameObject> target,
+    weak_ptr<GameObject> target,
     float chaseSteering)
     : Component(associatedObject), speed(Vector2::Angled(startingAngle, speed)), angle(startingAngle), timeToLive(timeToLive), damage(damage), targetWeak(target), chaseSteering(chaseSteering)
 {
+  // Adjust rotation
+  gameObject.rotation = this->speed.Angle();
 }
 
 void Projectile::Update(float deltaTime)
@@ -46,4 +51,7 @@ void Projectile::Chase()
 
   // Steer
   speed = speed.Rotated(steerAngle);
+
+  // Adjust rotation
+  gameObject.rotation = speed.Angle();
 }

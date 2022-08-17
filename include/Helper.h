@@ -58,8 +58,36 @@ namespace Helper
     return items;
   }
 
-  [[maybe_unused]] static float RadiansToDegrees(float radians) { return radians / 180 * M_PI; }
-  [[maybe_unused]] static float DegreesToRadians(float degrees) { return degrees * 180 / M_PI; }
+  // Converts radians to degrees
+  [[maybe_unused]] static float RadiansToDegrees(float radians) { return radians * 180 / M_PI; }
+  // Converts degrees to radians
+  [[maybe_unused]] static float DegreesToRadians(float degrees) { return degrees / 180 * M_PI; }
+  // Converts radians to degrees
+  [[maybe_unused]] static double RadiansToDegrees(double radians) { return radians * 180 / M_PI; }
+  // Converts degrees to radians
+  [[maybe_unused]] static double DegreesToRadians(double degrees) { return degrees / 180 * M_PI; }
+
+  // Gets a random number in the range [min, max[
+  [[maybe_unused]] static int RandomRange(int min, int max) { return min + rand() % (max - min); }
+  // Gets a random number in the range [min, max[
+  [[maybe_unused]] static float RandomRange(float min, float max)
+  {
+    return min + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (max - min)));
+  }
+
+  // Gets a random valid index of the array
+  template <typename T>
+  [[maybe_unused]] static int SampleIndex(T array[]) { return RandomRange(0, sizeof(array) / sizeof(T)); }
+  // Gets a random valid index of the vector
+  template <typename T>
+  [[maybe_unused]] static int SampleIndex(std::vector<T> array) { return RandomRange(0, array.size()); }
+
+  // Gets a random member from the array
+  template <typename T>
+  [[maybe_unused]] static int Sample(T array[]) { return array[SampleIndex(array)]; }
+  // Gets a random member from the vector
+  template <typename T>
+  [[maybe_unused]] static int Sample(std::vector<T> array) { return array[SampleIndex(array)]; }
 
 }
 

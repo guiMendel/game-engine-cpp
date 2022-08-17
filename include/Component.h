@@ -41,5 +41,9 @@ protected:
 };
 
 #include "GameObject.h"
+#include "Helper.h"
+
+// We don't care it's recommended against doing this — we only want our lives to be easier
+using namespace Helper;
 
 #endif

@@ -13,10 +13,6 @@
 #include "Vector2.h"
 #include "Helper.h"
 
-#define SAMPLE(vector) vector[SAMPLE_INDEX(vector)]
-#define SAMPLE_INDEX(vector) RANDOM_RANGE(0, vector.size())
-#define RANDOM_RANGE(min, max) rand() % (max - min) + min
-
 class GameObject
 {
 public:
@@ -101,7 +97,7 @@ public:
   Vector2 scale{1, 1};
 
   // Object's rotation, in radians
-  float rotation{0};
+  double rotation{0};
 
   // Temporary method to play sound & destroy after done playing
   void DestroyAfterSoundPlay();

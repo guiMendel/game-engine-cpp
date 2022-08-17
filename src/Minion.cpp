@@ -9,6 +9,10 @@ Minion::Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPoint
 {
   // Initialize radius
   orbitRadius = (rand() % (int)floor(radiusLimits[1] - radiusLimits[0])) + radiusLimits[0];
+
+  // Set scale
+  auto scale = RandomRange(scaleLimits[0], scaleLimits[1]);
+  gameObject.scale = {scale, scale};
 }
 
 void Minion::Update(float deltaTime)
@@ -27,6 +31,9 @@ void Minion::Update(float deltaTime)
 
   // Update radius position
   orbitRadius += radiusFloatSpeed * floatDirection;
+
+  // Add rotation so that bottom part of sprite faces host
+  gameObject.rotation = -(Vector2::AngleBetween(gameObject.position, hostLocked->position) - M_PI / 2);
 
   if (orbitRadius <= radiusLimits[0])
   {

@@ -51,6 +51,9 @@ void Alien::Update([[maybe_unused]] float deltaTime)
   // Link mouse buttons to actions
   checkButtonLinkedToAction(LEFT_MOUSE_BUTTON, Action::Type::shoot);
   checkButtonLinkedToAction(RIGHT_MOUSE_BUTTON, Action::Type::move);
+
+  // Rotate slowly
+  gameObject.rotation += rotationSpeed * deltaTime;
 }
 
 void Alien::Render()
@@ -117,7 +120,7 @@ shared_ptr<GameObject> SampleMinion(vector<weak_ptr<GameObject>> &minions)
   while (!minion && minions.empty() == false)
   {
     // Get some valid index
-    int minionIndex = SAMPLE_INDEX(minions);
+    int minionIndex = SampleIndex(minions);
 
     // Try to lock it
     if (!(minion = minions[minionIndex].lock()))
