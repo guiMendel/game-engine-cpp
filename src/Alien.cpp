@@ -9,7 +9,7 @@
 using namespace std;
 
 // Helper functions
-shared_ptr<GameObject> SampleMinion(vector<weak_ptr<GameObject>> &minions);
+shared_ptr<GameObject> NearestMinion(vector<weak_ptr<GameObject>> &minions, Vector2 position);
 
 void Alien::Start()
 {
@@ -98,37 +98,55 @@ void Alien::ExecuteActions()
   // If shoot action
   else if (currentAction.type == Action::Type::shoot)
   {
-    // Pick random minion
-    auto minion = SampleMinion(minions);
-
-    // Check that it's valid
-    if (minion)
+    // Ignore if no minions
+    if (!minions.empty())
     {
-      // Tell it to shoot at the target
-      minion->GetComponent<Minion>()->Shoot(currentAction.position);
+      // Pick nearest minion
+      auto minion = NearestMinion(minions, currentAction.position);
+
+      // Check that it's valid
+      if (minion)
+      {
+        // Tell it to shoot at the target
+        minion->GetComponent<Minion>()->Shoot(currentAction.position);
+      }
     }
 
     AdvanceActionQueue();
   }
 }
 
-shared_ptr<GameObject> SampleMinion(vector<weak_ptr<GameObject>> &minions)
+shared_ptr<GameObject> NearestMinion(vector<weak_ptr<GameObject>> &minions, Vector2 position)
 {
-  shared_ptr<GameObject> minion;
+  // Best distance so far
+  float bestDistance = -1;
 
-  // Until either we get a valid minion OR we run out of minions
-  while (!minion && minions.empty() == false)
+  shared_ptr<GameObject> bestMinion;
+
+  // For each minion
+  auto minionIterator = minions.begin();
+
+  while (minionIterator != minions.end())
   {
-    // Get some valid index
-    int minionIndex = SampleIndex(minions);
-
     // Try to lock it
-    if (!(minion = minions[minionIndex].lock()))
+    if (auto minion = minionIterator->lock())
     {
-      // If failed, remove this minion
-      minions.erase(minions.begin() + minionIndex);
+      // Get it's distance
+      float distance = Vector2::Distance(minion->position, position);
+
+      // If it's better
+      if (bestDistance == -1 || distance < bestDistance)
+      {
+        bestDistance = distance;
+        bestMinion = minion;
+      }
+
+      minionIterator++;
     }
+    // If failed, it's gone, so forget it
+    else
+      minionIterator = minions.erase(minionIterator);
   }
 
-  return minion;
+  return bestMinion;
 }
