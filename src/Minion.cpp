@@ -2,6 +2,7 @@
 #include "Projectile.h"
 #include "Game.h"
 #include "Sprite.h"
+#include "SpriteAnimator.h"
 #include <math.h>
 
 Minion::Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPointer, float startingArc)
@@ -66,7 +67,10 @@ void Minion::Shoot(Vector2 target)
           [this, targetAngle](std::shared_ptr<GameObject> projectile)
           {
     // Add sprite
-    projectile->AddComponent<Sprite>("./assets/image/minionbullet1.png", RenderLayer::Projectiles);
+    auto sprite = projectile->AddComponent<Sprite>("./assets/image/minionbullet2.png", RenderLayer::Projectiles);
+
+    // Add animation
+    projectile->AddComponent<SpriteAnimator>(sprite, Vector2(33, 12), 0.2);
     
     // Add projectile behavior
     projectile->AddComponent<Projectile>(

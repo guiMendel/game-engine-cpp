@@ -78,7 +78,7 @@ shared_ptr<GameObject> GameObject::GetShared() const
   return gameState.GetPointer(this).lock();
 }
 
-auto GameObject::GetComponent(const Component *componentPointer) -> shared_ptr<Component> const
+auto GameObject::GetComponent(const Component *componentPointer) const -> shared_ptr<Component>
 {
   auto componentIterator = find_if(
       components.begin(), components.end(),

@@ -30,6 +30,8 @@ public:
   // Returns this component's shared pointer
   std::shared_ptr<Component> GetShared() const;
 
+  bool IsEnabled() const { return enabled; }
+
 protected:
   virtual void Start() {}
 
@@ -38,6 +40,9 @@ protected:
 
   // Reference to input manager
   InputManager &inputManager;
+
+  // Whether the component is active
+  bool enabled{true};
 };
 
 #include "GameObject.h"

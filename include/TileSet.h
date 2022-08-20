@@ -1,6 +1,7 @@
 #ifndef __TILESET__
 #define __TILESET__
 
+#include <memory>
 #include <string>
 #include "GameObject.h"
 #include "Sprite.h"
@@ -28,7 +29,7 @@ private:
   GameObject tileSetObject;
 
   // The tileset sprite reference
-  Sprite *tileSet;
+  std::weak_ptr<Sprite> tileSpriteWeak;
 
   // The amount of rows in the tileset
   int rows;

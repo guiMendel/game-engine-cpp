@@ -10,21 +10,27 @@ TileSet::TileSet(int tileWidth, int tileHeight, std::string filename) : tileWidt
 {
   // Add the sprite component
   // Don't give it a render layer. It must only be directly rendered by the tilemap method
-  tileSet = &tileSetObject.AddComponent<Sprite>(filename, RenderLayer::None);
+  auto tileSprite = tileSetObject.AddComponent<Sprite>(filename, RenderLayer::None);
+
+  tileSpriteWeak = tileSprite;
 
   // Avoid awkward situations
   Assert(tileWidth > 0 && tileHeight > 0, "Tile dimensions must be greater than zero");
-  Assert(tileSet->GetHeight() > 0 && tileSet->GetWidth() > 0, "Tileset sprite is invalid (dimensions not greater than 0)");
+  Assert(tileSprite->GetHeight() > 0 && tileSprite->GetWidth() > 0, "Tileset sprite is invalid (dimensions not greater than 0)");
 
   // Get the rows & columns
-  rows = tileSet->GetHeight() / tileHeight;
-  columns = tileSet->GetWidth() / tileWidth;
+  rows = tileSprite->GetHeight() / tileHeight;
+  columns = tileSprite->GetWidth() / tileWidth;
 }
 
 void TileSet::RenderTile(unsigned index, Vector2 position)
 {
   // Ensure valid index
   Assert((int)index < rows * columns, "Invalid index");
+
+  auto tileSprite = tileSpriteWeak.lock();
+
+  Assert((bool)tileSprite, "Failed to retrieve tileset sprite");
 
   // Get to which row this tile belongs
   int tileRow = index / columns;
@@ -33,8 +39,8 @@ void TileSet::RenderTile(unsigned index, Vector2 position)
   int tileColumn = index % columns;
 
   // Set the sprite's clip to the tile
-  tileSet->SetClip(tileColumn * tileWidth, tileRow * tileHeight, tileWidth, tileHeight);
+  tileSprite->SetClip(tileColumn * tileWidth, tileRow * tileHeight, tileWidth, tileHeight);
 
   // Render it to the correct position
-  tileSet->Render(position);
+  tileSprite->Render(position);
 }

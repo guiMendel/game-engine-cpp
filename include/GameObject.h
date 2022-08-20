@@ -30,7 +30,10 @@ public:
   void Update(float deltaTime)
   {
     for (const auto &component : components)
-      component->Update(deltaTime);
+    {
+      if (component->IsEnabled())
+        component->Update(deltaTime);
+    }
   }
 
   // Whether is dead
@@ -41,7 +44,7 @@ public:
 
   // Adds a new component
   template <class T, typename... Args>
-  T &AddComponent(Args &&...args)
+  auto AddComponent(Args &&...args) -> std::shared_ptr<T>
   {
     auto component = std::make_shared<T>(*this, std::forward<Args>(args)...);
 
@@ -51,7 +54,7 @@ public:
     if (started)
       component->StartAndRegisterLayer();
 
-    return dynamic_cast<T &>(*components.back());
+    return component;
   }
 
   // Removes an existing component
@@ -60,7 +63,7 @@ public:
   // Gets pointer to a component of the given type
   // Needs to be in header file so the compiler knows how to build the necessary methods
   template <class T>
-  auto GetComponent() const -> T *
+  auto GetComponent() const -> std::shared_ptr<T>
   {
     // Find the position of the component that is of the requested type
     auto componentIterator = std::find_if(
@@ -69,18 +72,18 @@ public:
 
     // Detect if not present
     if (componentIterator == components.end())
-      return nullptr;
+      return std::shared_ptr<T>();
 
-    return dynamic_cast<T *>(componentIterator->get());
+    return std::dynamic_pointer_cast<T>(*componentIterator);
   }
 
   // Like GetComponent, but raises if it's not present
   template <class T>
-  auto RequireComponent() const -> T *
+  auto RequireComponent() const -> std::shared_ptr<T>
   {
     auto component = GetComponent<T>();
 
-    if (component == nullptr)
+    if (!component)
     {
       throw std::runtime_error(std::string("Required component was not found.\nRequired component typeid name: ") + typeid(T).name());
     }
@@ -88,7 +91,7 @@ public:
     return component;
   }
 
-  auto GetComponent(const Component *componentPointer) -> std::shared_ptr<Component> const;
+  auto GetComponent(const Component *componentPointer) const -> std::shared_ptr<Component>;
 
   // The rectangle that specifies where this object exists in game space
   Vector2 position;

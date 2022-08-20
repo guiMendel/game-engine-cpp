@@ -112,7 +112,8 @@ void GameState::Render()
       if (auto component = componentIterator->lock())
       {
         // Render it
-        component->Render();
+        if (component->IsEnabled())
+          component->Render();
 
         // Advance
         componentIterator++;
