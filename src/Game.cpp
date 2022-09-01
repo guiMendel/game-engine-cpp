@@ -8,6 +8,7 @@
 #include "Helper.h"
 #include "Resources.h"
 #include "InputManager.h"
+#include "MainState.h"
 
 using namespace std;
 using namespace Helper;
@@ -145,7 +146,7 @@ Game &Game::GetInstance()
     gameInstance.reset(new Game("GuilhermeMendel-170143970", screenWidth, screenHeight));
 
     // Set a starting state
-    gameInstance->state = make_unique<GameState>();
+    gameInstance->state = gameInstance->GetInitialState();
   }
 
   // Return the instance
@@ -193,8 +194,13 @@ GameState &Game::GetState() const
 {
   if (!state)
   {
-    throw std::runtime_error("No game state defined");
+    throw runtime_error("No game state defined");
   }
 
   return *state;
+}
+
+unique_ptr<GameState> Game::GetInitialState() const
+{
+  return make_unique<MainState>();
 }

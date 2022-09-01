@@ -70,7 +70,7 @@ void Minion::Shoot(Vector2 target)
     auto sprite = projectile->AddComponent<Sprite>("./assets/image/minionbullet2.png", RenderLayer::Projectiles);
 
     // Add animation
-    projectile->AddComponent<SpriteAnimator>(sprite, Vector2(33, 12), 0.2);
+    projectile->AddComponent<SpriteAnimator>(sprite, Vector2(33, 12), 0.2f);
     
     // Add projectile behavior
     projectile->AddComponent<Projectile>(

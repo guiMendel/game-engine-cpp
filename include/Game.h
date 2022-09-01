@@ -39,7 +39,7 @@ public:
   float GetDeltaTime() const { return deltaTime; }
 
   // Creates and returns the initial state
-  std::unique_ptr<GameState> &&GetInitialState() const;
+  std::unique_ptr<GameState> GetInitialState() const;
 
   // Explicit destructor
   ~Game();

@@ -7,6 +7,10 @@
 #include <string>
 #include <memory>
 
+#define LOCK(weak, shared)   \
+  auto shared = weak.lock(); \
+  Assert(shared != nullptr, "Unexpectedly failed to lock shared pointer");
+
 class GameObject;
 
 class Component

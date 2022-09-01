@@ -16,7 +16,7 @@ public:
       float timeToLive,
       float damage,
       std::weak_ptr<GameObject> target = std::weak_ptr<GameObject>(),
-      float chaseSteering = 0.5);
+      float chaseSteering = 0.5f);
 
   RenderLayer GetRenderLayer() override { return RenderLayer::None; }
   

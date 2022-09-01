@@ -14,10 +14,10 @@ class Alien : public Component
 {
 public:
   // Movement speed
-  const float speed = 10.0;
+  const float speed = 10.0f;
 
   // Rotation speed, in radians
-  const float rotationSpeed = 0.2;
+  const float rotationSpeed = 0.2f;
 
   Alien(GameObject &associatedObject, int minionCount) : Component(associatedObject), minionCount(minionCount)
   {

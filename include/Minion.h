@@ -11,7 +11,7 @@ class Minion : public Component
 {
 public:
   // Speed at which to orbit the host alien, in radians
-  const float angularSpeed{0.5};
+  const float angularSpeed{0.5f};
 
   // Speed at which the radius changes
   const float radiusFloatSpeed{1};
@@ -20,7 +20,7 @@ public:
   const float radiusLimits[2]{90, 160};
 
   // Limits to scale
-  const float scaleLimits[2]{0.75, 1.25};
+  const float scaleLimits[2]{0.75f, 1.25f};
 
   // Projectile speed
   const float projectileSpeed{300};

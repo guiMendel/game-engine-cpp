@@ -1,3 +1,5 @@
+#include "PenguinCannon.h"
+#include "PenguinBody.h"
 #include "MainState.h"
 #include "CameraFollower.h"
 #include "Alien.h"
@@ -5,6 +7,30 @@
 #include "Health.h"
 
 using namespace std;
+
+auto PenguinBodyRecipe(shared_ptr<GameObject> penguinCannon) -> function<void(shared_ptr<GameObject>)>
+{
+  return [penguinCannon](shared_ptr<GameObject> penguin)
+  {
+    // Get sprite
+    penguin->AddComponent<Sprite>("./assets/image/penguin.png", RenderLayer::Background, false);
+
+    // Add movement
+    auto movement = penguin->AddComponent<Movement>(1.0f, PenguinBody::maxSpeed);
+
+    // Add behavior
+    auto penguinBody = penguin->AddComponent<PenguinBody>(penguinCannon, movement);
+  };
+}
+
+void PenguinCannonRecipe(shared_ptr<GameObject> penguin)
+{
+  // Get sprite
+  penguin->AddComponent<Sprite>("./assets/image/cubngun.png", RenderLayer::Background, false);
+
+  // Add behavior
+  penguin->AddComponent<PenguinCannon>();
+}
 
 void BackgroundRecipe(shared_ptr<GameObject> background)
 {
@@ -27,20 +53,20 @@ void TilemapRecipe(shared_ptr<GameObject> tilemap)
   tilemap->AddComponent<TileMap>("./assets/map/tileMap.txt", tileset, 1, RenderLayer::Foreground);
 }
 
-void AlienRecipe(shared_ptr<GameObject> alien)
-{
-  // Get alien sprite
-  alien->AddComponent<Sprite>("./assets/image/alien.png", RenderLayer::Enemies);
+// void AlienRecipe(shared_ptr<GameObject> alien)
+// {
+//   // Get alien sprite
+//   alien->AddComponent<Sprite>("./assets/image/alien.png", RenderLayer::Enemies);
 
-  // Get alien behavior
-  alien->AddComponent<Alien>(6);
+//   // Get alien behavior
+//   alien->AddComponent<Alien>(6);
 
-  // Get movement
-  alien->AddComponent<Movement>(175);
+//   // Get movement
+//   alien->AddComponent<Movement>(175);
 
-  // Get health
-  alien->AddComponent<Health>();
-}
+//   // Get health
+//   alien->AddComponent<Health>();
+// }
 
 void MainState::InitializeObjects()
 {
@@ -51,7 +77,11 @@ void MainState::InitializeObjects()
   CreateObject(TilemapRecipe);
 
   // Add an alien
-  CreateObject(AlienRecipe, Vector2(512, 300));
+  // CreateObject(AlienRecipe, Vector2(512, 300));
+
+  // Add penguins
+  auto penguinCannon = CreateObject(PenguinCannonRecipe);
+  CreateObject(PenguinBodyRecipe(penguinCannon));
 
   // Play music
   music.Play("./assets/music/main.mp3");

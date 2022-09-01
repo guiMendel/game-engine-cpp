@@ -12,7 +12,7 @@ class TileMap : public Component
 {
 public:
   // Defines the intensity of the parallax effect. 0 means no effect
-  const float parallaxIntensity = 0.75;
+  const float parallaxIntensity = 0.75f;
 
   // Default constructor. onlyLayer allows to only render a single tilemap layer, but if set to -1 render all of them
   TileMap(
