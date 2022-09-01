@@ -108,7 +108,7 @@ public:
   // Returns a vector rotated by the given angle, in radians
   Vector2 Rotated(float angle) const
   {
-    return Vector2(x * cos(angle) - y * sin(angle), y * cos(angle) - x * sin(angle));
+    return Vector2(x * cos(-angle) - y * sin(-angle), y * cos(-angle) - x * sin(-angle));
   }
 
   explicit operator bool() const { return x != 0 || y != 0; }

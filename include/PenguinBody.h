@@ -10,6 +10,7 @@ class PenguinBody : public Component
 {
 public:
   // From 0 to 1, per second
+  static const float proportionAcceleration;
   static const float acceleration;
   static const float maxSpeed;
 

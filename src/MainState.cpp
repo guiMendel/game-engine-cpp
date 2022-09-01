@@ -13,10 +13,10 @@ auto PenguinBodyRecipe(shared_ptr<GameObject> penguinCannon) -> function<void(sh
   return [penguinCannon](shared_ptr<GameObject> penguin)
   {
     // Get sprite
-    penguin->AddComponent<Sprite>("./assets/image/penguin.png", RenderLayer::Background, false);
+    penguin->AddComponent<Sprite>("./assets/image/penguin.png", RenderLayer::Player);
 
     // Add movement
-    auto movement = penguin->AddComponent<Movement>(1.0f, PenguinBody::maxSpeed);
+    auto movement = penguin->AddComponent<Movement>(PenguinBody::acceleration, PenguinBody::maxSpeed);
 
     // Add behavior
     auto penguinBody = penguin->AddComponent<PenguinBody>(penguinCannon, movement);
@@ -26,7 +26,7 @@ auto PenguinBodyRecipe(shared_ptr<GameObject> penguinCannon) -> function<void(sh
 void PenguinCannonRecipe(shared_ptr<GameObject> penguin)
 {
   // Get sprite
-  penguin->AddComponent<Sprite>("./assets/image/cubngun.png", RenderLayer::Background, false);
+  penguin->AddComponent<Sprite>("./assets/image/cubngun.png", RenderLayer::Player);
 
   // Add behavior
   penguin->AddComponent<PenguinCannon>();

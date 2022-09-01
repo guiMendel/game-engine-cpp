@@ -4,11 +4,12 @@
 using namespace std;
 
 // INITIALIZATION
-const float PenguinBody::acceleration{0.2f};
-const float PenguinBody::maxSpeed{20.0f};
+const float PenguinBody::proportionAcceleration{10.0f};
+const float PenguinBody::acceleration{2.0f};
+const float PenguinBody::maxSpeed{30.0f};
 
 // In radians per second
-const float PenguinBody::rotationSpeed{35.0f};
+const float PenguinBody::rotationSpeed{M_PI / 3.0f};
 
 void PenguinBody::Update(float deltaTime)
 {
@@ -33,11 +34,11 @@ void PenguinBody::Accelerate(float deltaTime)
 
   // Gain speed with W
   if (inputManager.IsKeyDown(SDLK_w))
-    SetSpeedProportion(min(1.0f, speedProportion + deltaTime * acceleration));
+    SetSpeedProportion(min(maxSpeed, speedProportion + deltaTime * proportionAcceleration));
 
   // Lose speed with S
   else if (inputManager.IsKeyDown(SDLK_s))
-    SetSpeedProportion(max(0.0f, speedProportion - deltaTime * acceleration));
+    SetSpeedProportion(max(0.0f, speedProportion - deltaTime * proportionAcceleration));
 }
 
 void PenguinBody::Rotate(float deltaTime)
@@ -49,7 +50,7 @@ void PenguinBody::Rotate(float deltaTime)
   {
     LOCK(movementWeak, movement);
 
-    gameObject.rotation += deltaTime * rotationSpeed;
+    gameObject.rotation -= deltaTime * rotationSpeed;
     movement->Move(Vector2::Angled(gameObject.rotation, speedProportion));
   }
 
@@ -58,7 +59,7 @@ void PenguinBody::Rotate(float deltaTime)
   {
     LOCK(movementWeak, movement);
 
-    gameObject.rotation -= deltaTime * rotationSpeed;
+    gameObject.rotation += deltaTime * rotationSpeed;
     movement->Move(Vector2::Angled(gameObject.rotation, speedProportion));
   }
 }
