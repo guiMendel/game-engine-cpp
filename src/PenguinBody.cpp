@@ -4,12 +4,12 @@
 using namespace std;
 
 // INITIALIZATION
-const float PenguinBody::proportionAcceleration{10.0f};
-const float PenguinBody::acceleration{2.0f};
-const float PenguinBody::maxSpeed{30.0f};
+const float PenguinBody::proportionAcceleration{30.0f};
+const float PenguinBody::acceleration{1.0f};
+const float PenguinBody::maxSpeed{28.0f};
 
 // In radians per second
-const float PenguinBody::rotationSpeed{M_PI / 3.0f};
+const float PenguinBody::rotationSpeed{M_PI / 2.0f};
 
 void PenguinBody::Update(float deltaTime)
 {
