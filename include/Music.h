@@ -17,6 +17,12 @@ public:
   // Plays the given music (-1 loops forever)
   void Play(const int times = -1);
 
+  void Play(std::string filename, const int times = -1)
+  {
+    Load(filename);
+    Play(times);
+  }
+
   // Fades out the currently playing music. Thw fade out window is in ms
   void FadeOut(const int fadeWindow = 1500) { Mix_FadeOutMusic(fadeWindow); }
 

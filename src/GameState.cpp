@@ -6,62 +6,10 @@
 #include "TileMap.h"
 #include "TileSet.h"
 #include "Camera.h"
-#include "CameraFollower.h"
-#include "Alien.h"
-#include "Movement.h"
-#include "Health.h"
 #include <iostream>
 using namespace std;
 
-shared_ptr<GameObject> CreateBackgroundObject()
-{
-  auto background = make_shared<GameObject>();
-
-  // Get a background sprite
-  background->AddComponent<Sprite>("./assets/image/ocean.jpg", RenderLayer::Background, false);
-
-  // Make it follow the camera
-  background->AddComponent<CameraFollower>();
-
-  return background;
-}
-
-shared_ptr<GameObject> CreateTilemapObject()
-{
-  // Get the Tileset
-  auto tileset = make_shared<TileSet>(64, 64, "./assets/image/tileset.png");
-
-  auto tilemap = make_shared<GameObject>();
-
-  // Render first tilemap layer below
-  tilemap->AddComponent<TileMap>("./assets/map/tileMap.txt", tileset, 0, RenderLayer::Tilemap);
-
-  // Render second layer above
-  tilemap->AddComponent<TileMap>("./assets/map/tileMap.txt", tileset, 1, RenderLayer::Foreground);
-
-  return tilemap;
-}
-
-shared_ptr<GameObject> CreateAlienObject()
-{
-  auto alien = make_shared<GameObject>(Vector2(512, 300));
-
-  // Get alien sprite
-  alien->AddComponent<Sprite>("./assets/image/alien.png", RenderLayer::Enemies);
-
-  // Get alien behavior
-  alien->AddComponent<Alien>(6);
-
-  // Get movement
-  alien->AddComponent<Movement>(175);
-
-  // Get health
-  alien->AddComponent<Health>();
-
-  return alien;
-}
-
-GameState::GameState() : inputManager(InputManager::GetInstance()), music("./assets/music/main.mp3")
+GameState::GameState() : inputManager(InputManager::GetInstance())
 {
 }
 
@@ -161,22 +109,11 @@ void GameState::Start()
 {
   started = true;
 
+  // Load any assets
   LoadAssets();
 
-  // Add a background
-  auto background = CreateBackgroundObject();
-  gameObjects[background->id] = background;
-
-  // Add a tilemap
-  auto tilemap = CreateTilemapObject();
-  gameObjects[tilemap->id] = tilemap;
-
-  // Play the music
-  music.Play();
-
-  // Add an alien
-  auto alien = CreateAlienObject();
-  gameObjects[alien->id] = alien;
+  // Create the initial objects
+  InitializeObjects();
 
   for (auto &objectPair : gameObjects)
     objectPair.second->Start();

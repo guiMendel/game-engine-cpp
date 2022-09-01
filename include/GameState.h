@@ -16,7 +16,7 @@
 
 class Component;
 
-// Class that defines a state of the game
+// Abstract class that defines a state of the game
 class GameState
 {
 public:
@@ -62,22 +62,26 @@ public:
 
   void Start();
 
+  // Initializes the state's objects
+  virtual void InitializeObjects() = 0;
+
   // Supplies a valid unique identifier for a game object
   int SupplyObjectId() { return nextObjectId++; }
 
   void RegisterLayerRenderer(std::shared_ptr<Component> component);
 
-private:
+protected:
   // Reference to input manager
   InputManager &inputManager;
 
   Music music;
 
-  // Indicates that the game must exit
-  bool quitRequested{false};
-
   // Array with all of the state's objects
   std::unordered_map<int, std::shared_ptr<GameObject>> gameObjects;
+
+private:
+  // Indicates that the game must exit
+  bool quitRequested{false};
 
   // Whether the state has executed the start method
   bool started{false};
