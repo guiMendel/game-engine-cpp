@@ -29,7 +29,7 @@ void PenguinBody::Accelerate(float deltaTime)
     LOCK(movementWeak, movement);
 
     this->speedProportion = speed;
-    movement->Move(Vector2::Angled(gameObject.rotation, speed));
+    movement->Move(Vector2::Angled(gameObject.GetRotation(), speed));
   };
 
   // Gain speed with W
@@ -50,8 +50,8 @@ void PenguinBody::Rotate(float deltaTime)
   {
     LOCK(movementWeak, movement);
 
-    gameObject.rotation -= deltaTime * rotationSpeed;
-    movement->Move(Vector2::Angled(gameObject.rotation, speedProportion));
+    gameObject.localRotation -= deltaTime * rotationSpeed;
+    movement->Move(Vector2::Angled(gameObject.GetRotation(), speedProportion));
   }
 
   // Rotate right with D
@@ -59,7 +59,7 @@ void PenguinBody::Rotate(float deltaTime)
   {
     LOCK(movementWeak, movement);
 
-    gameObject.rotation += deltaTime * rotationSpeed;
-    movement->Move(Vector2::Angled(gameObject.rotation, speedProportion));
+    gameObject.localRotation += deltaTime * rotationSpeed;
+    movement->Move(Vector2::Angled(gameObject.GetRotation(), speedProportion));
   }
 }

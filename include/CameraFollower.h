@@ -14,7 +14,7 @@ public:
 
   void Update([[maybe_unused]] float deltaTime) override
   {
-    gameObject.position = -Camera::GetInstance().position;
+    gameObject.SetPosition(-Camera::GetInstance().position);
   }
 
   RenderLayer GetRenderLayer() override { return RenderLayer::None; }

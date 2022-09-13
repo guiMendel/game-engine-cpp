@@ -33,14 +33,14 @@ public:
 
   int GetHeight() const { return height; }
 
-  int GetScaledWidth() const { return clipRect.w * gameObject.scale.x; }
+  int GetScaledWidth() const { return clipRect.w * gameObject.localScale.x; }
 
-  int GetScaledHeight() const { return clipRect.h * gameObject.scale.y; }
+  int GetScaledHeight() const { return clipRect.h * gameObject.localScale.y; }
 
   bool IsLoaded() const { return texture != nullptr; }
 
   // Renders the sprite using the associated object's position
-  void Render() override { Render(gameObject.position + offset); }
+  void Render() override { Render(gameObject.GetPosition() + offset); }
 
   // Renders the sprite to the provided position, ignoring the associated object's position
   void Render(Vector2 position);

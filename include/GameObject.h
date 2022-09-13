@@ -20,11 +20,7 @@ public:
   GameObject();
 
   // With dimensions
-  GameObject(Vector2 coordinates);
-
-  // Base destructor
-  // Components are smart pointers, they free themselves
-  ~GameObject() { components.clear(); }
+  GameObject(Vector2 coordinates, std::shared_ptr<GameObject> parent = nullptr);
 
   // Called once per frame
   void Update(float deltaTime)
@@ -93,14 +89,28 @@ public:
 
   auto GetComponent(const Component *componentPointer) const -> std::shared_ptr<Component>;
 
-  // The rectangle that specifies where this object exists in game space
-  Vector2 position;
+  // === ABSOLUTE VALUES
+
+  // Where this object exists in game space, in absolute coordinates
+  Vector2 GetPosition() const { return parent == nullptr ? localPosition : parent->GetPosition() + localPosition; }
+  void SetPosition(const Vector2 newPosition) { localPosition = newPosition - (parent == nullptr ? Vector2::Zero() : parent->GetPosition()); }
+
+  // Absolute scale of the object
+  Vector2 GetScale() const { return parent == nullptr ? localScale : parent->GetScale() + localScale; }
+  void SetScale(const Vector2 newScale) { localScale = newScale - (parent == nullptr ? Vector2::Zero() : parent->GetScale()); }
+
+  // Absolute rotation in radians
+  double GetRotation() const { return parent == nullptr ? localRotation : parent->GetRotation() + localRotation; }
+  void SetRotation(const double newRotation) { localRotation = newRotation - (parent == nullptr ? 0.0 : parent->GetRotation()); }
+
+  // Where this object exists in game space, relative to it's parent's position
+  Vector2 localPosition;
 
   // Scale of the object
-  Vector2 scale{1, 1};
+  Vector2 localScale{1, 1};
 
   // Object's rotation, in radians
-  double rotation{0};
+  double localRotation{0};
 
   // Temporary method to play sound & destroy after done playing
   void DestroyAfterSoundPlay();
@@ -113,6 +123,9 @@ public:
 
   // Object's unique identifier
   const int id;
+
+  // Parent object
+  std::shared_ptr<GameObject> parent;
 
 private:
   // Vector with all components of this object

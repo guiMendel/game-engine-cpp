@@ -11,8 +11,12 @@ GameObject::GameObject() : id(Game::GetInstance().GetState().SupplyObjectId())
 }
 
 // With dimensions
-GameObject::GameObject(Vector2 coordinates)
-    : position(coordinates), id(Game::GetInstance().GetState().SupplyObjectId()) {}
+GameObject::GameObject(Vector2 coordinates, std::shared_ptr<GameObject> parent)
+    : GameObject()
+{
+  SetPosition(coordinates);
+  this->parent = parent;
+}
 
 void GameObject::Start()
 {

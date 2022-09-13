@@ -15,7 +15,7 @@ Projectile::Projectile(
     : Component(associatedObject), speed(Vector2::Angled(startingAngle, speed)), angle(startingAngle), timeToLive(timeToLive), damage(damage), targetWeak(target), chaseSteering(chaseSteering)
 {
   // Adjust rotation
-  gameObject.rotation = this->speed.Angle();
+  gameObject.SetRotation(this->speed.Angle());
 }
 
 void Projectile::Update(float deltaTime)
@@ -32,7 +32,7 @@ void Projectile::Update(float deltaTime)
   Chase();
 
   // Move
-  gameObject.position += speed * deltaTime;
+  gameObject.localPosition += speed * deltaTime;
 }
 
 void Projectile::Chase()
@@ -44,7 +44,7 @@ void Projectile::Chase()
     return;
 
   // Get angle between projectile and target
-  float targetSteer = Vector2::AngleBetween(gameObject.position, target->position) - angle;
+  float targetSteer = Vector2::AngleBetween(gameObject.GetPosition(), target->GetPosition()) - angle;
 
   // Get angle to steer
   float steerAngle = std::abs(targetSteer) > std::abs(chaseSteering) ? chaseSteering : targetSteer;
@@ -53,5 +53,5 @@ void Projectile::Chase()
   speed = speed.Rotated(steerAngle);
 
   // Adjust rotation
-  gameObject.rotation = speed.Angle();
+  gameObject.SetRotation(speed.Angle());
 }

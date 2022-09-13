@@ -11,6 +11,10 @@
   auto shared = weak.lock(); \
   Assert(shared != nullptr, "Unexpectedly failed to lock shared pointer");
 
+#define LOCK_MESSAGE(weak, shared, message)   \
+  auto shared = weak.lock(); \
+  Assert(shared != nullptr, message);
+
 class GameObject;
 
 class Component

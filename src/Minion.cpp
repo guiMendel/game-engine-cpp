@@ -13,7 +13,7 @@ Minion::Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPoint
 
   // Set scale
   auto scale = RandomRange(scaleLimits[0], scaleLimits[1]);
-  gameObject.scale = {scale, scale};
+  gameObject.localScale = {scale, scale};
 }
 
 void Minion::Update(float deltaTime)
@@ -34,7 +34,7 @@ void Minion::Update(float deltaTime)
   orbitRadius += radiusFloatSpeed * floatDirection;
 
   // Add rotation so that bottom part of sprite faces host
-  gameObject.rotation = -(Vector2::AngleBetween(gameObject.position, hostLocked->position) - M_PI / 2);
+  gameObject.localRotation = -(Vector2::AngleBetween(gameObject.GetPosition(), hostLocked->GetPosition()) - M_PI / 2);
 
   if (orbitRadius <= radiusLimits[0])
   {
@@ -52,13 +52,13 @@ void Minion::Update(float deltaTime)
   Vector2 radialPosition = Vector2::Right(orbitRadius).Rotated(arc);
 
   // Update position
-  gameObject.position = hostLocked->position + radialPosition;
+  gameObject.SetPosition(hostLocked->GetPosition() + radialPosition);
 }
 
 void Minion::Shoot(Vector2 target)
 {
   // Get angle to target
-  float targetAngle = Vector2::AngleBetween(gameObject.position, target);
+  float targetAngle = Vector2::AngleBetween(gameObject.GetPosition(), target);
 
   // Create the projectile
   Game::GetInstance()
@@ -75,5 +75,5 @@ void Minion::Shoot(Vector2 target)
     // Add projectile behavior
     projectile->AddComponent<Projectile>(
       targetAngle, projectileSpeed, projectileTimeToLive, projectileDamage); },
-          gameObject.position);
+          gameObject.GetPosition());
 }

@@ -53,7 +53,7 @@ void Alien::Update([[maybe_unused]] float deltaTime)
   checkButtonLinkedToAction(RIGHT_MOUSE_BUTTON, Action::Type::move);
 
   // Rotate slowly
-  gameObject.rotation += rotationSpeed * deltaTime;
+  gameObject.localRotation += rotationSpeed * deltaTime;
 }
 
 void Alien::Render()
@@ -132,7 +132,7 @@ shared_ptr<GameObject> NearestMinion(vector<weak_ptr<GameObject>> &minions, Vect
     if (auto minion = minionIterator->lock())
     {
       // Get it's distance
-      float distance = Vector2::Distance(minion->position, position);
+      float distance = Vector2::Distance(minion->GetPosition(), position);
 
       // If it's better
       if (bestDistance == -1 || distance < bestDistance)

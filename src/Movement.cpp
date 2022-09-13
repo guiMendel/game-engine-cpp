@@ -15,7 +15,7 @@ void Movement::Update(float deltaTime)
   if (!velocity)
     return;
 
-  gameObject.position += velocity * deltaTime;
+  gameObject.localPosition += velocity * deltaTime;
 }
 
 void Movement::Accelerate(float deltaTime)
@@ -48,10 +48,10 @@ void Movement::FollowTarget(float deltaTime)
     return;
 
   // Check if arrived
-  if (Vector2::SqrDistance(gameObject.position, targetPosition) < deltaTime * deltaTime * velocity.SqrMagnitude())
+  if (Vector2::SqrDistance(gameObject.GetPosition(), targetPosition) < deltaTime * deltaTime * velocity.SqrMagnitude())
   {
     followTarget = false;
-    gameObject.position = targetPosition;
+    gameObject.SetPosition(targetPosition);
     velocity = Vector2::Zero();
 
     if (targetReachCallback != nullptr)
@@ -61,7 +61,7 @@ void Movement::FollowTarget(float deltaTime)
   }
 
   // Get target angle
-  float targetAngle = Vector2::AngleBetween(gameObject.position, targetPosition);
+  float targetAngle = Vector2::AngleBetween(gameObject.GetPosition(), targetPosition);
 
   Move(Vector2::Right().Rotated(targetAngle));
 }
