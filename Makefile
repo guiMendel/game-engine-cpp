@@ -13,10 +13,10 @@ OBJECT_DIRECTORY = .\src\obj
 SOURCE_DIRECTORY = .\src
 
 # SDL Include Directory
-SDL_INCLUDE = -IC:\SDL2\include\SDL2
+SDL_INCLUDE = -IC:\TDM-GCC-32\sdl2\include\SDL2
 
 # SDL Library Directory
-SDL_LIBRARY = -LC:\SDL2\lib
+SDL_LIBRARY = -LC:\TDM-GCC-32\sdl2\lib
 
 # === ARGUMENTS ================================
 
