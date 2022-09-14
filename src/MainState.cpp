@@ -5,28 +5,26 @@
 #include "Alien.h"
 #include "Movement.h"
 #include "Health.h"
+#include <iostream>
 
 using namespace std;
 
-auto PenguinBodyRecipe(shared_ptr<GameObject> penguinCannon) -> function<void(shared_ptr<GameObject>)>
+void PenguinBodyRecipe(shared_ptr<GameObject> penguin)
 {
-  return [penguinCannon](shared_ptr<GameObject> penguin)
-  {
-    // Get sprite
-    penguin->AddComponent<Sprite>("./assets/image/penguin.png", RenderLayer::Player);
+  // Get sprite
+  penguin->AddComponent<Sprite>("./assets/image/penguin.png", RenderLayer::Player);
 
-    // Add movement
-    auto movement = penguin->AddComponent<Movement>(PenguinBody::acceleration, PenguinBody::maxSpeed);
+  // Add movement
+  auto movement = penguin->AddComponent<Movement>(PenguinBody::acceleration, PenguinBody::maxSpeed);
 
-    // Add behavior
-    auto penguinBody = penguin->AddComponent<PenguinBody>(penguinCannon, movement);
-  };
+  // Add behavior
+  auto penguinBody = penguin->AddComponent<PenguinBody>(movement);
 }
 
 void PenguinCannonRecipe(shared_ptr<GameObject> penguin)
 {
-  // Get sprite
-  penguin->AddComponent<Sprite>("./assets/image/cubngun.png", RenderLayer::Player);
+  // Get sprite (put it on render order 1 to show ahead)
+  penguin->AddComponent<Sprite>("./assets/image/cubngun.png", RenderLayer::Player, 1);
 
   // Add behavior
   penguin->AddComponent<PenguinCannon>();
@@ -35,7 +33,7 @@ void PenguinCannonRecipe(shared_ptr<GameObject> penguin)
 void BackgroundRecipe(shared_ptr<GameObject> background)
 {
   // Get a background sprite
-  background->AddComponent<Sprite>("./assets/image/ocean.jpg", RenderLayer::Background, false);
+  background->AddComponent<Sprite>("./assets/image/ocean.jpg", RenderLayer::Background, 0, false);
 
   // Make it follow the camera
   background->AddComponent<CameraFollower>();
@@ -80,8 +78,10 @@ void MainState::InitializeObjects()
   // CreateObject(AlienRecipe, Vector2(512, 300));
 
   // Add penguins
-  auto penguinCannon = CreateObject(PenguinCannonRecipe);
-  CreateObject(PenguinBodyRecipe(penguinCannon));
+  auto penguin = CreateObject(PenguinBodyRecipe);
+
+  // Add cannon as child
+  CreateObject(PenguinCannonRecipe, penguin->GetPosition(), penguin->GetRotation(), penguin);
 
   // Play music
   music.Play("./assets/music/main.mp3");

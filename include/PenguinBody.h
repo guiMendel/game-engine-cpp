@@ -17,8 +17,8 @@ public:
   // In radians per second
   static const float rotationSpeed;
 
-  PenguinBody(GameObject &associatedObject, std::weak_ptr<GameObject> cannonWeak, std::weak_ptr<Movement> movementWeak)
-      : Component(associatedObject), cannonWeak(cannonWeak), movementWeak(movementWeak) {}
+  PenguinBody(GameObject &associatedObject, std::weak_ptr<Movement> movementWeak)
+      : Component(associatedObject), movementWeak(movementWeak) {}
 
   RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
@@ -32,7 +32,6 @@ private:
   float speedProportion{0.0f};
 
   // Access facilitator
-  std::weak_ptr<GameObject> cannonWeak;
   std::weak_ptr<Movement> movementWeak;
 };
 

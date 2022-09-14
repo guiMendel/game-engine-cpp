@@ -9,11 +9,8 @@
 #include <iostream>
 using namespace std;
 
-GameState::GameState() : inputManager(InputManager::GetInstance())
-{
-}
-
-void GameState::LoadAssets()
+// Initialize root object
+GameState::GameState() : inputManager(InputManager::GetInstance()), rootObject(new GameObject(0))
 {
 }
 
@@ -35,11 +32,14 @@ void GameState::Update(float deltaTime)
   // Check for dead objects
   for (auto &objectPair : gameObjects)
   {
-    if (objectPair.second->DestroyRequested() == false)
-      continue;
-
     // If is dead, delete
-    gameObjects.erase(objectPair.first);
+    if (objectPair.second->DestroyRequested())
+    {
+      // Remove this object's reference from it's parent
+      objectPair.second->UnlinkParent();
+
+      gameObjects.erase(objectPair.first);
+    }
   }
 }
 
@@ -107,13 +107,16 @@ weak_ptr<GameObject> GameState::GetPointer(const GameObject *targetObject)
 
 void GameState::Start()
 {
-  started = true;
+  if (started)
+    return;
 
   // Load any assets
   LoadAssets();
 
   // Create the initial objects
   InitializeObjects();
+
+  started = true;
 
   for (auto &objectPair : gameObjects)
     objectPair.second->Start();
@@ -125,6 +128,20 @@ void GameState::RegisterLayerRenderer(shared_ptr<Component> component)
   if (!component)
     return;
 
+  // Get it's layer
+  auto &layer = layerStructure[component->GetRenderLayer()];
+
   // Add it's entry
-  layerStructure[component->GetRenderLayer()].emplace_back(component);
+  layer.emplace_back(component);
+
+  // Sort it
+  sort(layer.begin(), layer.end(), [](weak_ptr<Component> comp1Weak, weak_ptr<Component> comp2Weak)
+       { 
+        auto comp1 = comp1Weak.lock();
+        auto comp2 = comp2Weak.lock();
+
+        // Leave as is if any of them has been erased
+        if (comp1 == nullptr || comp2 == nullptr) return true;
+        
+        return comp1->GetRenderOrder() < comp2->GetRenderOrder(); });
 }

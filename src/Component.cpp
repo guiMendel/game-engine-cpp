@@ -6,10 +6,15 @@ using namespace std;
 
 void Component::StartAndRegisterLayer()
 {
+  if (started)
+    return;
+
   if (GetRenderLayer() != RenderLayer::None)
   {
     Game::GetInstance().GetState().RegisterLayerRenderer(GetShared());
   }
+
+  started = true;
 
   Start();
 }

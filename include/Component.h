@@ -11,8 +11,8 @@
   auto shared = weak.lock(); \
   Assert(shared != nullptr, "Unexpectedly failed to lock shared pointer");
 
-#define LOCK_MESSAGE(weak, shared, message)   \
-  auto shared = weak.lock(); \
+#define LOCK_MESSAGE(weak, shared, message) \
+  auto shared = weak.lock();                \
   Assert(shared != nullptr, message);
 
 class GameObject;
@@ -33,6 +33,9 @@ public:
   // If None, then it's Render method will never be called
   virtual RenderLayer GetRenderLayer() = 0;
 
+  // The order in which to render this component in it's layer (higher numbers are shown on top)
+  virtual int GetRenderOrder() { return 0; }
+
   void StartAndRegisterLayer();
 
   // Returns this component's shared pointer
@@ -51,6 +54,11 @@ protected:
 
   // Whether the component is active
   bool enabled{true};
+  
+  private:
+
+  // Whether StartAndRegisterLayer has been called already
+  bool started{false};
 };
 
 #include "GameObject.h"

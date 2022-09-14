@@ -28,9 +28,6 @@ public:
   // Whether the game should exit
   bool QuitRequested() { return quitRequested; }
 
-  // Preloads all the assets so that they are ready when required
-  void LoadAssets();
-
   void Update(float deltaTime);
 
   void Render();
@@ -45,17 +42,11 @@ public:
   {
     std::shared_ptr<GameObject> object = std::make_shared<GameObject>(std::forward<Args>(args)...);
 
-    gameObjects[object->id] = object;
-
     // Initialize it
     if (initializer)
       initializer(object);
 
-    // Call it's start method
-    if (started)
-      object->Start();
-
-    return object;
+    return AddObject(object);
   }
 
   std::weak_ptr<GameObject> GetPointer(const GameObject *gameObject);
@@ -65,10 +56,15 @@ public:
   // Initializes the state's objects
   virtual void InitializeObjects() = 0;
 
+  // Preloads all the assets so that they are ready when required
+  virtual void LoadAssets() {}
+
   // Supplies a valid unique identifier for a game object
   int SupplyObjectId() { return nextObjectId++; }
 
   void RegisterLayerRenderer(std::shared_ptr<Component> component);
+
+  std::shared_ptr<GameObject> GetRootObject() { return rootObject; }
 
 protected:
   // Reference to input manager
@@ -79,6 +75,9 @@ protected:
   // Array with all of the state's objects
   std::unordered_map<int, std::shared_ptr<GameObject>> gameObjects;
 
+  // Root object reference
+  std::shared_ptr<GameObject> rootObject;
+
 private:
   // Indicates that the game must exit
   bool quitRequested{false};
@@ -87,7 +86,7 @@ private:
   bool started{false};
 
   // ID counter for game objects
-  int nextObjectId{0};
+  int nextObjectId{1};
 
   // Structure that maps each component that renders to it's corresponding render layer
   std::unordered_map<RenderLayer, std::vector<std::weak_ptr<Component>>>

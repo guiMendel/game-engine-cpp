@@ -14,11 +14,11 @@ public:
   // Since we are using unique ptrs, no need to define destructor
 
   // Default constructor
-  Sprite(GameObject &associatedObject, RenderLayer renderLayer = RenderLayer::Default, bool centerObject = true)
-      : Component(associatedObject), centered(centerObject), renderLayer(renderLayer) {}
+  Sprite(GameObject &associatedObject, RenderLayer renderLayer = RenderLayer::Default, int renderOrder = 0, bool centerObject = true)
+      : Component(associatedObject), centered(centerObject), renderLayer(renderLayer), renderOrder(renderOrder) {}
 
   // Constructor with image file name
-  Sprite(GameObject &associatedObject, const std::string fileName, RenderLayer renderLayer = RenderLayer::Default, bool centerObject = true) : Sprite(associatedObject, renderLayer, centerObject)
+  Sprite(GameObject &associatedObject, const std::string fileName, RenderLayer renderLayer = RenderLayer::Default, int renderOrder = 0, bool centerObject = true) : Sprite(associatedObject, renderLayer, renderOrder, centerObject)
   {
     Load(fileName);
   }
@@ -55,6 +55,8 @@ public:
 
   RenderLayer GetRenderLayer() override { return renderLayer; }
 
+  int GetRenderOrder() override { return renderOrder; }
+
 private:
   // The loaded texture
   SDL_Texture *texture{nullptr};
@@ -70,6 +72,9 @@ private:
 
   // The sprite's layer
   RenderLayer renderLayer{RenderLayer::Default};
+
+  // The sprite's render order
+  int renderOrder{0};
 };
 
 #endif

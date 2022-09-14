@@ -2,24 +2,40 @@
 #include "GameObject.h"
 #include "Sound.h"
 #include "Game.h"
+#include <iostream>
 
 using namespace std;
 
-// Base constructor
-GameObject::GameObject() : id(Game::GetInstance().GetState().SupplyObjectId())
-{
-}
+// Private constructor
+GameObject::GameObject(int id) : id(id) {}
 
 // With dimensions
-GameObject::GameObject(Vector2 coordinates, std::shared_ptr<GameObject> parent)
-    : GameObject()
+GameObject::GameObject(Vector2 coordinates, double rotation, std::shared_ptr<GameObject> parent)
+    : GameObject(Game::GetInstance().GetState().SupplyObjectId())
 {
+  // Only add a parent if not the root object
+  if (IsRoot() == false)
+  {
+    // If no parent, add root as parent
+    if (parent == nullptr)
+      parent = Game::GetInstance().GetState().GetRootObject();
+
+    // Add reference to parent
+    this->weakParent = parent;
+
+    // Give parent a reference to self
+    parent->children[id] = GetShared();
+  }
+
   SetPosition(coordinates);
-  this->parent = parent;
+  SetRotation(rotation);
 }
 
 void GameObject::Start()
 {
+  if (started)
+    return;
+
   started = true;
 
   for (auto component : components)
@@ -77,9 +93,7 @@ void GameObject::DestroyAfterSoundPlay()
 
 shared_ptr<GameObject> GameObject::GetShared() const
 {
-  auto &gameState = Game::GetInstance().GetState();
-
-  return gameState.GetPointer(this).lock();
+  return Game::GetInstance().GetState().GetPointer(this).lock();
 }
 
 auto GameObject::GetComponent(const Component *componentPointer) const -> shared_ptr<Component>
@@ -93,4 +107,87 @@ auto GameObject::GetComponent(const Component *componentPointer) const -> shared
     return shared_ptr<Component>();
 
   return *componentIterator;
+}
+
+std::shared_ptr<GameObject> GameObject::InternalGetParent() const
+{
+  // Ensure not root
+  Assert(IsRoot() == false, "Getting parent is forbidden on root object");
+
+  if (IsRoot())
+    return nullptr;
+
+  // Ensure the parent is there
+  Assert(weakParent.expired() == false, "GameObject unexpectedly failed to retrieve parent object");
+
+  return weakParent.lock();
+}
+
+std::shared_ptr<GameObject> GameObject::GetParent() const
+{
+  auto parent = InternalGetParent();
+
+  return parent->id == 0 ? nullptr : parent;
+}
+
+void GameObject::UnlinkParent()
+{
+  if (IsRoot())
+    return;
+
+  InternalGetParent()->children.erase(id);
+  weakParent.reset();
+}
+
+void GameObject::SetParent(std::shared_ptr<GameObject> newParent)
+{
+  Assert(IsRoot() == false, "SetParent is forbidden on root object");
+
+  // Delete current parent
+  UnlinkParent();
+
+  // Set new parent
+  weakParent = newParent;
+}
+
+// Where this object exists in game space, in absolute coordinates
+Vector2 GameObject::GetPosition() const
+{
+  if (IsRoot())
+    return localPosition;
+  return InternalGetParent()->GetPosition() + localPosition;
+}
+void GameObject::SetPosition(const Vector2 newPosition)
+{
+  if (IsRoot())
+    localPosition = newPosition;
+  localPosition = newPosition - InternalGetParent()->GetPosition();
+}
+
+// Absolute scale of the object
+Vector2 GameObject::GetScale() const
+{
+  if (IsRoot())
+    return localScale;
+  return InternalGetParent()->GetScale() + localScale;
+}
+void GameObject::SetScale(const Vector2 newScale)
+{
+  if (IsRoot())
+    localScale = newScale;
+  localScale = newScale - InternalGetParent()->GetScale();
+}
+
+// Absolute rotation in radians
+double GameObject::GetRotation() const
+{
+  if (IsRoot())
+    return localRotation;
+  return InternalGetParent()->GetRotation() + localRotation;
+}
+void GameObject::SetRotation(const double newRotation)
+{
+  if (IsRoot())
+    localRotation = newRotation;
+  localRotation = newRotation - InternalGetParent()->GetRotation();
 }

@@ -13,14 +13,15 @@
 #include "Vector2.h"
 #include "Helper.h"
 
+class GameState;
+
 class GameObject
 {
-public:
-  // Base constructor
-  GameObject();
+  friend GameState;
 
+public:
   // With dimensions
-  GameObject(Vector2 coordinates, std::shared_ptr<GameObject> parent = nullptr);
+  GameObject(Vector2 coordinates = Vector2(0, 0), double rotation = 0.0, std::shared_ptr<GameObject> parent = nullptr);
 
   // Called once per frame
   void Update(float deltaTime)
@@ -89,19 +90,33 @@ public:
 
   auto GetComponent(const Component *componentPointer) const -> std::shared_ptr<Component>;
 
+  // Temporary method to play sound & destroy after done playing
+  void DestroyAfterSoundPlay();
+
+  // Initialize
+  void Start();
+
+  // Returns this object's shared pointer
+  std::shared_ptr<GameObject> GetShared() const;
+
+  // Get's pointer to parent, and ensures it's valid, unless this is the root object. If the parent is the root object, returns nullptr
+  std::shared_ptr<GameObject> GetParent() const;
+
+  // Set the parent
+  void SetParent(std::shared_ptr<GameObject> newParent);
   // === ABSOLUTE VALUES
 
   // Where this object exists in game space, in absolute coordinates
-  Vector2 GetPosition() const { return parent == nullptr ? localPosition : parent->GetPosition() + localPosition; }
-  void SetPosition(const Vector2 newPosition) { localPosition = newPosition - (parent == nullptr ? Vector2::Zero() : parent->GetPosition()); }
+  Vector2 GetPosition() const;
+  void SetPosition(const Vector2 newPosition);
 
   // Absolute scale of the object
-  Vector2 GetScale() const { return parent == nullptr ? localScale : parent->GetScale() + localScale; }
-  void SetScale(const Vector2 newScale) { localScale = newScale - (parent == nullptr ? Vector2::Zero() : parent->GetScale()); }
+  Vector2 GetScale() const;
+  void SetScale(const Vector2 newScale);
 
   // Absolute rotation in radians
-  double GetRotation() const { return parent == nullptr ? localRotation : parent->GetRotation() + localRotation; }
-  void SetRotation(const double newRotation) { localRotation = newRotation - (parent == nullptr ? 0.0 : parent->GetRotation()); }
+  double GetRotation() const;
+  void SetRotation(const double newRotation);
 
   // Where this object exists in game space, relative to it's parent's position
   Vector2 localPosition;
@@ -112,22 +127,25 @@ public:
   // Object's rotation, in radians
   double localRotation{0};
 
-  // Temporary method to play sound & destroy after done playing
-  void DestroyAfterSoundPlay();
-
-  // Initialize
-  void Start();
-
-  // Returns this object's shared pointer
-  std::shared_ptr<GameObject> GetShared() const;
-
   // Object's unique identifier
   const int id;
 
-  // Parent object
-  std::shared_ptr<GameObject> parent;
+  // Child objects
+  std::unordered_map<int, std::weak_ptr<GameObject>> children;
 
 private:
+  // Initialize with given id
+  GameObject(int id);
+
+  // Whether this is the root object
+  bool IsRoot() const { return id == 0; }
+
+  // Get's pointer to parent, and ensures it's valid, unless this is the root object
+  std::shared_ptr<GameObject> InternalGetParent() const;
+
+  // Deletes reference to parent and paren't reference to self
+  void UnlinkParent();
+
   // Vector with all components of this object
   std::vector<std::shared_ptr<Component>> components;
 
@@ -136,6 +154,9 @@ private:
 
   // Whether has already run started
   bool started{false};
+
+  // Parent object
+  std::weak_ptr<GameObject> weakParent;
 };
 
 #endif
