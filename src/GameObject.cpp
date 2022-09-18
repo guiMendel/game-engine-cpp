@@ -130,7 +130,8 @@ std::shared_ptr<GameObject> GameObject::GetParent() const
   return parent->id == 0 ? nullptr : parent;
 }
 
-void GameObject::UnlinkParent()
+void GameObject::
+UnlinkParent()
 {
   if (IsRoot())
     return;
@@ -190,4 +191,19 @@ void GameObject::SetRotation(const double newRotation)
   if (IsRoot())
     localRotation = newRotation;
   localRotation = newRotation - InternalGetParent()->GetRotation();
+}
+
+void GameObject::InternalDestroy()
+{
+  // Remove all children
+  for (auto pairIterator = children.begin(); pairIterator != children.end(); ++pairIterator)
+  {
+    LOCK(pairIterator->second, child);
+
+    child->InternalDestroy();
+  }
+
+  // Remove this object's reference from it's parent
+  UnlinkParent();
+  gameObjects.erase(objectPair.first);
 }
