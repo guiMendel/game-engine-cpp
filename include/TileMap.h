@@ -8,6 +8,8 @@
 #include "Component.h"
 #include "TileSet.h"
 
+class TileSet;
+
 class TileMap : public Component
 {
 public:

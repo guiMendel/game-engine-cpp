@@ -10,7 +10,7 @@
 using namespace std;
 
 // Initialize root object
-GameState::GameState() : inputManager(InputManager::GetInstance()), rootObject(new GameObject(0))
+GameState::GameState() : inputManager(InputManager::GetInstance()), rootObject(new GameObject(*this))
 {
 }
 
@@ -30,13 +30,21 @@ void GameState::Update(float deltaTime)
     objectPair.second->Update(deltaTime);
 
   // Check for dead objects
-  TODO USE ITERATOR HERE
+  vector<shared_ptr<GameObject>> deadObjects;
+
+  // Collect them
   for (auto &objectPair : gameObjects)
   {
-    // If is dead, delete
+    // If is dead, collect
     if (objectPair.second->DestroyRequested())
-      objectPair.second->InternalDestroy();
+      deadObjects.push_back(objectPair.second);
+
+    // Not a good idea to delete them here directly, as it would invalidate this loop's iterator
   }
+
+  // Erase them
+  for (auto &deadObject : deadObjects)
+    deadObject->InternalDestroy();
 }
 
 void GameState::Render()
@@ -69,6 +77,11 @@ void GameState::Render()
       }
     }
   }
+}
+
+void GameState::RemoveObject(int id)
+{
+  gameObjects.erase(id);
 }
 
 shared_ptr<GameObject> GameState::AddObject(shared_ptr<GameObject> gameObject)

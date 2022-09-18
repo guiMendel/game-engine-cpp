@@ -19,6 +19,9 @@ class GameObject
 {
   friend GameState;
 
+  // State reference
+  GameState &gameState;
+
 public:
   // With dimensions
   GameObject(Vector2 coordinates = Vector2(0, 0), double rotation = 0.0, std::shared_ptr<GameObject> parent = nullptr);
@@ -134,8 +137,8 @@ public:
   std::unordered_map<int, std::weak_ptr<GameObject>> children;
 
 private:
-  // Initialize with given id
-  GameObject(int id);
+  // Initialize with given state
+  GameObject(GameState &gameState);
 
   // Whether this is the root object
   bool IsRoot() const { return id == 0; }
@@ -161,5 +164,7 @@ private:
   // Parent object
   std::weak_ptr<GameObject> weakParent;
 };
+
+#include "GameState.h"
 
 #endif

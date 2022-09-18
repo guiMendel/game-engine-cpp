@@ -3,8 +3,10 @@
 
 #include <memory>
 #include <string>
-#include "GameObject.h"
 #include "Sprite.h"
+#include "GameObject.h"
+
+class Sprite;
 
 class TileSet
 {

@@ -7,11 +7,11 @@
 using namespace std;
 
 // Private constructor
-GameObject::GameObject(int id) : id(id) {}
+GameObject::GameObject(GameState &gameState) : gameState(gameState), id(gameState.SupplyObjectId()) {}
 
 // With dimensions
 GameObject::GameObject(Vector2 coordinates, double rotation, std::shared_ptr<GameObject> parent)
-    : GameObject(Game::GetInstance().GetState().SupplyObjectId())
+    : GameObject(Game::GetInstance().GetState())
 {
   // Only add a parent if not the root object
   if (IsRoot() == false)
@@ -130,8 +130,7 @@ std::shared_ptr<GameObject> GameObject::GetParent() const
   return parent->id == 0 ? nullptr : parent;
 }
 
-void GameObject::
-UnlinkParent()
+void GameObject::UnlinkParent()
 {
   if (IsRoot())
     return;
@@ -205,5 +204,7 @@ void GameObject::InternalDestroy()
 
   // Remove this object's reference from it's parent
   UnlinkParent();
-  gameObjects.erase(objectPair.first);
+
+  // Delete self from state's list
+  gameState.RemoveObject(id);
 }

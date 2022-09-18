@@ -32,6 +32,11 @@ public:
 
   void Render();
 
+  // Removes an object from the object list
+  void RemoveObject(int id);
+
+  void RemoveObject(std::shared_ptr<GameObject> gameObject) { RemoveObject(gameObject->id); }
+
   // Adds a new game object
   std::shared_ptr<GameObject> AddObject(std::shared_ptr<GameObject> gameObject);
 
