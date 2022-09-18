@@ -143,6 +143,9 @@ private:
   // Get's pointer to parent, and ensures it's valid, unless this is the root object
   std::shared_ptr<GameObject> InternalGetParent() const;
 
+  // Unlinks from parent, destroys all children and destroys self
+  void InternalDestroy();
+
   // Deletes reference to parent and paren't reference to self
   void UnlinkParent();
 

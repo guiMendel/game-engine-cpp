@@ -13,7 +13,7 @@ public:
 
   void TakeDamage(float damage);
 
-  Health(GameObject& associatedObject) : Component(associatedObject) {}
+  Health(GameObject &associatedObject, float totalHealth) : Component(associatedObject), healthPoints(totalHealth) {}
 
   RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
@@ -22,7 +22,7 @@ private:
   float healthPoints;
 
   // Whether has already triggered death
-  bool deathTriggered;
+  bool deathTriggered{false};
 };
 
 #endif

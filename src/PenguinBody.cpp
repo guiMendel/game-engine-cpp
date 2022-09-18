@@ -7,6 +7,7 @@ using namespace std;
 const float PenguinBody::proportionAcceleration{30.0f};
 const float PenguinBody::acceleration{1.0f};
 const float PenguinBody::maxSpeed{28.0f};
+const float PenguinBody::totalHealth{100.0f};
 
 // In radians per second
 const float PenguinBody::rotationSpeed{M_PI / 2.0f};

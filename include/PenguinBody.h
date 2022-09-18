@@ -13,6 +13,7 @@ public:
   static const float proportionAcceleration;
   static const float acceleration;
   static const float maxSpeed;
+  static const float totalHealth;
 
   // In radians per second
   static const float rotationSpeed;

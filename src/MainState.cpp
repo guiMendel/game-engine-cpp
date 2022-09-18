@@ -18,7 +18,10 @@ void PenguinBodyRecipe(shared_ptr<GameObject> penguin)
   auto movement = penguin->AddComponent<Movement>(PenguinBody::acceleration, PenguinBody::maxSpeed);
 
   // Add behavior
-  auto penguinBody = penguin->AddComponent<PenguinBody>(movement);
+  penguin->AddComponent<PenguinBody>(movement);
+
+  // Add health
+  penguin->AddComponent<Health>(PenguinBody::totalHealth);
 }
 
 void PenguinCannonRecipe(shared_ptr<GameObject> penguin)

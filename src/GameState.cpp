@@ -30,16 +30,12 @@ void GameState::Update(float deltaTime)
     objectPair.second->Update(deltaTime);
 
   // Check for dead objects
+  TODO USE ITERATOR HERE
   for (auto &objectPair : gameObjects)
   {
     // If is dead, delete
     if (objectPair.second->DestroyRequested())
-    {
-      // Remove this object's reference from it's parent
-      objectPair.second->UnlinkParent();
-
-      gameObjects.erase(objectPair.first);
-    }
+      objectPair.second->InternalDestroy();
   }
 }
 
