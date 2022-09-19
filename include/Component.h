@@ -9,7 +9,8 @@
 
 #define LOCK(weak, shared)   \
   auto shared = weak.lock(); \
-  Assert(shared != nullptr, "Unexpectedly failed to lock shared pointer");
+  Assert(shared != nullptr,  \
+         "Unexpectedly failed to lock shared pointer at " __FILE__ ":" + std::to_string(__LINE__));
 
 #define LOCK_MESSAGE(weak, shared, message) \
   auto shared = weak.lock();                \
@@ -31,7 +32,7 @@ public:
 
   // In which render layer this component is
   // If None, then it's Render method will never be called
-  virtual RenderLayer GetRenderLayer() = 0;
+  virtual RenderLayer GetRenderLayer() { return RenderLayer::None; }
 
   // The order in which to render this component in it's layer (higher numbers are shown on top)
   virtual int GetRenderOrder() { return 0; }
@@ -54,9 +55,8 @@ protected:
 
   // Whether the component is active
   bool enabled{true};
-  
-  private:
 
+private:
   // Whether StartAndRegisterLayer has been called already
   bool started{false};
 };

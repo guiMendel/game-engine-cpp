@@ -5,6 +5,27 @@
 #include "SpriteAnimator.h"
 #include <math.h>
 
+// Speed at which to orbit the host alien, in radians
+const float Minion::angularSpeed{0.5f};
+
+// Speed at which the radius changes
+const float Minion::radiusFloatSpeed{1};
+
+// Limits to radius floating
+const float Minion::radiusLimits[2]{90, 160};
+
+// Limits to scale
+const float Minion::scaleLimits[2]{0.75f, 1.25f};
+
+// Projectile speed
+const float Minion::projectileSpeed{300};
+
+// Projectile time to live, in seconds
+const float Minion::projectileTimeToLive{5};
+
+// Damage of projectile
+const float Minion::projectileDamage{50};
+
 Minion::Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPointer, float startingArc)
     : Component(associatedObject), hostPointer(hostPointer), arc(startingArc)
 {

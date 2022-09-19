@@ -11,25 +11,25 @@ class Minion : public Component
 {
 public:
   // Speed at which to orbit the host alien, in radians
-  const float angularSpeed{0.5f};
+  static const float angularSpeed;
 
   // Speed at which the radius changes
-  const float radiusFloatSpeed{1};
+  static const float radiusFloatSpeed;
 
   // Limits to radius floating
-  const float radiusLimits[2]{90, 160};
+  static const float radiusLimits[2];
 
   // Limits to scale
-  const float scaleLimits[2]{0.75f, 1.25f};
+  static const float scaleLimits[2];
 
   // Projectile speed
-  const float projectileSpeed{300};
+  static const float projectileSpeed;
 
   // Projectile time to live, in seconds
-  const float projectileTimeToLive{5};
+  static const float projectileTimeToLive;
 
   // Damage of projectile
-  const float projectileDamage{50};
+  static const float projectileDamage;
 
   Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPointer, float startingArc = 0);
 

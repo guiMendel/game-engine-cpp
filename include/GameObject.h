@@ -19,9 +19,6 @@ class GameObject
 {
   friend GameState;
 
-  // State reference
-  GameState &gameState;
-
 public:
   // With dimensions
   GameObject(Vector2 coordinates = Vector2(0, 0), double rotation = 0.0, std::shared_ptr<GameObject> parent = nullptr);
@@ -98,6 +95,9 @@ public:
 
   // Initialize
   void Start();
+
+  // State reference
+  GameState &gameState;
 
   // Returns this object's shared pointer
   std::shared_ptr<GameObject> GetShared() const;

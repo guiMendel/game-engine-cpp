@@ -29,7 +29,7 @@ void Sprite::Render(Vector2 position)
   // Offset coordinates if centered
   if (centered)
   {
-    position -= Vector2(GetScaledWidth() / 2, GetScaledHeight() / 2);
+    position -= Vector2(GetWidth() / 2, GetHeight() / 2);
   }
 
   // Get the real position
@@ -37,7 +37,7 @@ void Sprite::Render(Vector2 position)
 
   // Get destination rectangle
   SDL_Rect destinationRect{
-      (int)offsetPosition.x, (int)offsetPosition.y, GetScaledWidth(), GetScaledHeight()};
+      (int)offsetPosition.x, (int)offsetPosition.y, GetWidth(), GetHeight()};
 
   // Put the texture in the renderer
   SDL_RenderCopyEx(

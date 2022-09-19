@@ -16,11 +16,11 @@ TileSet::TileSet(int tileWidth, int tileHeight, std::string filename) : tileWidt
 
   // Avoid awkward situations
   Assert(tileWidth > 0 && tileHeight > 0, "Tile dimensions must be greater than zero");
-  Assert(tileSprite->GetHeight() > 0 && tileSprite->GetWidth() > 0, "Tileset sprite is invalid (dimensions not greater than 0)");
+  Assert(tileSprite->GetUnscaledHeight() > 0 && tileSprite->GetUnscaledWidth() > 0, "Tileset sprite is invalid (dimensions not greater than 0)");
 
   // Get the rows & columns
-  rows = tileSprite->GetHeight() / tileHeight;
-  columns = tileSprite->GetWidth() / tileWidth;
+  rows = tileSprite->GetUnscaledHeight() / tileHeight;
+  columns = tileSprite->GetUnscaledWidth() / tileWidth;
 }
 
 void TileSet::RenderTile(unsigned index, Vector2 position)

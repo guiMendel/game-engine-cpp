@@ -29,13 +29,13 @@ public:
   // Sets which rectangle of the image to be displayed
   void SetClip(int x, int y, int width, int height);
 
-  int GetWidth() const { return width; }
+  int GetUnscaledWidth() const { return width; }
 
-  int GetHeight() const { return height; }
+  int GetUnscaledHeight() const { return height; }
 
-  int GetScaledWidth() const { return clipRect.w * gameObject.localScale.x; }
+  int GetWidth() const { return clipRect.w * gameObject.localScale.x; }
 
-  int GetScaledHeight() const { return clipRect.h * gameObject.localScale.y; }
+  int GetHeight() const { return clipRect.h * gameObject.localScale.y; }
 
   bool IsLoaded() const { return texture != nullptr; }
 

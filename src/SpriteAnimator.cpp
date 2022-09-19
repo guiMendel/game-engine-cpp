@@ -12,8 +12,8 @@ void SpriteAnimator::ConfigureSpriteFrames()
   }
 
   // Get frame count
-  columnFrameCount = sprite->GetWidth() / frameDimensions.x;
-  rowFrameCount = sprite->GetHeight() / frameDimensions.y;
+  columnFrameCount = sprite->GetUnscaledWidth() / frameDimensions.x;
+  rowFrameCount = sprite->GetUnscaledHeight() / frameDimensions.y;
 
   // Set first frame
   SetFrame(0);

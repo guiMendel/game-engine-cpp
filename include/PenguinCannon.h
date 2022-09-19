@@ -8,15 +8,23 @@
 class PenguinCannon : public Component
 {
 public:
+  // Projectile speed
+  static const float projectileSpeed;
+
+  // Projectile time to live, in seconds
+  static const float projectileTimeToLive;
+
+  // Damage of projectile
+  static const float projectileDamage;
+
   PenguinCannon(GameObject &associatedObject) : Component(associatedObject) {}
 
-  RenderLayer GetRenderLayer() override { return RenderLayer::None; }
+  void Update([[maybe_unused]] float deltaTime) override;
 
   void Shoot();
 
-private:
-  // Access facilitator
-  std::weak_ptr<GameObject> bodyWeak;
+  // Get gun point position
+  Vector2 GunPointPosition();
 };
 
 #endif
