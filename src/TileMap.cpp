@@ -77,7 +77,7 @@ void TileMap::RenderTileLayer(int layer)
   int layerOffset = layer * mapWidth * mapHeight;
 
   // Get camera position
-  auto [cameraX, cameraY] = Camera::GetInstance().position;
+  auto [cameraX, cameraY] = Camera::GetInstance().GetPosition();
 
   // Parallax to apply on X coordinates
   float parallaxX = layer * parallaxIntensity * cameraX;
@@ -95,10 +95,10 @@ void TileMap::RenderTileLayer(int layer)
       continue;
 
     // X coord where to render it
-    float x = (i % mapWidth) * tileSet->GetTileWidth() + parallaxX;
+    float x = (i % mapWidth) * tileSet->GetTileWidth() - parallaxX;
 
     // Y coord where to render it
-    float y = (i / mapWidth) * tileSet->GetTileHeight() + parallaxY;
+    float y = (i / mapWidth) * tileSet->GetTileHeight() - parallaxY;
 
     // Render it
     tileSet->RenderTile(tileMatrix[matrixIndex], {x, y});

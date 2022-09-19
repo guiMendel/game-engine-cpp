@@ -2,27 +2,84 @@
 #include <iostream>
 #include "Camera.h"
 #include "InputManager.h"
+#include "Game.h"
 
 using namespace std;
 
 #define LENGTH(array) sizeof(array) / sizeof(array[0])
 #define CLAMP(value, minValue, maxValue) min(max(value, minValue), maxValue)
 
+// Acceleration applied each frame to the camera towards 0 speed
+const int Camera::gravity{70};
+
+// Max speed for the camera, in pixels per second
+const int Camera::maxSpeed{700};
+
+// Acceleration applied to the camera on user input
+const int Camera::acceleration{4000};
+
+// How many seconds the camera waits before starting to follow the target
+const float Camera::followDelay{2.0f};
+
+// How far from the target camera can be before starting to follow
+const float Camera::maxFocusDistance{1.0f};
+
 Vector2 GetInputSpeedChange();
+
+Vector2 GetGravitySpeedChange(Vector2 speed, float gravity);
+
+Vector2 Camera::GetPosition() const
+{
+  return rawPosition + Vector2(Game::screenWidth / 2, Game::screenHeight / 2);
+}
+
+void Camera::SetPosition(Vector2 newPosition)
+{
+  rawPosition = newPosition - Vector2(Game::screenWidth / 2, Game::screenHeight / 2);
+}
 
 void Camera::Update(float deltaTime)
 {
+  cout << "Camera position: " << (string)GetPosition() << endl;
+
   // Get displacement from input, taking delta time in consideration
   auto frameSpeedChange = GetInputSpeedChange() * acceleration * deltaTime;
 
-  // If it's null and speed isn't, set it to the gravity
-  if (speed && !frameSpeedChange)
+  // If there was input, reset follow delay (convert seconds to milliseconds)
+  if (frameSpeedChange)
   {
-    // Set the displacement to the opposite direction of current speed
-    frameSpeedChange = Vector2(speed).Normalized() * -gravity;
+    cout << ("INPUT") << endl;
+    timeLeftToFollow = followDelay;
+  }
 
-    // Cap to the current speed value
-    frameSpeedChange.CapMagnitude(speed.Magnitude());
+  // If no input
+  else
+  {
+
+    // If follow delay is over OR there is no target
+    if (weakFocus.expired() == false && timeLeftToFollow <= 0.0f)
+    {
+      LOCK(weakFocus, focus);
+
+      // cout << "Camera at " << (string)GetPosition() << ", moving towards " << (string)focus->GetPosition() << endl;
+
+      frameSpeedChange = Vector2::Zero();
+      SetPosition(focus->GetPosition());
+    }
+
+    // If timer is not up yet
+    else
+    {
+      // cout << "waiting for " << timeLeftToFollow << " milliseconds" << endl;
+
+      // By default, apply gravity
+      if (speed)
+        frameSpeedChange = GetGravitySpeedChange(speed, gravity);
+
+      // Discount it
+      if (timeLeftToFollow > 0.0f)
+        timeLeftToFollow -= deltaTime;
+    }
   }
 
   // Move
@@ -38,7 +95,7 @@ void Camera::Move(Vector2 speedModification, float deltaTime)
   speed.CapMagnitude(maxSpeed);
 
   // Displace it
-  position += speed * deltaTime;
+  rawPosition += speed * deltaTime;
 }
 
 // Gets the displacement directions from input
@@ -48,7 +105,7 @@ Vector2 GetInputSpeedChange()
   auto inputManager = InputManager::GetInstance();
 
   // Will hold camera displacement values
-  Vector2 frameSpeedChange;
+  Vector2 frameSpeedChange{Vector2::Zero()};
 
   // Map each key direction to an index
   typedef decltype(UP_ARROW_KEY) KeyType;
@@ -58,7 +115,7 @@ Vector2 GetInputSpeedChange()
 
   // Map each displacement direction to an index, corresponding to the key direction map
   Vector2 displacementMap[LENGTH(keyDirectionMap)] =
-      {Vector2::Up(), Vector2::Right(), Vector2::Down(), Vector2::Left()};
+      {Vector2::Down(), Vector2::Left(), Vector2::Up(), Vector2::Right()};
 
   // Catch button presses
   for (size_t i = 0; i < LENGTH(keyDirectionMap); ++i)
@@ -70,6 +127,16 @@ Vector2 GetInputSpeedChange()
       frameSpeedChange += displacementMap[i];
     }
   }
+
+  return frameSpeedChange;
+}
+Vector2 GetGravitySpeedChange(Vector2 speed, float gravity)
+{
+  // Set the displacement to the opposite direction of current speed
+  Vector2 frameSpeedChange = Vector2(speed).Normalized() * -gravity;
+
+  // Cap to the current speed value
+  frameSpeedChange.CapMagnitude(speed.Magnitude());
 
   return frameSpeedChange;
 }

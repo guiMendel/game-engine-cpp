@@ -39,7 +39,7 @@ void BackgroundRecipe(shared_ptr<GameObject> background)
   background->AddComponent<Sprite>("./assets/image/ocean.jpg", RenderLayer::Background, 0, false);
 
   // Make it follow the camera
-  background->AddComponent<CameraFollower>();
+  background->AddComponent<CameraFollower>(true);
 }
 
 void TilemapRecipe(shared_ptr<GameObject> tilemap)
@@ -85,6 +85,9 @@ void MainState::InitializeObjects()
 
   // Add cannon as child
   CreateObject(PenguinCannonRecipe, penguin->GetPosition(), penguin->GetRotation(), penguin);
+
+  // Make camera follow penguin
+  Camera::GetInstance().Follow(penguin);
 
   // Play music
   // music.Play("./assets/music/main.mp3");

@@ -10,14 +10,15 @@ using namespace std;
 class CameraFollower : public Component
 {
 public:
-  CameraFollower(GameObject &associatedObject) : Component(associatedObject) {}
+  CameraFollower(GameObject &associatedObject, bool useRawPosition = false)
+      : Component(associatedObject), useRawPosition(useRawPosition) {}
 
   void Update([[maybe_unused]] float deltaTime) override
   {
-    gameObject.SetPosition(-Camera::GetInstance().position);
+    gameObject.SetPosition(useRawPosition ? Camera::GetInstance().GetRawPosition() : Camera::GetInstance().GetPosition());
   }
 
-  RenderLayer GetRenderLayer() override { return RenderLayer::None; }
+  bool useRawPosition;
 };
 
 #endif
