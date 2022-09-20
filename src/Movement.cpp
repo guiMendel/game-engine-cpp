@@ -4,12 +4,12 @@ using namespace std;
 
 void Movement::Update(float deltaTime)
 {
-  // Adjust speed
-  Accelerate(deltaTime);
-
   // Follow a target if it exists
   if (followTarget)
     FollowTarget(deltaTime);
+
+  // Adjust speed
+  Accelerate(deltaTime);
 
   // Move based on speed
   if (!velocity)
@@ -47,12 +47,15 @@ void Movement::FollowTarget(float deltaTime)
   if (followTarget == false)
     return;
 
+  float squareDistance = Vector2::SqrDistance(gameObject.GetPosition(), targetPosition);
+
   // Check if arrived
-  if (Vector2::SqrDistance(gameObject.GetPosition(), targetPosition) < deltaTime * deltaTime * velocity.SqrMagnitude())
+  if (squareDistance < deltaTime * deltaTime * velocity.SqrMagnitude() || squareDistance < 0.01f)
   {
     followTarget = false;
     gameObject.SetPosition(targetPosition);
     velocity = Vector2::Zero();
+    targetDirection = Vector2::Zero();
 
     if (targetReachCallback != nullptr)
       targetReachCallback();
@@ -61,7 +64,5 @@ void Movement::FollowTarget(float deltaTime)
   }
 
   // Get target angle
-  float targetAngle = Vector2::AngleBetween(gameObject.GetPosition(), targetPosition);
-
-  Move(Vector2::Right().Rotated(targetAngle));
+  Move((targetPosition - gameObject.GetPosition()).Normalized(), false);
 }

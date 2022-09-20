@@ -60,13 +60,13 @@ void AlienRecipe(shared_ptr<GameObject> alien)
   alien->AddComponent<Sprite>("./assets/image/alien.png", RenderLayer::Enemies);
 
   // Get alien behavior
-  alien->AddComponent<Alien>(6);
+  alien->AddComponent<Alien>(Alien::totalMinions);
 
   // Get movement
-  alien->AddComponent<Movement>(175);
+  alien->AddComponent<Movement>(Alien::acceleration, Alien::maxSpeed);
 
   // Get health
-  alien->AddComponent<Health>();
+  alien->AddComponent<Health>(Alien::healthPoints);
 }
 
 void MainState::InitializeObjects()

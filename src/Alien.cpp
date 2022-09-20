@@ -8,6 +8,19 @@
 
 using namespace std;
 
+// Rotation speed, in radians
+const float Alien::rotationSpeed{0.2f};
+
+// Movement acceleration
+const float Alien::acceleration{1.0f};
+const float Alien::maxSpeed{100.0f};
+
+// Total minion count
+const int Alien::totalMinions{6};
+
+// Total health points
+const float Alien::healthPoints{500.0f};
+
 // Helper functions
 shared_ptr<GameObject> NearestMinion(vector<weak_ptr<GameObject>> &minions, Vector2 position);
 
@@ -43,6 +56,8 @@ void Alien::Update([[maybe_unused]] float deltaTime)
   auto checkButtonLinkedToAction = [this](int button, Action::Type actionType)
   {
     auto inputManager = InputManager::GetInstance();
+
+    // cout << "Checking for action " << button << endl;
 
     if (inputManager.MousePress(button))
       AddAction(actionType);

@@ -16,11 +16,9 @@ void PenguinCannon::Update([[maybe_unused]] float deltaTime)
 {
   auto &input = InputManager::GetInstance();
 
-  // Get mouse direction
-  Vector2 mouseDirection = input.GetMouseWorldCoordinates() - gameObject.GetPosition();
-
   // Point at mouse
-  gameObject.SetRotation(mouseDirection.Angle());
+  gameObject.SetRotation(
+      Vector2::AngleBetween(gameObject.GetPosition(), input.GetMouseWorldCoordinates()));
 
   // Shoot on click
   if (input.MousePress(RIGHT_MOUSE_BUTTON))

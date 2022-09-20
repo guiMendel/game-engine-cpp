@@ -40,17 +40,12 @@ void Camera::SetPosition(Vector2 newPosition)
 
 void Camera::Update(float deltaTime)
 {
-  cout << "Camera position: " << (string)GetPosition() << endl;
-
   // Get displacement from input, taking delta time in consideration
   auto frameSpeedChange = GetInputSpeedChange() * acceleration * deltaTime;
 
   // If there was input, reset follow delay (convert seconds to milliseconds)
   if (frameSpeedChange)
-  {
-    cout << ("INPUT") << endl;
     timeLeftToFollow = followDelay;
-  }
 
   // If no input
   else
@@ -61,8 +56,6 @@ void Camera::Update(float deltaTime)
     {
       LOCK(weakFocus, focus);
 
-      // cout << "Camera at " << (string)GetPosition() << ", moving towards " << (string)focus->GetPosition() << endl;
-
       frameSpeedChange = Vector2::Zero();
       SetPosition(focus->GetPosition());
     }
@@ -70,8 +63,6 @@ void Camera::Update(float deltaTime)
     // If timer is not up yet
     else
     {
-      // cout << "waiting for " << timeLeftToFollow << " milliseconds" << endl;
-
       // By default, apply gravity
       if (speed)
         frameSpeedChange = GetGravitySpeedChange(speed, gravity);
@@ -122,10 +113,8 @@ Vector2 GetInputSpeedChange()
   {
     // Check if this direction is pressed
     if (inputManager.IsKeyDown(keyDirectionMap[i]))
-    {
       // If so, add this displacement to the sum
       frameSpeedChange += displacementMap[i];
-    }
   }
 
   return frameSpeedChange;
