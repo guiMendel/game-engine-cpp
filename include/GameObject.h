@@ -9,7 +9,6 @@
 #include <utility>
 #include "GameObject.h"
 #include "Component.h"
-#include "Rectangle.h"
 #include "Vector2.h"
 #include "Helper.h"
 

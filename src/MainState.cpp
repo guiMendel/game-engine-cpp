@@ -54,20 +54,20 @@ void TilemapRecipe(shared_ptr<GameObject> tilemap)
   tilemap->AddComponent<TileMap>("./assets/map/tileMap.txt", tileset, 1, RenderLayer::Foreground);
 }
 
-// void AlienRecipe(shared_ptr<GameObject> alien)
-// {
-//   // Get alien sprite
-//   alien->AddComponent<Sprite>("./assets/image/alien.png", RenderLayer::Enemies);
+void AlienRecipe(shared_ptr<GameObject> alien)
+{
+  // Get alien sprite
+  alien->AddComponent<Sprite>("./assets/image/alien.png", RenderLayer::Enemies);
 
-//   // Get alien behavior
-//   alien->AddComponent<Alien>(6);
+  // Get alien behavior
+  alien->AddComponent<Alien>(6);
 
-//   // Get movement
-//   alien->AddComponent<Movement>(175);
+  // Get movement
+  alien->AddComponent<Movement>(175);
 
-//   // Get health
-//   alien->AddComponent<Health>();
-// }
+  // Get health
+  alien->AddComponent<Health>();
+}
 
 void MainState::InitializeObjects()
 {
@@ -78,7 +78,7 @@ void MainState::InitializeObjects()
   CreateObject(TilemapRecipe);
 
   // Add an alien
-  // CreateObject(AlienRecipe, Vector2(512, 300));
+  CreateObject(AlienRecipe, Vector2(512, 300));
 
   // Add penguins
   auto penguin = CreateObject(PenguinBodyRecipe);

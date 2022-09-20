@@ -2,16 +2,17 @@
 #define __RECTANGLE__
 
 #include <initializer_list>
+#include <vector>
 #include <SDL.h>
 #include "Vector2.h"
 
 class Rectangle
 {
 public:
-  // X coordinate
+  // X coordinate (rect's center)
   float x;
 
-  // Y coordinate
+  // Y coordinate (rect's center)
   float y;
 
   // Width
@@ -69,14 +70,39 @@ public:
 
   Vector2 Coordinates() const { return Vector2(x, y); }
 
-  Vector2 GetCenter() const { return Vector2(x + width / 2, y + height / 2); }
-
-  void SetCenter(Vector2 coordinates) { *this = Vector2{coordinates.x - width / 2, coordinates.y - height / 2}; }
-
   // Indicates if a given coordinate is contained by the rectangle
   bool Contains(const Vector2 &vector) const
   {
     return vector.x >= x && vector.x <= x + width && vector.y >= y && vector.y <= y + height;
+  }
+
+  // Pivot's a point around a rectangles center
+  Vector2 Pivot(Vector2 point, float radians) const
+  {
+    return (point - Center()).Rotated(radians) + Center();
+  }
+
+  Vector2 Center() const { return Vector2(x, y); }
+  Vector2 TopLeft(float pivoted = 0.0f) const
+  {
+    return Pivot(Vector2(x - width / 2, y - height / 2), pivoted);
+  }
+  Vector2 BottomLeft(float pivoted = 0.0f) const
+  {
+    return Pivot(Vector2(x - width / 2, y + height / 2), pivoted);
+  }
+  Vector2 BottomRight(float pivoted = 0.0f) const
+  {
+    return Pivot(Vector2(x + width / 2, y + height / 2), pivoted);
+  }
+  Vector2 TopRight(float pivoted = 0.0f) const
+  {
+    return Pivot(Vector2(x + width / 2, y - height / 2), pivoted);
+  }
+
+  std::vector<Vector2> Vertices(float pivoted = 0.0f) const
+  {
+    return {TopRight(pivoted), BottomRight(pivoted), BottomLeft(pivoted), TopLeft(pivoted)};
   }
 
   // Convert to sdl rect

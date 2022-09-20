@@ -126,6 +126,8 @@ public:
 
   static float AngleBetween(const Vector2 &v1, const Vector2 &v2) { return -(v2 - v1).Angle(); }
 
+  static float Dot(const Vector2 &v1, const Vector2 &v2) { return v1.x * v2.x + v1.y * v2.y; }
+
   // === STATIC GETTERS
 
   static Vector2 Up(float magnitude = 1) { return Vector2(0, magnitude); }
