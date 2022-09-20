@@ -44,17 +44,17 @@ public:
 
   bool IsEnabled() const { return enabled; }
 
-protected:
-  virtual void Start() {}
-
   // The associated game object
   GameObject &gameObject;
 
-  // Reference to input manager
-  InputManager &inputManager;
-
   // Whether the component is active
   bool enabled{true};
+
+protected:
+  virtual void Start() {}
+
+  // Reference to input manager
+  InputManager &inputManager;
 
 private:
   // Whether StartAndRegisterLayer has been called already

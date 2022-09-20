@@ -43,13 +43,13 @@ public:
   // Creates a new game object
   template <typename... Args>
   std::shared_ptr<GameObject> CreateObject(
-      std::function<void(std::shared_ptr<GameObject>)> initializer, Args &&...args)
+      std::function<void(std::shared_ptr<GameObject>)> recipe, Args &&...args)
   {
     std::shared_ptr<GameObject> object = std::make_shared<GameObject>(std::forward<Args>(args)...);
 
     // Initialize it
-    if (initializer)
-      initializer(object);
+    if (recipe)
+      recipe(object);
 
     return AddObject(object);
   }

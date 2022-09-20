@@ -35,6 +35,11 @@ public:
   void Render() override;
   RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
+  void AddMinion(float arcPosition);
+
+  // It's current minions
+  std::vector<std::weak_ptr<GameObject>> minions;
+
 private:
   // Defines the alien's possible actions
   struct Action
@@ -59,9 +64,6 @@ private:
 
   // How many minions it should start with
   int minionCount;
-
-  // It's current minions
-  std::vector<std::weak_ptr<GameObject>> minions;
 
   // Executes next action
   void ExecuteActions();

@@ -9,7 +9,11 @@
 class Collider : public Component
 {
 public:
-  Collider(GameObject &associatedObject, Rectangle box) : Component(associatedObject), box(box) {}
+  // Explicitly initialize box
+  Collider(GameObject &associatedObject, Rectangle box);
+
+  // Use sprite's box
+  Collider(GameObject &associatedObject, std::shared_ptr<Sprite> sprite, Vector2 scale = Vector2::One());
 
   // Collision detection area
   Rectangle box;
