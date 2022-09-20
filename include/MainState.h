@@ -3,6 +3,7 @@
 
 #include "GameState.h"
 #include "GameObject.h"
+#include "Alien.h"
 #include <functional>
 #include <memory>
 
@@ -23,10 +24,17 @@ public:
 
   // Aliens
   static void AlienRecipe(std::shared_ptr<GameObject> alien);
-  static auto MinionRecipe(Alien &alien, float startingArc) -> std::function<void(std::shared_ptr<GameObject>)>;
+  static auto MinionRecipe(std::shared_ptr<Alien> alien, float startingArc) -> std::function<void(std::shared_ptr<GameObject>)>;
 
   // Projectile
-  static void ProjectileRecipe(std::shared_ptr<GameObject> projectile);
+  static auto ProjectileRecipe(std::string spritePath, Vector2 animationFrame, float animationSpeed,
+                               float startingAngle,
+                               float speed,
+                               float timeToLive,
+                               float damage,
+                               std::weak_ptr<GameObject> target = std::weak_ptr<GameObject>(),
+                               float chaseSteering = 0.5f)
+      -> std::function<void(std::shared_ptr<GameObject>)>;
 };
 
 #endif

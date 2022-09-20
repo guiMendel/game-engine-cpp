@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Sprite.h"
 #include "SpriteAnimator.h"
+#include "MainState.h"
 #include <math.h>
 
 // Speed at which to orbit the host alien, in radians
@@ -82,19 +83,10 @@ void Minion::Shoot(Vector2 target)
   float targetAngle = Vector2::AngleBetween(gameObject.GetPosition(), target);
 
   // Create the projectile
-  Game::GetInstance()
-      .GetState()
+  gameObject.gameState
       .CreateObject(
-          [this, targetAngle](std::shared_ptr<GameObject> projectile)
-          {
-    // Add sprite
-    auto sprite = projectile->AddComponent<Sprite>("./assets/image/minionbullet2.png", RenderLayer::Projectiles);
-
-    // Add animation
-    projectile->AddComponent<SpriteAnimator>(sprite, Vector2(33, 12), 0.2f);
-    
-    // Add projectile behavior
-    projectile->AddComponent<Projectile>(
-      targetAngle, projectileSpeed, projectileTimeToLive, projectileDamage); },
+          MainState::ProjectileRecipe(
+              "./assets/image/minionbullet2.png", Vector2(33, 12), 0.2f,
+              targetAngle, projectileSpeed, projectileTimeToLive, projectileDamage),
           gameObject.GetPosition());
 }

@@ -2,6 +2,7 @@
 #include "InputManager.h"
 #include "SpriteAnimator.h"
 #include "Projectile.h"
+#include "MainState.h"
 
 // Projectile speed
 const float PenguinCannon::projectileSpeed{300};
@@ -30,17 +31,9 @@ void PenguinCannon::Shoot()
   // Create the projectile
   gameObject.gameState
       .CreateObject(
-          [this](std::shared_ptr<GameObject> projectile)
-          {
-    // Add sprite
-    auto sprite = projectile->AddComponent<Sprite>("./assets/image/penguinbullet.png", RenderLayer::Projectiles);
-
-    // Add animation
-    projectile->AddComponent<SpriteAnimator>(sprite, Vector2(30, 29), 0.2f);
-    
-    // Add projectile behavior
-    projectile->AddComponent<Projectile>(
-      gameObject.GetRotation(), projectileSpeed, projectileTimeToLive, projectileDamage); },
+          MainState::ProjectileRecipe(
+              "./assets/image/penguinbullet.png", Vector2(30, 29), 0.2f,
+              gameObject.GetRotation(), projectileSpeed, projectileTimeToLive, projectileDamage),
           GunPointPosition());
 }
 

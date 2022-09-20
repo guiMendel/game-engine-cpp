@@ -7,6 +7,8 @@
 #include "Health.h"
 #include "Collider.h"
 #include "Minion.h"
+#include "SpriteAnimator.h"
+#include "Projectile.h"
 #include <iostream>
 
 using namespace std;
@@ -80,7 +82,7 @@ void MainState::AlienRecipe(shared_ptr<GameObject> alien)
   alien->AddComponent<Health>(Alien::healthPoints);
 }
 
-auto MainState::MinionRecipe(Alien &alien, float startingArc) -> function<void(shared_ptr<GameObject>)>
+auto MainState::MinionRecipe(shared_ptr<Alien> alien, float startingArc) -> function<void(shared_ptr<GameObject>)>
 {
   return [alien, startingArc](shared_ptr<GameObject> minion)
   {
@@ -91,11 +93,34 @@ auto MainState::MinionRecipe(Alien &alien, float startingArc) -> function<void(s
     minion->AddComponent<Collider>(sprite);
 
     // Give it minion behavior
-    minion->AddComponent<Minion>(alien.gameObject.GetShared(), startingArc);
+    minion->AddComponent<Minion>(alien->gameObject.GetShared(), startingArc);
 
     // Add to minions
-    alien.minions.push_back(weak_ptr(minion));
-  }
+    alien->minions.emplace_back(minion);
+  };
+}
+
+auto ProjectileRecipe(string spritePath, Vector2 animationFrame, float animationSpeed,
+                      float startingAngle,
+                      float speed,
+                      float timeToLive,
+                      float damage,
+                      weak_ptr<GameObject> target,
+                      float chaseSteering)
+    -> function<void(shared_ptr<GameObject>)>
+{
+  return [spritePath, animationFrame, animationSpeed, startingAngle, speed, timeToLive, damage, target, chaseSteering](shared_ptr<GameObject> projectile)
+  {
+    // Add sprite
+    auto sprite = projectile->AddComponent<Sprite>(spritePath, RenderLayer::Projectiles);
+
+    // Add animation
+    projectile->AddComponent<SpriteAnimator>(sprite, animationFrame, animationSpeed);
+
+    // Add projectile behavior
+    projectile->AddComponent<Projectile>(
+        startingAngle, speed, timeToLive, damage, target, chaseSteering);
+  };
 }
 
 void MainState::InitializeObjects()

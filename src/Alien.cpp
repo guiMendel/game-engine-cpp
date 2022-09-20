@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "Minion.h"
 #include "Debug.h"
+#include "MainState.h"
 #include <iostream>
 
 using namespace std;
@@ -39,16 +40,11 @@ void Alien::Start()
 
   // Add minions
   for (int i = 0; i < minionCount; i++)
-    gameState.CreateObject([this, i](shared_ptr<GameObject> minionObject)
-                           {
-      // Give it a sprite
-      minionObject->AddComponent<Sprite>("./assets/image/minion.png", RenderLayer::Enemies);
-
-      // Give it minion behavior
-      minionObject->AddComponent<Minion>(gameObject.GetShared(), 2 * M_PI * i / minionCount);
-      
-      // Add to minions
-      minions.emplace_back(minionObject); });
+  {
+    gameState.CreateObject(
+        MainState::MinionRecipe(
+            dynamic_pointer_cast<Alien>(GetShared()), 2 * M_PI * i / minionCount));
+  }
 }
 
 void Alien::Update([[maybe_unused]] float deltaTime)

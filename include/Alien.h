@@ -35,8 +35,6 @@ public:
   void Render() override;
   RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
-  void AddMinion(float arcPosition);
-
   // It's current minions
   std::vector<std::weak_ptr<GameObject>> minions;
 
