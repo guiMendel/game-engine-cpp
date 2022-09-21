@@ -6,6 +6,8 @@
 #include "Vector2.h"
 #include "Rectangle.h"
 
+class Sprite;
+
 class Collider : public Component
 {
 public:
@@ -15,19 +17,21 @@ public:
   // Use sprite's box
   Collider(GameObject &associatedObject, std::shared_ptr<Sprite> sprite, Vector2 scale = Vector2::One());
 
-  void Update(float deltaTime) override;
-
-  TODO: COLOCAR UM START QUE ANUNCIA ESTE COLLIDER PAR AO GAMEOBJECT OU GAMESTATE SLA
+  void Start() override;
 
   void SetBox(const Rectangle &box);
   Rectangle GetBox() const;
+
+  float GetMaxVertexDistance() const { return maxVertexDistance; }
 
 private:
   // Collision detection area
   Rectangle box;
 
   // Maximum distance of a vertex from the rectangle's center
-  float maxVertexDistanceSquared;
+  float maxVertexDistance;
 };
+
+#include "Sprite.h"
 
 #endif

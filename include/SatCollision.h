@@ -54,8 +54,8 @@ namespace SatCollision
     if (Vector2::SqrDistance(rect1.Center(), rect2.Center()) > minDistanceSquared)
       return false;
 
-    return FindMinDistance(rect1, rect2) <= 0.0f && FindMinDistance(rect2, rect1) <= 0.0f;
+    return IsColliding(rect1, rect2);
   }
-};
+}
 
 #endif

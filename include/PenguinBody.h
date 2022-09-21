@@ -24,6 +24,7 @@ public:
   RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
   void Update(float deltaTime) override;
+  void OnCollision(GameObject &other) override;
 
 private:
   void Accelerate(float deltaTime);

@@ -6,11 +6,32 @@
 #include "TileMap.h"
 #include "TileSet.h"
 #include "Camera.h"
+#include "SatCollision.h"
 #include <iostream>
+
 using namespace std;
 
+// Whether the two collider lists have some pair of colliders which are colliding
+bool CheckForCollision(vector<shared_ptr<Collider>> colliders1, vector<shared_ptr<Collider>> colliders2)
+{
+  for (auto collider1 : colliders1)
+  {
+    for (auto collider2 : colliders2)
+    {
+      if (SatCollision::IsColliding(
+              collider1->GetBox(), collider2->GetBox(),
+              pow(collider1->GetMaxVertexDistance() + collider2->GetMaxVertexDistance(), 2)))
+      {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 // Initialize root object
-GameState::GameState() : inputManager(InputManager::GetInstance()), rootObject(new GameObject(*this))
+GameState::GameState() : inputManager(InputManager::GetInstance()), rootObject(new GameObject("Root", *this))
 {
 }
 
@@ -40,18 +61,33 @@ void GameState::DeleteObjects()
     deadObject->InternalDestroy();
 }
 
-void GameState::DetectCollisions() {
-  TODO:
-  GUARDAR UM MAP DOS IDS DOS OBJETOS A UM VETOR DOS SEUS COLLDIERS
-  AI QUANDO O COLLIDER DER START ELE SE REGISTRA NESSE VETOR
-  AI VAMOS PODER TIRAR A REFERENCIA AOS COLLIDERS Q EU COLOQUEI EM GAMEOBJECT E TIRAR O FRIEND TB
+void GameState::DetectCollisions()
+{
+  // Get validated colliders
+  auto validatedColliderStructure = ValidateColliders();
 
-  AI AQUI TEM Q PASSAR POR ESSE MAP E GERAR UM NOVO MAP IGUAL, MAS USANDO SAHREDPTR EM VEZ DE WEAK (JA REMOVE OS WEAK EXPIRED TAMBEM)
-  AI DPS PASSA UM POR UM TESTANDO COLISAO COM OS DEMAIS
-  LEMBRAR D EUSAR UM ITERADOR E SO COPARAR COM OS OBJECTOS DA FRENTE, PQ OS DE TRAS JA TESTARAM COM ESTE OBJETO
-  
-  for (auto &objectPair : gameObjects) {
-    
+  // For each object
+  auto objectEntryIterator = validatedColliderStructure.begin();
+  while (objectEntryIterator != validatedColliderStructure.end())
+  {
+    // Test, for each OTHER object in the list (excluding the ones before this one)
+    decltype(objectEntryIterator) otherObjectEntryIterator{objectEntryIterator};
+    otherObjectEntryIterator++;
+    while (otherObjectEntryIterator != validatedColliderStructure.end())
+    {
+      // Check if they are colliding
+      if (CheckForCollision(objectEntryIterator->second, otherObjectEntryIterator->second))
+      {
+        auto &object1 = *gameObjects[objectEntryIterator->first];
+        auto &object2 = *gameObjects[otherObjectEntryIterator->first];
+        object1.OnCollision(object2);
+        object2.OnCollision(object1);
+      }
+
+      otherObjectEntryIterator++;
+    }
+
+    objectEntryIterator++;
   }
 }
 
@@ -182,4 +218,54 @@ void GameState::RegisterLayerRenderer(shared_ptr<Component> component)
         if (comp1 == nullptr || comp2 == nullptr) return true;
         
         return comp1->GetRenderOrder() < comp2->GetRenderOrder(); });
+}
+
+void GameState::RegisterCollider(shared_ptr<Collider> collider)
+{
+  if (!collider)
+    return;
+
+  colliderStructure[collider->gameObject.id].emplace_back(collider);
+}
+
+unordered_map<int, vector<shared_ptr<Collider>>> GameState::ValidateColliders()
+{
+  unordered_map<int, vector<shared_ptr<Collider>>> verifiedCollidersStructure;
+
+  // For each object entry
+  auto objectEntryIterator = colliderStructure.begin();
+  while (objectEntryIterator != colliderStructure.end())
+  {
+    auto &objectColliders = objectEntryIterator->second;
+
+    // For each of it's colliders
+    auto colliderIterator = objectColliders.begin();
+    while (colliderIterator != objectColliders.end())
+    {
+      // Remove it if it's expired
+      if (colliderIterator->expired())
+      {
+        colliderIterator = objectColliders.erase(colliderIterator);
+        continue;
+      }
+
+      // Otherwise lock it and add it
+      verifiedCollidersStructure[objectEntryIterator->first]
+          .push_back(colliderIterator->lock());
+
+      // Advance
+      colliderIterator++;
+    }
+
+    // If it's empty, remove it from the map
+    if (objectColliders.empty())
+    {
+      objectEntryIterator = colliderStructure.erase(objectEntryIterator);
+      continue;
+    }
+
+    objectEntryIterator++;
+  }
+
+  return verifiedCollidersStructure;
 }

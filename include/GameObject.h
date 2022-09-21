@@ -9,7 +9,6 @@
 #include <utility>
 #include "GameObject.h"
 #include "Component.h"
-#include "Collider.h"
 #include "Vector2.h"
 #include "Helper.h"
 
@@ -18,11 +17,10 @@ class GameState;
 class GameObject
 {
   friend GameState;
-  friend Collider;
 
 public:
   // With dimensions
-  GameObject(Vector2 coordinates = Vector2(0, 0), double rotation = 0.0, std::shared_ptr<GameObject> parent = nullptr);
+  GameObject(std::string name, Vector2 coordinates = Vector2(0, 0), double rotation = 0.0, std::shared_ptr<GameObject> parent = nullptr);
 
   // Called once per frame
   void Update(float deltaTime)
@@ -122,8 +120,7 @@ public:
   double GetRotation() const;
   void SetRotation(const double newRotation);
 
-  // Get's a list of this objects colliders
-  std::vector<std::shared_ptr<Collider>> GetColliders();
+  std::string GetName() const { return name; }
 
   // Where this object exists in game space, relative to it's parent's position
   Vector2 localPosition;
@@ -142,7 +139,7 @@ public:
 
 private:
   // Initialize with given state
-  GameObject(GameState &gameState);
+  GameObject(std::string name, GameState &gameState);
 
   // Whether this is the root object
   bool IsRoot() const { return id == 0; }
@@ -156,8 +153,8 @@ private:
   // Deletes reference to parent and paren't reference to self
   void UnlinkParent();
 
-  // Registers new collider
-  void RegisterCollider(std::shared_ptr<Collider> collider);
+  // Announces collision to all components
+  void OnCollision(GameObject &other);
 
   // Vector with all components of this object
   std::vector<std::shared_ptr<Component>> components;
@@ -171,9 +168,8 @@ private:
   // Parent object
   std::weak_ptr<GameObject> weakParent;
 
-  // References to this object's colliders
-  // Is only populated after the collider's Start() method is called
-  std::vector<std::weak_ptr<Collider>> colliders;
+  // The game object's name (not necessarily unique)
+  std::string name;
 };
 
 #include "GameState.h"

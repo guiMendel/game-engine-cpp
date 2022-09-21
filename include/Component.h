@@ -20,6 +20,8 @@ class GameObject;
 
 class Component
 {
+  friend GameObject;
+
 public:
   // Called once per frame
   virtual void Update([[maybe_unused]] float deltaTime) {}
@@ -57,6 +59,9 @@ protected:
   InputManager &inputManager;
 
 private:
+  // Allows for reacting to collision
+  virtual void OnCollision([[maybe_unused]] GameObject &other) {}
+
   // Whether StartAndRegisterLayer has been called already
   bool started{false};
 };

@@ -7,11 +7,11 @@
 using namespace std;
 
 // Private constructor
-GameObject::GameObject(GameState &gameState) : gameState(gameState), id(gameState.SupplyObjectId()) {}
+GameObject::GameObject(string name, GameState &gameState) : gameState(gameState), id(gameState.SupplyObjectId()), name(name) {}
 
 // With dimensions
-GameObject::GameObject(Vector2 coordinates, double rotation, shared_ptr<GameObject> parent)
-    : GameObject(Game::GetInstance().GetState())
+GameObject::GameObject(string name, Vector2 coordinates, double rotation, shared_ptr<GameObject> parent)
+    : GameObject(name, Game::GetInstance().GetState())
 {
   // Only add a parent if not the root object
   if (IsRoot() == false)
@@ -209,25 +209,9 @@ void GameObject::InternalDestroy()
   gameState.RemoveObject(id);
 }
 
-void GameObject::RegisterCollider(shared_ptr<Collider> collider) { colliders.emplace_back(collider); }
-
-vector<shared_ptr<Collider>> GameObject::GetColliders()
+void GameObject::OnCollision(GameObject &other)
 {
-  vector<shared_ptr<Collider>> verifiedColliders;
-
-  auto colliderIterator = colliders.begin();
-  while (colliderIterator != colliders.end())
-  {
-    // Remove it if it's expired
-    if (colliderIterator->expired())
-    {
-      colliderIterator = colliders.erase(colliderIterator);
-      continue;
-    }
-
-    // Otherwise lock it and add it
-    verifiedColliders.push_back(colliderIterator->lock());
-  }
-
-  return verifiedColliders;
+  // Alert all components
+  for (auto component : components)
+    component->OnCollision(other);
 }

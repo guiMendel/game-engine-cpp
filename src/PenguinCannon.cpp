@@ -31,6 +31,7 @@ void PenguinCannon::Shoot()
   // Create the projectile
   gameObject.gameState
       .CreateObject(
+          "Penguin Projectile",
           MainState::ProjectileRecipe(
               "./assets/image/penguinbullet.png", Vector2(30, 29), 0.2f,
               gameObject.GetRotation(), projectileSpeed, projectileTimeToLive, projectileDamage),

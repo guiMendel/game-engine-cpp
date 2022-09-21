@@ -64,3 +64,8 @@ void PenguinBody::Rotate(float deltaTime)
     movement->Move(Vector2::Angled(gameObject.GetRotation(), speedProportion));
   }
 }
+
+void PenguinBody::OnCollision(GameObject &other)
+{
+  cout << "Body collision with " << other.GetName() << endl;
+}

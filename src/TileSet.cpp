@@ -6,7 +6,7 @@
 using namespace std;
 using namespace Helper;
 
-TileSet::TileSet(int tileWidth, int tileHeight, std::string filename) : tileWidth(tileWidth), tileHeight(tileHeight)
+TileSet::TileSet(int tileWidth, int tileHeight, std::string filename) : tileWidth(tileWidth), tileHeight(tileHeight), tileSetObject("Tileset")
 {
   // Add the sprite component
   // Don't give it a render layer. It must only be directly rendered by the tilemap method

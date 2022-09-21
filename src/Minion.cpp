@@ -85,6 +85,7 @@ void Minion::Shoot(Vector2 target)
   // Create the projectile
   gameObject.gameState
       .CreateObject(
+          "Minion Projectile",
           MainState::ProjectileRecipe(
               "./assets/image/minionbullet2.png", Vector2(33, 12), 0.2f,
               targetAngle, projectileSpeed, projectileTimeToLive, projectileDamage),

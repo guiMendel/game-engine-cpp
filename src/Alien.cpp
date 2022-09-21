@@ -42,6 +42,7 @@ void Alien::Start()
   for (int i = 0; i < minionCount; i++)
   {
     gameState.CreateObject(
+        "Minion",
         MainState::MinionRecipe(
             dynamic_pointer_cast<Alien>(GetShared()), 2 * M_PI * i / minionCount));
   }

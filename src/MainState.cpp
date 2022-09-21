@@ -100,13 +100,13 @@ auto MainState::MinionRecipe(shared_ptr<Alien> alien, float startingArc) -> func
   };
 }
 
-auto ProjectileRecipe(string spritePath, Vector2 animationFrame, float animationSpeed,
-                      float startingAngle,
-                      float speed,
-                      float timeToLive,
-                      float damage,
-                      weak_ptr<GameObject> target,
-                      float chaseSteering)
+auto MainState::ProjectileRecipe(string spritePath, Vector2 animationFrame, float animationSpeed,
+                                 float startingAngle,
+                                 float speed,
+                                 float timeToLive,
+                                 float damage,
+                                 weak_ptr<GameObject> target,
+                                 float chaseSteering)
     -> function<void(shared_ptr<GameObject>)>
 {
   return [spritePath, animationFrame, animationSpeed, startingAngle, speed, timeToLive, damage, target, chaseSteering](shared_ptr<GameObject> projectile)
@@ -129,19 +129,19 @@ auto ProjectileRecipe(string spritePath, Vector2 animationFrame, float animation
 void MainState::InitializeObjects()
 {
   // Add a background
-  CreateObject(BackgroundRecipe);
+  CreateObject("Background", BackgroundRecipe);
 
   // Add a tilemap
-  CreateObject(TilemapRecipe);
+  CreateObject("Tilemap", TilemapRecipe);
 
   // Add an alien
-  CreateObject(AlienRecipe, Vector2(512, 300));
+  CreateObject("Alien", AlienRecipe, Vector2(512, 300));
 
   // Add penguins
-  auto penguin = CreateObject(PenguinBodyRecipe);
+  auto penguin = CreateObject("Penguin Body", PenguinBodyRecipe);
 
   // Add cannon as child
-  CreateObject(PenguinCannonRecipe, penguin->GetPosition(), penguin->GetRotation(), penguin);
+  CreateObject("Penguin Cannon", PenguinCannonRecipe, penguin->GetPosition(), penguin->GetRotation(), penguin);
 
   // Make camera follow penguin
   Camera::GetInstance().Follow(penguin);
