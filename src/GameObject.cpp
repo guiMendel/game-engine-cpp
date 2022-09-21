@@ -10,7 +10,7 @@ using namespace std;
 GameObject::GameObject(GameState &gameState) : gameState(gameState), id(gameState.SupplyObjectId()) {}
 
 // With dimensions
-GameObject::GameObject(Vector2 coordinates, double rotation, std::shared_ptr<GameObject> parent)
+GameObject::GameObject(Vector2 coordinates, double rotation, shared_ptr<GameObject> parent)
     : GameObject(Game::GetInstance().GetState())
 {
   // Only add a parent if not the root object
@@ -109,7 +109,7 @@ auto GameObject::GetComponent(const Component *componentPointer) const -> shared
   return *componentIterator;
 }
 
-std::shared_ptr<GameObject> GameObject::InternalGetParent() const
+shared_ptr<GameObject> GameObject::InternalGetParent() const
 {
   // Ensure not root
   Assert(IsRoot() == false, "Getting parent is forbidden on root object");
@@ -123,7 +123,7 @@ std::shared_ptr<GameObject> GameObject::InternalGetParent() const
   return weakParent.lock();
 }
 
-std::shared_ptr<GameObject> GameObject::GetParent() const
+shared_ptr<GameObject> GameObject::GetParent() const
 {
   auto parent = InternalGetParent();
 
@@ -139,7 +139,7 @@ void GameObject::UnlinkParent()
   weakParent.reset();
 }
 
-void GameObject::SetParent(std::shared_ptr<GameObject> newParent)
+void GameObject::SetParent(shared_ptr<GameObject> newParent)
 {
   Assert(IsRoot() == false, "SetParent is forbidden on root object");
 
@@ -207,4 +207,27 @@ void GameObject::InternalDestroy()
 
   // Delete self from state's list
   gameState.RemoveObject(id);
+}
+
+void GameObject::RegisterCollider(shared_ptr<Collider> collider) { colliders.emplace_back(collider); }
+
+vector<shared_ptr<Collider>> GameObject::GetColliders()
+{
+  vector<shared_ptr<Collider>> verifiedColliders;
+
+  auto colliderIterator = colliders.begin();
+  while (colliderIterator != colliders.end())
+  {
+    // Remove it if it's expired
+    if (colliderIterator->expired())
+    {
+      colliderIterator = colliders.erase(colliderIterator);
+      continue;
+    }
+
+    // Otherwise lock it and add it
+    verifiedColliders.push_back(colliderIterator->lock());
+  }
+
+  return verifiedColliders;
 }

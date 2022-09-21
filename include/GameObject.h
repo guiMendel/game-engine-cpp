@@ -9,6 +9,7 @@
 #include <utility>
 #include "GameObject.h"
 #include "Component.h"
+#include "Collider.h"
 #include "Vector2.h"
 #include "Helper.h"
 
@@ -17,6 +18,7 @@ class GameState;
 class GameObject
 {
   friend GameState;
+  friend Collider;
 
 public:
   // With dimensions
@@ -120,6 +122,9 @@ public:
   double GetRotation() const;
   void SetRotation(const double newRotation);
 
+  // Get's a list of this objects colliders
+  std::vector<std::shared_ptr<Collider>> GetColliders();
+
   // Where this object exists in game space, relative to it's parent's position
   Vector2 localPosition;
 
@@ -151,6 +156,9 @@ private:
   // Deletes reference to parent and paren't reference to self
   void UnlinkParent();
 
+  // Registers new collider
+  void RegisterCollider(std::shared_ptr<Collider> collider);
+
   // Vector with all components of this object
   std::vector<std::shared_ptr<Component>> components;
 
@@ -162,6 +170,10 @@ private:
 
   // Parent object
   std::weak_ptr<GameObject> weakParent;
+
+  // References to this object's colliders
+  // Is only populated after the collider's Start() method is called
+  std::vector<std::weak_ptr<Collider>> colliders;
 };
 
 #include "GameState.h"

@@ -29,9 +29,9 @@ public:
   // Projectile
   static auto ProjectileRecipe(std::string spritePath, Vector2 animationFrame, float animationSpeed,
                                float startingAngle,
-                               float speed,
-                               float timeToLive,
-                               float damage,
+                               float speed = 300.0f,
+                               float timeToLive = 5.0f,
+                               float damage = 50.0f,
                                std::weak_ptr<GameObject> target = std::weak_ptr<GameObject>(),
                                float chaseSteering = 0.5f)
       -> std::function<void(std::shared_ptr<GameObject>)>;

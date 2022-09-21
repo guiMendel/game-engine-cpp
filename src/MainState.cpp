@@ -114,6 +114,9 @@ auto ProjectileRecipe(string spritePath, Vector2 animationFrame, float animation
     // Add sprite
     auto sprite = projectile->AddComponent<Sprite>(spritePath, RenderLayer::Projectiles);
 
+    // Get collider
+    projectile->AddComponent<Collider>(sprite);
+
     // Add animation
     projectile->AddComponent<SpriteAnimator>(sprite, animationFrame, animationSpeed);
 

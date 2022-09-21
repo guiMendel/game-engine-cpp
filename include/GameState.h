@@ -84,6 +84,10 @@ protected:
   std::shared_ptr<GameObject> rootObject;
 
 private:
+  void UpdateObjects(float deltaTime);
+  void DeleteObjects();
+  void DetectCollisions();
+
   // Indicates that the game must exit
   bool quitRequested{false};
 

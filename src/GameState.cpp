@@ -14,21 +14,14 @@ GameState::GameState() : inputManager(InputManager::GetInstance()), rootObject(n
 {
 }
 
-void GameState::Update(float deltaTime)
+void GameState::UpdateObjects(float deltaTime)
 {
-  // Quit if necessary
-  if (inputManager.KeyRelease(ESCAPE_KEY) || inputManager.QuitRequested())
-  {
-    quitRequested = true;
-  }
-
-  // Update camera
-  Camera::GetInstance().Update(deltaTime);
-
-  // Update game objects
   for (auto &objectPair : gameObjects)
     objectPair.second->Update(deltaTime);
+}
 
+void GameState::DeleteObjects()
+{
   // Check for dead objects
   vector<shared_ptr<GameObject>> deadObjects;
 
@@ -45,6 +38,42 @@ void GameState::Update(float deltaTime)
   // Erase them
   for (auto &deadObject : deadObjects)
     deadObject->InternalDestroy();
+}
+
+void GameState::DetectCollisions() {
+  TODO:
+  GUARDAR UM MAP DOS IDS DOS OBJETOS A UM VETOR DOS SEUS COLLDIERS
+  AI QUANDO O COLLIDER DER START ELE SE REGISTRA NESSE VETOR
+  AI VAMOS PODER TIRAR A REFERENCIA AOS COLLIDERS Q EU COLOQUEI EM GAMEOBJECT E TIRAR O FRIEND TB
+
+  AI AQUI TEM Q PASSAR POR ESSE MAP E GERAR UM NOVO MAP IGUAL, MAS USANDO SAHREDPTR EM VEZ DE WEAK (JA REMOVE OS WEAK EXPIRED TAMBEM)
+  AI DPS PASSA UM POR UM TESTANDO COLISAO COM OS DEMAIS
+  LEMBRAR D EUSAR UM ITERADOR E SO COPARAR COM OS OBJECTOS DA FRENTE, PQ OS DE TRAS JA TESTARAM COM ESTE OBJETO
+  
+  for (auto &objectPair : gameObjects) {
+    
+  }
+}
+
+void GameState::Update(float deltaTime)
+{
+  // Quit if necessary
+  if (inputManager.KeyRelease(ESCAPE_KEY) || inputManager.QuitRequested())
+  {
+    quitRequested = true;
+  }
+
+  // Update camera
+  Camera::GetInstance().Update(deltaTime);
+
+  // Update game objects
+  UpdateObjects(deltaTime);
+
+  // Delete dead ones
+  DeleteObjects();
+
+  // Inform them of any collisions
+  DetectCollisions();
 }
 
 void GameState::Render()
