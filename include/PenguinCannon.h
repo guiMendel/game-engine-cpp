@@ -17,8 +17,12 @@ public:
   // Damage of projectile
   static const float projectileDamage;
 
+  // Cooldown
+  static const float cooldown;
+
   PenguinCannon(GameObject &associatedObject) : Component(associatedObject) {}
 
+  void Start() override;
   void Update([[maybe_unused]] float deltaTime) override;
 
   void Shoot();

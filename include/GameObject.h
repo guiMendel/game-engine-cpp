@@ -118,6 +118,22 @@ public:
 
   std::vector<std::shared_ptr<GameObject>> GetChildren();
 
+  // A timer helper
+  class
+  {
+    std::unordered_map<std::string, float> timers;
+
+  public:
+    void Reset(std::string name, float value = 0) { timers[name] = value; }
+    float Get(std::string name) { return timers[name]; }
+    void Stop(std::string name) { timers.erase(name); }
+    void Update(float deltaTime)
+    {
+      for (auto &entry : timers)
+        entry.second += deltaTime;
+    }
+  } timer;
+
   // Where this object exists in game space, relative to it's parent's position
   Vector2 localPosition;
 
