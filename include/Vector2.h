@@ -7,6 +7,7 @@
 #include <string>
 #include <initializer_list>
 #include <cmath>
+#include <SDL.h>
 
 class Vector2
 {
@@ -108,7 +109,7 @@ public:
   // Returns a vector rotated by the given angle, in radians
   Vector2 Rotated(float angle) const
   {
-    return Vector2(x * cos(-angle) - y * sin(-angle), y * cos(-angle) - x * sin(-angle));
+    return Vector2(x * cos(angle) - y * sin(angle), x * sin(angle) + y * cos(angle));
   }
 
   explicit operator bool() const { return x != 0 || y != 0; }
@@ -137,6 +138,8 @@ public:
   static Vector2 Zero() { return Vector2(0, 0); }
   static Vector2 One() { return Vector2(1, 1); }
   static Vector2 Angled(float angle, float magnitude = 1) { return Vector2::Right(magnitude).Rotated(angle); }
+
+  explicit operator SDL_Point() const { return {(int)round(x), (int)round(y)}; }
 };
 
 #endif

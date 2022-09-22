@@ -33,8 +33,8 @@ void PenguinCannon::Shoot()
       .CreateObject(
           "Penguin Projectile",
           MainState::ProjectileRecipe(
-              "./assets/image/penguinbullet.png", Vector2(30, 29), 0.2f,
-              gameObject.GetRotation(), projectileSpeed, projectileTimeToLive, projectileDamage),
+              "./assets/image/penguinbullet.png", Vector2(30, 29), 0.2f, false,
+              Tag::Enemy, gameObject.GetRotation(), projectileSpeed, projectileTimeToLive, projectileDamage),
           GunPointPosition());
 }
 

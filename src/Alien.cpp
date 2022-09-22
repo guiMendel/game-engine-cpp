@@ -17,7 +17,7 @@ const float Alien::acceleration{1.0f};
 const float Alien::maxSpeed{100.0f};
 
 // Total minion count
-const int Alien::totalMinions{6};
+const int Alien::totalMinions{1};
 
 // Total health points
 const float Alien::healthPoints{500.0f};

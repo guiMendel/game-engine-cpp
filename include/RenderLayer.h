@@ -11,6 +11,7 @@ enum class RenderLayer
   Player,
   Projectiles,
   Foreground,
+  Debug,
   None
 };
 

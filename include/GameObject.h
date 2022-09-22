@@ -11,6 +11,7 @@
 #include "Component.h"
 #include "Vector2.h"
 #include "Helper.h"
+#include "Tag.h"
 
 class GameState;
 
@@ -133,6 +134,9 @@ public:
 
   // Object's unique identifier
   const int id;
+
+  // This object's tag
+  Tag tag{Tag::None};
 
   // Child objects
   std::unordered_map<int, std::weak_ptr<GameObject>> children;

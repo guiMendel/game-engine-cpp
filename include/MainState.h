@@ -27,7 +27,8 @@ public:
   static auto MinionRecipe(std::shared_ptr<Alien> alien, float startingArc) -> std::function<void(std::shared_ptr<GameObject>)>;
 
   // Projectile
-  static auto ProjectileRecipe(std::string spritePath, Vector2 animationFrame, float animationSpeed,
+  static auto ProjectileRecipe(std::string spritePath, Vector2 animationFrame, float animationSpeed, bool loopAnimation,
+                               Tag targetTag,
                                float startingAngle,
                                float speed = 300.0f,
                                float timeToLive = 5.0f,

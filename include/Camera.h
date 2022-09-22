@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Vector2.h"
+#include "Rectangle.h"
 #include <memory>
 
 class Camera
@@ -52,6 +53,15 @@ public:
 
   // Convert coordinates
   Vector2 WorldToScreen(const Vector2 &worldCoordinates) const
+  {
+    return worldCoordinates - rawPosition;
+  }
+
+  Rectangle ScreenToWorld(const Rectangle &screenCoordinates) const
+  {
+    return screenCoordinates + rawPosition;
+  }
+  Rectangle WorldToScreen(const Rectangle &worldCoordinates) const
   {
     return worldCoordinates - rawPosition;
   }

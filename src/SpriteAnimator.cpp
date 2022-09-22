@@ -21,10 +21,13 @@ void SpriteAnimator::ConfigureSpriteFrames()
 
 void SpriteAnimator::Update(float deltaTime)
 {
+  if (playing == false)
+    return;
+
   // Count this frame's time
   frameElapsedTime += deltaTime;
 
-  // Do nothing id timer isn't up
+  // Do nothing if timer isn't up
   if (frameElapsedTime < secondsPerFrame)
     return;
 
@@ -39,6 +42,8 @@ void SpriteAnimator::SetFrame(int frameIndex)
   // Get sprite
   auto sprite = spriteWeak.lock();
 
+  int frameCount = GetFrameCount();
+
   if (!sprite)
   {
     enabled = false;
@@ -50,7 +55,7 @@ void SpriteAnimator::SetFrame(int frameIndex)
 
   // Update to this frame
   // Limit frame index to frame space
-  currentFrame = frameIndex % GetFrameCount();
+  currentFrame = frameIndex % frameCount;
 
   // Finit's row
   int frameRow = currentFrame / columnFrameCount;
@@ -64,4 +69,8 @@ void SpriteAnimator::SetFrame(int frameIndex)
       frameRow * frameDimensions.y,
       frameDimensions.x,
       frameDimensions.y);
+
+  // Stop if last frame & not looping
+  if (frameIndex == frameCount - 1 && loop == false)
+    playing = false;
 }

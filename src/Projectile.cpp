@@ -1,4 +1,5 @@
 #include "Projectile.h"
+#include "Health.h"
 #include <cmath>
 #include <string>
 
@@ -6,13 +7,14 @@ using namespace std;
 
 Projectile::Projectile(
     GameObject &associatedObject,
+    Tag targetTag,
     float startingAngle,
     float speed,
     float timeToLive,
     float damage,
     weak_ptr<GameObject> target,
     float chaseSteering)
-    : Component(associatedObject), speed(Vector2::Angled(startingAngle, speed)), angle(startingAngle), timeToLive(timeToLive), damage(damage), targetWeak(target), chaseSteering(chaseSteering)
+    : Component(associatedObject), speed(Vector2::Angled(startingAngle, speed)), angle(startingAngle), timeToLive(timeToLive), damage(damage), targetWeak(target), chaseSteering(chaseSteering), targetTag(targetTag)
 {
   // Adjust rotation
   gameObject.SetRotation(this->speed.Angle());
@@ -54,4 +56,24 @@ void Projectile::Chase()
 
   // Adjust rotation
   gameObject.SetRotation(speed.Angle());
+}
+
+void Projectile::OnCollision(GameObject &other)
+{
+  // Ignore if other isn't of target tag
+  if (other.tag != targetTag)
+    return;
+
+  // Get other's health component
+  auto health = other.GetComponent<Health>();
+
+  // If it has none, stop
+  if (!health)
+    return;
+
+  // Deal damage
+  health->TakeDamage(damage);
+
+  // Die
+  gameObject.RequestDestroy();
 }

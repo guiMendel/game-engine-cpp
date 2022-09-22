@@ -70,5 +70,5 @@ void InputManager::Update()
 
 Vector2 InputManager::GetMouseWorldCoordinates() const
 {
-  return Camera::GetInstance().ScreenToWorld({(float)mouseX, (float)mouseY});
+  return Camera::GetInstance().ScreenToWorld(Vector2((float)mouseX, (float)mouseY));
 }

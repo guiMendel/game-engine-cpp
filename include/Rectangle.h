@@ -109,6 +109,11 @@ public:
   operator SDL_Rect() const { return SDL_Rect{(int)x, (int)y, (int)width, (int)height}; }
 
   explicit operator Vector2() const { return Vector2{x, y}; }
+
+  explicit operator std::string() const
+  {
+    return "{ x: " + std::to_string(x) + ", y: " + std::to_string(y) + ", w: " + std::to_string(width) + ", h: " + std::to_string(height) + " }";
+  }
 };
 
 #endif

@@ -67,5 +67,6 @@ void PenguinBody::Rotate(float deltaTime)
 
 void PenguinBody::OnCollision(GameObject &other)
 {
-  cout << "Body collision with " << other.GetName() << endl;
+  if (other.GetName() != "Penguin Cannon")
+    cout << "Body collision with " << other.GetName() << endl;
 }

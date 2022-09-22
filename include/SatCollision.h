@@ -51,8 +51,8 @@ namespace SatCollision
   // Additionally first does a quick check to ensure the rectangles are close enough so that collision is possible
   static bool IsColliding(const Rectangle &rect1, const Rectangle &rect2, float minDistanceSquared)
   {
-    if (Vector2::SqrDistance(rect1.Center(), rect2.Center()) > minDistanceSquared)
-      return false;
+    // if (Vector2::SqrDistance(rect1.Center(), rect2.Center()) > minDistanceSquared)
+    //   return false;
 
     return IsColliding(rect1, rect2);
   }

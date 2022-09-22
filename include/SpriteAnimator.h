@@ -10,8 +10,8 @@
 class SpriteAnimator : public Component
 {
 public:
-  SpriteAnimator(GameObject &associatedObject, std::weak_ptr<Sprite> sprite, Vector2 frameDimensions, float secondsPerFrame)
-      : Component(associatedObject), spriteWeak(sprite), frameDimensions(frameDimensions), secondsPerFrame(secondsPerFrame)
+  SpriteAnimator(GameObject &associatedObject, std::weak_ptr<Sprite> sprite, Vector2 frameDimensions, float secondsPerFrame, bool loop = false)
+      : Component(associatedObject), loop(loop), spriteWeak(sprite), frameDimensions(frameDimensions), secondsPerFrame(secondsPerFrame)
   {
     ConfigureSpriteFrames();
   }
@@ -28,6 +28,12 @@ public:
 
   // Set the current frame
   void SetFrame(int frameIndex);
+
+  float GetFrameWidth() { return frameDimensions.x; }
+  float GetFrameHeight() { return frameDimensions.y; }
+
+  // Whether to loop
+  bool loop{false};
 
 private:
   void ConfigureSpriteFrames();
@@ -52,6 +58,9 @@ private:
 
   // Time to spend in each frame, in seconds
   float secondsPerFrame;
+
+  // Whether animation is playing
+  bool playing{true};
 };
 
 #endif

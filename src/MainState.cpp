@@ -29,6 +29,9 @@ void MainState::PenguinBodyRecipe(shared_ptr<GameObject> penguin)
 
   // Add health
   penguin->AddComponent<Health>(PenguinBody::totalHealth);
+
+  // Give it a player tag
+  penguin->tag = Tag::Player;
 }
 
 void MainState::PenguinCannonRecipe(shared_ptr<GameObject> penguin)
@@ -41,6 +44,9 @@ void MainState::PenguinCannonRecipe(shared_ptr<GameObject> penguin)
 
   // Add behavior
   penguin->AddComponent<PenguinCannon>();
+
+  // Give it a player tag
+  penguin->tag = Tag::Player;
 }
 
 void MainState::BackgroundRecipe(shared_ptr<GameObject> background)
@@ -80,6 +86,9 @@ void MainState::AlienRecipe(shared_ptr<GameObject> alien)
 
   // Get health
   alien->AddComponent<Health>(Alien::healthPoints);
+
+  // Give it an enemy tag
+  alien->tag = Tag::Enemy;
 }
 
 auto MainState::MinionRecipe(shared_ptr<Alien> alien, float startingArc) -> function<void(shared_ptr<GameObject>)>
@@ -97,10 +106,14 @@ auto MainState::MinionRecipe(shared_ptr<Alien> alien, float startingArc) -> func
 
     // Add to minions
     alien->minions.emplace_back(minion);
+
+    // Give it an enemy tag
+    minion->tag = Tag::Enemy;
   };
 }
 
-auto MainState::ProjectileRecipe(string spritePath, Vector2 animationFrame, float animationSpeed,
+auto MainState::ProjectileRecipe(string spritePath, Vector2 animationFrame, float animationSpeed, bool loopAnimation,
+                                 Tag targetTag,
                                  float startingAngle,
                                  float speed,
                                  float timeToLive,
@@ -109,20 +122,20 @@ auto MainState::ProjectileRecipe(string spritePath, Vector2 animationFrame, floa
                                  float chaseSteering)
     -> function<void(shared_ptr<GameObject>)>
 {
-  return [spritePath, animationFrame, animationSpeed, startingAngle, speed, timeToLive, damage, target, chaseSteering](shared_ptr<GameObject> projectile)
+  return [targetTag, spritePath, animationFrame, animationSpeed, startingAngle, speed, timeToLive, damage, target, chaseSteering, loopAnimation](shared_ptr<GameObject> projectile)
   {
     // Add sprite
     auto sprite = projectile->AddComponent<Sprite>(spritePath, RenderLayer::Projectiles);
 
-    // Get collider
-    projectile->AddComponent<Collider>(sprite);
-
     // Add animation
-    projectile->AddComponent<SpriteAnimator>(sprite, animationFrame, animationSpeed);
+    auto animator = projectile->AddComponent<SpriteAnimator>(sprite, animationFrame, animationSpeed, loopAnimation);
+
+    // Get collider
+    projectile->AddComponent<Collider>(animator);
 
     // Add projectile behavior
     projectile->AddComponent<Projectile>(
-        startingAngle, speed, timeToLive, damage, target, chaseSteering);
+        targetTag, startingAngle, speed, timeToLive, damage, target, chaseSteering);
   };
 }
 
