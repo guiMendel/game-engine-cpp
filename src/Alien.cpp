@@ -54,8 +54,6 @@ void Alien::Update([[maybe_unused]] float deltaTime)
   {
     auto inputManager = InputManager::GetInstance();
 
-    // cout << "Checking for action " << button << endl;
-
     if (inputManager.MousePress(button))
       AddAction(actionType);
   };

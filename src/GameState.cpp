@@ -36,10 +36,16 @@ GameState::GameState() : inputManager(InputManager::GetInstance()), rootObject(n
 {
 }
 
-void GameState::UpdateObjects(float deltaTime)
+void GameState::UpdateObject(float deltaTime, shared_ptr<GameObject> object)
 {
-  for (auto &objectPair : gameObjects)
-    objectPair.second->Update(deltaTime);
+  // cout << "UpdateObject: " << object->name << ", children: " << object->GetChildren().size() << endl;
+
+  // Update this object
+  object->Update(deltaTime);
+
+  // Update it's children
+  for (auto child : object->GetChildren())
+    UpdateObject(deltaTime, child);
 }
 
 void GameState::DeleteObjects()
@@ -104,7 +110,7 @@ void GameState::Update(float deltaTime)
   Camera::GetInstance().Update(deltaTime);
 
   // Update game objects
-  UpdateObjects(deltaTime);
+  UpdateObject(deltaTime, rootObject);
 
   // Delete dead ones
   DeleteObjects();
@@ -150,16 +156,10 @@ void GameState::RemoveObject(int id)
   gameObjects.erase(id);
 }
 
-shared_ptr<GameObject> GameState::AddObject(shared_ptr<GameObject> gameObject)
+shared_ptr<GameObject> GameState::RegisterObject(GameObject *gameObject)
 {
-  // Store it
-  gameObjects[gameObject->id] = gameObject;
-
-  // Call it's start method
-  if (started)
-    gameObject->Start();
-
-  return gameObject;
+  gameObjects[gameObject->id] = shared_ptr<GameObject>(gameObject);
+  return gameObjects[gameObject->id];
 }
 
 weak_ptr<GameObject> GameState::GetPointer(const GameObject *targetObject)

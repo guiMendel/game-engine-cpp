@@ -24,14 +24,7 @@ public:
   GameObject(std::string name, Vector2 coordinates = Vector2(0, 0), double rotation = 0.0, std::shared_ptr<GameObject> parent = nullptr);
 
   // Called once per frame
-  void Update(float deltaTime)
-  {
-    for (const auto &component : components)
-    {
-      if (component->IsEnabled())
-        component->Update(deltaTime);
-    }
-  }
+  void Update(float deltaTime);
 
   // Whether is dead
   bool DestroyRequested() const { return destroyRequested; }
@@ -122,6 +115,8 @@ public:
   void SetRotation(const double newRotation);
 
   std::string GetName() const { return name; }
+
+  std::vector<std::shared_ptr<GameObject>> GetChildren();
 
   // Where this object exists in game space, relative to it's parent's position
   Vector2 localPosition;

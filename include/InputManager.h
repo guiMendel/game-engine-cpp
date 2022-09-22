@@ -64,7 +64,7 @@ private:
   std::unordered_map<int, int> keyUpdate;
 
   // Whether user has requested to quit
-  bool quitRequested;
+  bool quitRequested{false};
 
   int updateCounter;
 

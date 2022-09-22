@@ -2,6 +2,7 @@
 #define __SAT_COLLISION__
 
 #include "Rectangle.h"
+#include <iostream>
 
 // Implementation of SAT collision, limited to rectangle polygons
 // Based on this guide: https://youtu.be/-EsWKT7Doww
@@ -51,6 +52,8 @@ namespace SatCollision
   // Additionally first does a quick check to ensure the rectangles are close enough so that collision is possible
   static bool IsColliding(const Rectangle &rect1, const Rectangle &rect2, float rotation1, float rotation2, float minDistanceSquared)
   {
+    // std::cout << minDistanceSquared << " < " << Vector2::SqrDistance(rect1.Center(), rect2.Center()) << " == " << (Vector2::SqrDistance(rect1.Center(), rect2.Center()) > minDistanceSquared) << std::endl;
+
     // if (Vector2::SqrDistance(rect1.Center(), rect2.Center()) > minDistanceSquared)
     //   return false;
 

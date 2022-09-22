@@ -28,12 +28,7 @@ void Collider::SetBox(const Rectangle &newBox)
   maxVertexDistance = sqrt(box.width * box.width + box.height * box.height) / 2;
 }
 
-Rectangle Collider::GetBox() const
-{
-  // if (gameObject.GetName() == "Penguin Body")
-  //   cout << gameObject.GetName() << ": " << (string)(box + gameObject.GetPosition()) << endl;
-  return box + gameObject.GetPosition();
-}
+Rectangle Collider::GetBox() const { return box + gameObject.GetPosition(); }
 
 void Collider::Start()
 {

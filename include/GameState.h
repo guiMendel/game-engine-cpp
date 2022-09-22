@@ -40,21 +40,28 @@ public:
 
   void RemoveObject(std::shared_ptr<GameObject> gameObject) { RemoveObject(gameObject->id); }
 
-  // Adds a new game object
-  std::shared_ptr<GameObject> AddObject(std::shared_ptr<GameObject> gameObject);
+  std::shared_ptr<GameObject> RegisterObject(GameObject *gameObject);
 
   // Creates a new game object
   template <typename... Args>
   std::shared_ptr<GameObject> CreateObject(
       std::string name, std::function<void(std::shared_ptr<GameObject>)> recipe, Args &&...args)
   {
-    std::shared_ptr<GameObject> object = std::make_shared<GameObject>(name, std::forward<Args>(args)...);
+    // Create the object, which automatically registers it's pointer to the state's list
+    int objectId = (new GameObject(name, std::forward<Args>(args)...))->id;
+    auto object = gameObjects[objectId];
 
     // Initialize it
     if (recipe)
       recipe(object);
 
-    return AddObject(object);
+    // Call it's start method
+    if (started)
+    {
+      object->Start();
+    }
+
+    return object;
   }
 
   std::weak_ptr<GameObject> GetPointer(const GameObject *gameObject);
@@ -87,7 +94,7 @@ protected:
   std::shared_ptr<GameObject> rootObject;
 
 private:
-  void UpdateObjects(float deltaTime);
+  void UpdateObject(float deltaTime, std::shared_ptr<GameObject> object);
   void DeleteObjects();
   void DetectCollisions();
 

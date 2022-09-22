@@ -7,24 +7,29 @@
 using namespace std;
 
 // Private constructor
-GameObject::GameObject(string name, GameState &gameState) : gameState(gameState), id(gameState.SupplyObjectId()), name(name) {}
+GameObject::GameObject(string name, GameState &gameState) : gameState(gameState), id(gameState.SupplyObjectId()), name(name)
+{
+}
 
 // With dimensions
 GameObject::GameObject(string name, Vector2 coordinates, double rotation, shared_ptr<GameObject> parent)
     : GameObject(name, Game::GetInstance().GetState())
 {
+  // Add gameState reference
+  auto shared = gameState.RegisterObject(this);
+
   // Only add a parent if not the root object
   if (IsRoot() == false)
   {
     // If no parent, add root as parent
     if (parent == nullptr)
-      parent = Game::GetInstance().GetState().GetRootObject();
+      parent = gameState.GetRootObject();
 
     // Add reference to parent
     this->weakParent = parent;
 
     // Give parent a reference to self
-    parent->children[id] = GetShared();
+    parent->children[id] = weak_ptr(shared);
   }
 
   SetPosition(coordinates);
@@ -40,6 +45,15 @@ void GameObject::Start()
 
   for (auto component : components)
     component->StartAndRegisterLayer();
+}
+
+void GameObject::Update(float deltaTime)
+{
+  for (const auto &component : components)
+  {
+    if (component->IsEnabled())
+      component->Update(deltaTime);
+  }
 }
 
 void GameObject::RemoveComponent(Component *component)
@@ -93,7 +107,9 @@ void GameObject::DestroyAfterSoundPlay()
 
 shared_ptr<GameObject> GameObject::GetShared() const
 {
-  return Game::GetInstance().GetState().GetPointer(this).lock();
+  LOCK(gameState.GetPointer(this), shared);
+
+  return shared;
 }
 
 auto GameObject::GetComponent(const Component *componentPointer) const -> shared_ptr<Component>
@@ -190,6 +206,33 @@ void GameObject::SetRotation(const double newRotation)
   if (IsRoot())
     localRotation = newRotation;
   localRotation = newRotation - InternalGetParent()->GetRotation();
+}
+
+vector<shared_ptr<GameObject>> GameObject::GetChildren()
+{
+  vector<shared_ptr<GameObject>> verifiedChildren;
+
+  // For each child entry
+  auto childEntryIterator = children.begin();
+  while (childEntryIterator != children.end())
+  {
+    // If it's expired
+    if (childEntryIterator->second.expired())
+    {
+      // Remove it
+      childEntryIterator = children.erase(childEntryIterator);
+
+      continue;
+    }
+
+    // Otherwise lock it and add it
+    verifiedChildren.push_back(childEntryIterator->second.lock());
+
+    // Advance
+    childEntryIterator++;
+  }
+
+  return verifiedChildren;
 }
 
 void GameObject::InternalDestroy()

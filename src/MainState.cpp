@@ -40,7 +40,7 @@ void MainState::PenguinCannonRecipe(shared_ptr<GameObject> penguin)
   auto sprite = penguin->AddComponent<Sprite>("./assets/image/cubngun.png", RenderLayer::Player, 1);
 
   // Get collider
-  penguin->AddComponent<Collider>(sprite);
+  // penguin->AddComponent<Collider>(sprite);
 
   // Add behavior
   penguin->AddComponent<PenguinCannon>();
@@ -99,7 +99,7 @@ auto MainState::MinionRecipe(shared_ptr<Alien> alien, float startingArc) -> func
     auto sprite = minion->AddComponent<Sprite>("./assets/image/minion.png", RenderLayer::Enemies);
 
     // Get collider
-    minion->AddComponent<Collider>(sprite);
+    // minion->AddComponent<Collider>(sprite);
 
     // Give it minion behavior
     minion->AddComponent<Minion>(alien->gameObject.GetShared(), startingArc);
@@ -131,7 +131,7 @@ auto MainState::ProjectileRecipe(string spritePath, Vector2 animationFrame, floa
     auto animator = projectile->AddComponent<SpriteAnimator>(sprite, animationFrame, animationSpeed, loopAnimation);
 
     // Get collider
-    projectile->AddComponent<Collider>(animator);
+    // projectile->AddComponent<Collider>(animator);
 
     // Add projectile behavior
     projectile->AddComponent<Projectile>(

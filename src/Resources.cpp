@@ -15,7 +15,6 @@ unordered_map<string, Helper::auto_ptr<Mix_Chunk>> Resources::soundTable;
 
 SDL_Texture &Resources::GetTexture(string filename)
 {
-
   // Check if it's already loaded
   auto textureIterator = textureTable.find(filename);
 
