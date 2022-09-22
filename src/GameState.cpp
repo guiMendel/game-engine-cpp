@@ -20,6 +20,7 @@ bool CheckForCollision(vector<shared_ptr<Collider>> colliders1, vector<shared_pt
     {
       if (SatCollision::IsColliding(
               collider1->GetBox(), collider2->GetBox(),
+              collider1->gameObject.GetRotation(), collider2->gameObject.GetRotation(),
               pow(collider1->GetMaxVertexDistance() + collider2->GetMaxVertexDistance(), 2)))
       {
         return true;

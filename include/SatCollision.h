@@ -43,18 +43,18 @@ namespace SatCollision
   }
 
   // Checks if both rect's have any overlapping area
-  static bool IsColliding(const Rectangle &rect1, const Rectangle &rect2)
+  static bool IsColliding(const Rectangle &rect1, const Rectangle &rect2, float rotation1, float rotation2)
   {
-    return FindMinDistance(rect1, rect2) <= 0.0f && FindMinDistance(rect2, rect1) <= 0.0f;
+    return FindMinDistance(rect1, rect2, rotation1, rotation2) <= 0.0f && FindMinDistance(rect2, rect1, rotation2, rotation1) <= 0.0f;
   }
 
   // Additionally first does a quick check to ensure the rectangles are close enough so that collision is possible
-  static bool IsColliding(const Rectangle &rect1, const Rectangle &rect2, float minDistanceSquared)
+  static bool IsColliding(const Rectangle &rect1, const Rectangle &rect2, float rotation1, float rotation2, float minDistanceSquared)
   {
     // if (Vector2::SqrDistance(rect1.Center(), rect2.Center()) > minDistanceSquared)
     //   return false;
 
-    return IsColliding(rect1, rect2);
+    return IsColliding(rect1, rect2, rotation1, rotation2);
   }
 }
 
