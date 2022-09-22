@@ -28,12 +28,13 @@ shared_ptr<GameObject> NearestMinion(vector<weak_ptr<GameObject>> &minions, Vect
 void Alien::Start()
 {
   gameObject.RequireComponent<Movement>();
-  auto health = gameObject.RequireComponent<Health>();
 
-  // Remove on death
-  health->OnDeath.AddListener(
-      "deathRemove", [this]()
-      { gameObject.RequestDestroy(); });
+  // Explosion on death
+  gameObject.RequireComponent<Health>()->OnDeath.AddListener("alienExplosion", [this]()
+                                                             {
+    auto ExplosionRecipe = MainState::OneShotAnimationRecipe("./assets/image/aliendeath.png", Vector2(127.25f, 133), 0.4f);
+    
+    gameObject.gameState.CreateObject("Alien Explosion", ExplosionRecipe, gameObject.GetPosition()); });
 
   // Get game state reference
   auto &gameState = Game::GetInstance().GetState();

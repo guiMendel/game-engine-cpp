@@ -1,27 +1,23 @@
 #include "Sound.h"
+#include "Resources.h"
 
 using namespace Helper;
 using namespace std;
 
+Sound::Sound(GameObject &associatedObject, const string fileName, bool playOnStart) : Component(associatedObject), chunkPath(fileName), playOnStart(playOnStart) {}
+
 void Sound::Play(const int times)
 {
-  // Catch no chunk loaded
-  Assert(IsLoaded(), "Tried playing a sound chunk that was never loaded");
+  Mix_Chunk &sound = Resources::GetSound(chunkPath);
 
   // Play and memorize channel
-  channel = Mix_PlayChannel(-1, chunk.get(), times - 1);
-}
-
-void Sound::Play(function<void()> callback, const int times)
-{
-  finishCallback = callback;
-  Play(times);
+  channel = Mix_PlayChannel(-1, &sound, times - 1);
 }
 
 void Sound::Stop()
 {
-  // Catch no chunk loaded or no channel registered
-  if (IsLoaded() == false || channel < 0)
+  // Catch no channel registered
+  if (channel < 0)
     return;
 
   // Stop the channel that was previously used
@@ -31,14 +27,8 @@ void Sound::Stop()
   channel = -1;
 }
 
-void Sound::Load(const std::string fileName)
+void Sound::Start()
 {
-  // Try opening file
-  Mix_Chunk *loadedChunk = Mix_LoadWAV(fileName.c_str());
-
-  // Catch open fail
-  Assert(loadedChunk != nullptr, "Failed to load audio chunk at " + fileName);
-
-  // Store it
-  chunk.reset(loadedChunk);
+  if (playOnStart)
+    Play();
 }

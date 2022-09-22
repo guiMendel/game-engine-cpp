@@ -13,9 +13,7 @@ public:
 
   void TakeDamage(float damage);
 
-  Health(GameObject &associatedObject, float totalHealth) : Component(associatedObject), healthPoints(totalHealth) {}
-
-  RenderLayer GetRenderLayer() override { return RenderLayer::None; }
+  Health(GameObject &associatedObject, float totalHealth, bool destroyOnDeath = true);
 
 private:
   // Current health status
@@ -23,6 +21,9 @@ private:
 
   // Whether has already triggered death
   bool deathTriggered{false};
+
+  // Whether to destroy self on death
+  bool destroyOnDeath;
 };
 
 #endif

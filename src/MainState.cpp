@@ -9,6 +9,7 @@
 #include "Minion.h"
 #include "SpriteAnimator.h"
 #include "Projectile.h"
+#include "Sound.h"
 #include <iostream>
 
 using namespace std;
@@ -40,7 +41,7 @@ void MainState::PenguinCannonRecipe(shared_ptr<GameObject> penguin)
   auto sprite = penguin->AddComponent<Sprite>("./assets/image/cubngun.png", RenderLayer::Player, 1);
 
   // Get collider
-  // penguin->AddComponent<Collider>(sprite);
+  penguin->AddComponent<Collider>(sprite);
 
   // Add behavior
   penguin->AddComponent<PenguinCannon>();
@@ -99,16 +100,43 @@ auto MainState::MinionRecipe(shared_ptr<Alien> alien, float startingArc) -> func
     auto sprite = minion->AddComponent<Sprite>("./assets/image/minion.png", RenderLayer::Enemies);
 
     // Get collider
-    // minion->AddComponent<Collider>(sprite);
+    minion->AddComponent<Collider>(sprite);
 
     // Give it minion behavior
     minion->AddComponent<Minion>(alien->gameObject.GetShared(), startingArc);
+
+    // Make it mortal
+    minion->AddComponent<Health>(Minion::healthPoints);
 
     // Add to minions
     alien->minions.emplace_back(minion);
 
     // Give it an enemy tag
     minion->tag = Tag::Enemy;
+  };
+}
+
+auto MainState::OneShotAnimationRecipe(string spritePath, Vector2 animationFrame, float animationSpeed)
+    -> function<void(shared_ptr<GameObject>)>
+{
+  return [spritePath, animationFrame, animationSpeed](shared_ptr<GameObject> animation)
+  {
+    // Add sprite
+    auto sprite = animation->AddComponent<Sprite>(spritePath, RenderLayer::VFX);
+
+    // Add animation
+    auto animator = animation->AddComponent<SpriteAnimator>(sprite, animationFrame, animationSpeed);
+
+    // Get weak pointer to animation object
+    auto animationWeak = weak_ptr(animation);
+
+    // Play boom
+    animation->AddComponent<Sound>("./assets/sound/boom.wav");
+
+    // Delete self on animation end
+    animator->OnCycleEnd.AddListener("One Shot Destructor", [animationWeak]()
+                                     { if (auto animation = animationWeak.lock()) 
+                                        animation->RequestDestroy(); });
   };
 }
 
@@ -131,7 +159,7 @@ auto MainState::ProjectileRecipe(string spritePath, Vector2 animationFrame, floa
     auto animator = projectile->AddComponent<SpriteAnimator>(sprite, animationFrame, animationSpeed, loopAnimation);
 
     // Get collider
-    // projectile->AddComponent<Collider>(animator);
+    projectile->AddComponent<Collider>(animator);
 
     // Add projectile behavior
     projectile->AddComponent<Projectile>(

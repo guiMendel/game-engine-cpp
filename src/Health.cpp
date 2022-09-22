@@ -1,5 +1,8 @@
 #include "Health.h"
 
+Health::Health(GameObject &associatedObject, float totalHealth, bool destroyOnDeath)
+    : Component(associatedObject), healthPoints(totalHealth), destroyOnDeath(destroyOnDeath) {}
+
 void Health::TakeDamage(float damage)
 {
   healthPoints -= damage;
@@ -8,5 +11,9 @@ void Health::TakeDamage(float damage)
   {
     OnDeath.Invoke();
     deathTriggered = true;
+
+    // Destroy if necessary
+    if (destroyOnDeath)
+      gameObject.RequestDestroy();
   }
 }

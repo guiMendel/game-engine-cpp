@@ -8,36 +8,29 @@
 class Music
 {
 public:
-  // Default constructor
-  Music() : music(nullptr, Mix_FreeMusic) {}
+  Music() {}
 
   // Construct from music filename
-  Music(const std::string filename) : Music() { Load(filename); }
+  Music(const std::string filename) : musicPath(filename) {}
 
   // Plays the given music (-1 loops forever)
   void Play(const int times = -1);
 
   void Play(std::string filename, const int times = -1)
   {
-    Load(filename);
+    musicPath = filename;
     Play(times);
   }
 
   // Fades out the currently playing music. Thw fade out window is in ms
   void FadeOut(const int fadeWindow = 1500) { Mix_FadeOutMusic(fadeWindow); }
 
-  // Loads the music file
-  void Load(const std::string filename);
-
-  // Whether a music file is loaded
-  bool IsLoaded() const { return music != nullptr; }
-
   // Declare custom destructor
   ~Music();
 
 private:
   // The currently loaded music track
-  Helper::auto_ptr<Mix_Music> music;
+  std::string musicPath{""};
 };
 
 #endif

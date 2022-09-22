@@ -274,3 +274,15 @@ unordered_map<int, vector<shared_ptr<Collider>>> GameState::ValidateColliders()
 
   return verifiedCollidersStructure;
 }
+
+shared_ptr<GameObject> GameState::GetObject(int id)
+{
+  try
+  {
+    return gameObjects.at(id);
+  }
+  catch (out_of_range &)
+  {
+    return nullptr;
+  }
+}

@@ -40,8 +40,6 @@ void PenguinCannon::Update([[maybe_unused]] float deltaTime)
 void PenguinCannon::Shoot()
 {
   // Check if cooldown is done
-  cout << gameObject.timer.Get("cooldown") << endl;
-
   if (gameObject.timer.Get("cooldown") < cooldown)
     return;
 

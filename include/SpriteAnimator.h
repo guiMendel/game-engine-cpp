@@ -6,6 +6,7 @@
 #include "Component.h"
 #include "Sprite.h"
 #include "Vector2.h"
+#include "Event.h"
 
 class SpriteAnimator : public Component
 {
@@ -15,8 +16,6 @@ public:
   {
     ConfigureSpriteFrames();
   }
-
-  RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
   void Update(float deltaTime) override;
 
@@ -31,6 +30,9 @@ public:
 
   float GetFrameWidth() { return frameDimensions.x; }
   float GetFrameHeight() { return frameDimensions.y; }
+
+  // Triggered on animation cycle end
+  Event OnCycleEnd;
 
   // Whether to loop
   bool loop{false};

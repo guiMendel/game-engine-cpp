@@ -26,6 +26,9 @@ public:
   static void AlienRecipe(std::shared_ptr<GameObject> alien);
   static auto MinionRecipe(std::shared_ptr<Alien> alien, float startingArc) -> std::function<void(std::shared_ptr<GameObject>)>;
 
+  // General
+  static auto OneShotAnimationRecipe(std::string spritePath, Vector2 animationFrame, float animationSpeed) -> std::function<void(std::shared_ptr<GameObject>)>;
+
   // Projectile
   static auto ProjectileRecipe(std::string spritePath, Vector2 animationFrame, float animationSpeed, bool loopAnimation,
                                Tag targetTag,

@@ -9,6 +9,7 @@ enum class RenderLayer
   Default,
   Enemies,
   Player,
+  VFX,
   Projectiles,
   Foreground,
   Debug,

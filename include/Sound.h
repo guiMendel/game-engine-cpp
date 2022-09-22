@@ -11,55 +11,26 @@
 class Sound : public Component
 {
 public:
-  // Default constructor
-  Sound(GameObject &associatedObject)
-      : Component(associatedObject), chunk(nullptr, Mix_FreeChunk) {}
-
   // Constructor with sound file name
-  Sound(GameObject &associatedObject, const std::string fileName) : Sound(associatedObject)
-  {
-    Load(fileName);
-  }
+  Sound(GameObject &associatedObject, const std::string fileName, bool playOnStart = true);
 
   // Ensure sound stops if destroyed
   ~Sound() { Stop(); }
 
-  // Loads the file sound
-  void Load(const std::string fileName);
-
   // Plays audio
   void Play(const int times = 1);
-  void Play(std::function<void()> callback, const int times = 1);
 
   // Stops playing
   void Stop();
 
-  bool IsLoaded() const { return chunk != nullptr; }
-
-  // === COMPONENT OVERRIDES
-
-  void Update([[maybe_unused]] float deltaTime) override
-  {
-    // TEMPORARY
-    // Do nothing is this channel is playing
-    if (Mix_Playing(channel) || !finishCallback)
-      return;
-
-    // Otherwise, call the callback
-    finishCallback();
-
-    finishCallback = nullptr;
-  }
-
-  RenderLayer GetRenderLayer() override { return RenderLayer::None; }
+  void Start() override;
 
 private:
-  // Callback to execute when sound stops playing
-  std::function<void()> finishCallback;
+  // The chunk path
+  std::string chunkPath;
 
-  // The loaded audio chunk
-  // No need for destructor to free it!
-  Helper::auto_ptr<Mix_Chunk> chunk;
+  // Whther to play on Start callback
+  bool playOnStart;
 
   // The channel where to play
   int channel{-1};

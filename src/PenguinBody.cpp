@@ -1,5 +1,7 @@
 #include "PenguinBody.h"
 #include "InputManager.h"
+#include "Health.h"
+#include "MainState.h"
 
 using namespace std;
 
@@ -11,6 +13,16 @@ const float PenguinBody::totalHealth{100.0f};
 
 // In radians per second
 const float PenguinBody::rotationSpeed{M_PI / 2.0f};
+
+void PenguinBody::Start()
+{
+  // Explosion on death
+  gameObject.RequireComponent<Health>()->OnDeath.AddListener("penguinExplosion", [this]()
+                                                             {
+    auto ExplosionRecipe = MainState::OneShotAnimationRecipe("./assets/image/penguindeath.png", Vector2(128, 128), 0.6f);
+    
+    gameObject.gameState.CreateObject("Penguin Explosion", ExplosionRecipe, gameObject.GetPosition()); });
+}
 
 void PenguinBody::Update(float deltaTime)
 {

@@ -25,7 +25,9 @@ const float Minion::projectileSpeed{300};
 const float Minion::projectileTimeToLive{5};
 
 // Damage of projectile
-const float Minion::projectileDamage{50};
+const float Minion::projectileDamage{35};
+
+const float Minion::healthPoints{100.0f};
 
 Minion::Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPointer, float startingArc)
     : Component(associatedObject), hostPointer(hostPointer), arc(startingArc)
@@ -36,6 +38,16 @@ Minion::Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPoint
   // Set scale
   auto scale = RandomRange(scaleLimits[0], scaleLimits[1]);
   gameObject.localScale = {scale, scale};
+}
+
+void Minion::Start()
+{
+  // Explosion on death
+  gameObject.RequireComponent<Health>()->OnDeath.AddListener("minionExplosion", [this]()
+                                                             {
+    auto ExplosionRecipe = MainState::OneShotAnimationRecipe("./assets/image/miniondeath.png", Vector2(63.75f, 67), 0.25f);
+    
+    gameObject.gameState.CreateObject("Minion Explosion", ExplosionRecipe, gameObject.GetPosition()); });
 }
 
 void Minion::Update(float deltaTime)

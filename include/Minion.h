@@ -31,8 +31,12 @@ public:
   // Damage of projectile
   static const float projectileDamage;
 
+  // How many health points it has
+  static const float healthPoints;
+
   Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPointer, float startingArc = 0);
 
+  void Start() override;
   void Update(float deltaTime) override;
   RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 

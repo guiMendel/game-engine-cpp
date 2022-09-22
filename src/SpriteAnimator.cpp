@@ -31,6 +31,20 @@ void SpriteAnimator::Update(float deltaTime)
   if (frameElapsedTime < secondsPerFrame)
     return;
 
+  // If this is the cycle's last frame
+  if (currentFrame == GetFrameCount() - 1)
+  {
+    // Trigger event
+    OnCycleEnd.Invoke();
+
+    // Stop playing if not supposed to loop
+    if (loop == false)
+    {
+      playing = false;
+      return;
+    }
+  }
+
   // Advance frame
   SetFrame(currentFrame + 1);
 }
@@ -69,8 +83,4 @@ void SpriteAnimator::SetFrame(int frameIndex)
       frameRow * frameDimensions.y,
       frameDimensions.x,
       frameDimensions.y);
-
-  // Stop if last frame & not looping
-  if (frameIndex == frameCount - 1 && loop == false)
-    playing = false;
 }

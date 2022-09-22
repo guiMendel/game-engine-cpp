@@ -23,6 +23,7 @@ public:
 
   RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
+  void Start() override;
   void Update(float deltaTime) override;
   void OnCollision(GameObject &other) override;
 

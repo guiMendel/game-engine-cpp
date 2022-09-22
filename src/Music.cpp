@@ -1,29 +1,20 @@
 #include "Music.h"
 #include "Helper.h"
+#include "Resources.h"
 
 using namespace Helper;
 
 void Music::Play(const int times)
 {
-  // Catch no music loaded
-  Assert(IsLoaded(), "Tried playing a music track that was never loaded");
+  Assert(musicPath.size() > 0, "Tried playing music without providing it's file path");
 
-  auto encounteredError = Mix_PlayMusic(music.get(), times);
+  // Get music
+  Mix_Music &music = Resources::GetMusic(musicPath);
+
+  auto encounteredError = Mix_PlayMusic(&music, times);
 
   // Catch weird errors
   Assert(!encounteredError, "Failed to play a music track");
-}
-
-void Music::Load(const std::string filename)
-{
-  // Try to load the file
-  Mix_Music *loadedMusicPointer = Mix_LoadMUS(filename.c_str());
-
-  // Ensure it loaded correctly
-  Assert(loadedMusicPointer != nullptr, "Failed to load music file at " + filename);
-
-  // Store music
-  music.reset(loadedMusicPointer);
 }
 
 Music::~Music()

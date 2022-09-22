@@ -15,30 +15,34 @@ unordered_map<string, Helper::auto_ptr<Mix_Chunk>> Resources::soundTable;
 
 SDL_Texture &Resources::GetTexture(string filename)
 {
-  // Check if it's already loaded
-  auto textureIterator = textureTable.find(filename);
+  function<SDL_Texture *(string)> textureLoader = [](string filename)
+  {
+    // Get the game renderer
+    SDL_Renderer *renderer = Game::GetInstance().GetRenderer();
 
-  // If so, return the loaded asset
-  if (textureIterator != textureTable.end())
-    return *textureIterator->second;
+    // Gets the texture pointer
+    return IMG_LoadTexture(renderer, filename.c_str());
+  };
 
-  // At this point, we know the asset isn't loaded yet
+  return GetResource<SDL_Texture>("texture", filename, textureTable, textureLoader, SDL_DestroyTexture);
+}
 
-  // Get the game renderer
-  SDL_Renderer *renderer = Game::GetInstance().GetRenderer();
+Mix_Music &Resources::GetMusic(string filename)
+{
+  function<Mix_Music *(string)> musicLoader = [](string filename)
+  {
+    return Mix_LoadMUS(filename.c_str());
+  };
 
-  // Gets the texture pointer
-  SDL_Texture *texturePointer = IMG_LoadTexture(renderer, filename.c_str());
+  return GetResource<Mix_Music>("music", filename, musicTable, musicLoader, Mix_FreeMusic);
+}
 
-  // Catch any errors
-  Assert(texturePointer != nullptr, "Failed to load texture at " + filename);
+Mix_Chunk &Resources::GetSound(std::string filename)
+{
+  function<Mix_Chunk *(string)> chunkLoader = [](string filename)
+  {
+    return Mix_LoadWAV(filename.c_str());
+  };
 
-  // Store the texture (create the pointer with the destructor)
-  textureTable.emplace(
-      piecewise_construct,
-      forward_as_tuple(filename),
-      forward_as_tuple(texturePointer, SDL_DestroyTexture));
-
-  // Now that it's loaded, return it
-  return *texturePointer;
+  return GetResource<Mix_Chunk>("sound chunk", filename, soundTable, chunkLoader, Mix_FreeChunk);
 }

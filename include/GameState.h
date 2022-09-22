@@ -66,6 +66,8 @@ public:
 
   std::weak_ptr<GameObject> GetPointer(const GameObject *gameObject);
 
+  std::shared_ptr<GameObject> GetObject(int id);
+
   void Start();
 
   // Initializes the state's objects

@@ -74,45 +74,9 @@ void GameObject::RemoveComponent(Component *component)
   components.erase(componentPosition);
 }
 
-void GameObject::DestroyAfterSoundPlay()
-{
-  // If there is sound to play, play it
-  auto soundComponent = GetComponent<Sound>();
-
-  // If no sound to play, destroy immediately
-  if (soundComponent == nullptr)
-  {
-    RequestDestroy();
-    return;
-  }
-
-  // Otherwise, play sound
-  soundComponent->Play(
-      [this]()
-      { RequestDestroy(); },
-      1);
-
-  // Remove all components except Sound
-  auto soundIterator = find_if(
-      components.begin(), components.end(), [](shared_ptr<Component> component)
-      { return dynamic_cast<Sound *>(component.get()) != nullptr; });
-
-  // Remove up until sound
-  components.erase(components.begin(), soundIterator);
-
-  // See if there's more
-  if (components.size() <= 1)
-    return;
-
-  // Remove from sound on
-  components.erase(components.begin() + 1, components.end());
-}
-
 shared_ptr<GameObject> GameObject::GetShared() const
 {
-  LOCK(gameState.GetPointer(this), shared);
-
-  return shared;
+  return gameState.GetObject(id);
 }
 
 auto GameObject::GetComponent(const Component *componentPointer) const -> shared_ptr<Component>
@@ -137,7 +101,7 @@ shared_ptr<GameObject> GameObject::InternalGetParent() const
     return nullptr;
 
   // Ensure the parent is there
-  Assert(weakParent.expired() == false, "GameObject unexpectedly failed to retrieve parent object");
+  Assert(weakParent.expired() == false, "GameObject " + name + " unexpectedly failed to retrieve parent object");
 
   return weakParent.lock();
 }
@@ -240,6 +204,9 @@ vector<shared_ptr<GameObject>> GameObject::GetChildren()
 
 void GameObject::InternalDestroy()
 {
+  // Get pointer to self
+  auto shared = GetShared();
+
   // Remove all children
   for (auto pairIterator = children.begin(); pairIterator != children.end(); ++pairIterator)
   {
@@ -253,6 +220,9 @@ void GameObject::InternalDestroy()
 
   // Delete self from state's list
   gameState.RemoveObject(id);
+
+  // Ensure no more references to self than the one in this function and the one which called this function
+  Assert(shared.use_count() == 2, "Found leaked references to game object " + GetName() + " when trying to destroy it");
 }
 
 void GameObject::OnCollision(GameObject &other)
