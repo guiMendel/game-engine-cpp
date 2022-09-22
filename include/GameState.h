@@ -94,7 +94,8 @@ protected:
   std::shared_ptr<GameObject> rootObject;
 
 private:
-  void UpdateObject(float deltaTime, std::shared_ptr<GameObject> object);
+  // Executes this function for each object, cascading down the hierarchy
+  void CascadeDown(std::shared_ptr<GameObject> object, std::function<void(GameObject &)> callback, bool topDown = true);
   void DeleteObjects();
   void DetectCollisions();
 

@@ -36,16 +36,19 @@ GameState::GameState() : inputManager(InputManager::GetInstance()), rootObject(n
 {
 }
 
-void GameState::UpdateObject(float deltaTime, shared_ptr<GameObject> object)
+void GameState::CascadeDown(shared_ptr<GameObject> object, function<void(GameObject &)> callback, bool topDown)
 {
-  // cout << "UpdateObject: " << object->name << ", children: " << object->GetChildren().size() << endl;
-
-  // Update this object
-  object->Update(deltaTime);
+  // Execute on this object
+  if (topDown)
+    callback(*object);
 
   // Update it's children
   for (auto child : object->GetChildren())
-    UpdateObject(deltaTime, child);
+    CascadeDown(child, callback, topDown);
+
+  // Execute on this object (bottom up case)
+  if (topDown == false)
+    callback(*object);
 }
 
 void GameState::DeleteObjects()
@@ -110,7 +113,8 @@ void GameState::Update(float deltaTime)
   Camera::GetInstance().Update(deltaTime);
 
   // Update game objects
-  UpdateObject(deltaTime, rootObject);
+  CascadeDown(rootObject, [deltaTime](GameObject &object)
+              { object.Update(deltaTime); });
 
   // Delete dead ones
   DeleteObjects();
@@ -193,8 +197,8 @@ void GameState::Start()
 
   started = true;
 
-  for (auto &objectPair : gameObjects)
-    objectPair.second->Start();
+  CascadeDown(rootObject, [](GameObject &object)
+              { object.Start(); });
 }
 
 void GameState::RegisterLayerRenderer(shared_ptr<Component> component)
