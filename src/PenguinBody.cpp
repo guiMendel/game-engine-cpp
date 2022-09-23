@@ -18,7 +18,7 @@ void PenguinBody::Start()
 {
   // Explosion on death
   gameObject.RequireComponent<Health>()->OnDeath.AddListener("penguinExplosion", [this]()
-                                                             {
+                                                  {
     auto ExplosionRecipe = MainState::OneShotAnimationRecipe("./assets/image/penguindeath.png", Vector2(128, 128), 0.6f);
     
     gameObject.gameState.CreateObject("Penguin Explosion", ExplosionRecipe, gameObject.GetPosition()); });

@@ -3,6 +3,7 @@
 
 #include "GameObject.h"
 #include "Movement.h"
+#include "PenguinBody.h"
 #include "Health.h"
 #include "Vector2.h"
 #include "Component.h"
@@ -26,54 +27,35 @@ public:
   // Total health points
   static const float healthPoints;
 
-  Alien(GameObject &associatedObject, int minionCount) : Component(associatedObject), minionCount(minionCount)
-  {
-  }
+  // Min and max time to stay idle
+  static const Vector2 idleTime;
+
+  Alien(GameObject &associatedObject, int minionCount);
 
   void Start() override;
   void Update(float deltaTime) override;
-  void Render() override;
-  RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
   // It's current minions
   std::vector<std::weak_ptr<GameObject>> minions;
 
 private:
-  // Defines the alien's possible actions
-  struct Action
+  void Chase();
+  void Arrive();
+  void Shoot(Vector2 position);
+
+  enum class State
   {
-    // Types
-    enum class Type
-    {
-      move,
-      shoot
-    };
-
-    Type type;
-
-    Action(Type type, Vector2 position)
-        : type(type), position(position) {}
-
-    Vector2 position;
+    moving,
+    idle
   };
 
-  // The actions it's currently assigned to perform
-  std::queue<Action> actionQueue;
+  State state{State::idle};
 
   // How many minions it should start with
   int minionCount;
 
-  // Executes next action
-  void ExecuteActions();
-
-  // Adds new action to queue
-  void AddAction(Action::Type actionType);
-
-  // Advances thew action queue
-  void AdvanceActionQueue();
-
-  std::weak_ptr<Movement> movementPointer;
-  std::weak_ptr<Health> healthPointer;
+  std::weak_ptr<Movement> movementWeak;
+  std::weak_ptr<PenguinBody> penguinWeak;
 };
 
 #endif

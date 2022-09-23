@@ -47,7 +47,7 @@ void PenguinCannon::Shoot()
   gameObject.timer.Reset("cooldown");
 
   // Create the projectile
-  gameObject.gameState
+  gameState
       .CreateObject(
           "Penguin Projectile",
           MainState::ProjectileRecipe(

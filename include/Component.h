@@ -17,6 +17,7 @@
   Assert(shared != nullptr, message);
 
 class GameObject;
+class GameState;
 
 class Component
 {
@@ -29,8 +30,7 @@ public:
   // Called once per frame to render to the screen
   virtual void Render() {}
 
-  Component(GameObject &associatedObject)
-      : gameObject(associatedObject), inputManager(InputManager::GetInstance()) {}
+  Component(GameObject &associatedObject);
 
   // In which render layer this component is
   // If None, then it's Render method will never be called
@@ -48,6 +48,9 @@ public:
 
   // The associated game object
   GameObject &gameObject;
+
+  // The associated game state
+  GameState &gameState;
 
   // Whether the component is active
   bool enabled{true};
@@ -67,6 +70,7 @@ private:
 };
 
 #include "GameObject.h"
+// #include "GameState.h"
 #include "Helper.h"
 
 // We don't care it's recommended against doing this — we only want our lives to be easier

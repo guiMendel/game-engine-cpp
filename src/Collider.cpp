@@ -33,7 +33,7 @@ Rectangle Collider::GetBox() const { return box + gameObject.GetPosition(); }
 void Collider::Start()
 {
   // Announce to game state
-  gameObject.gameState.RegisterCollider(dynamic_pointer_cast<Collider>(GetShared()));
+  gameState.RegisterCollider(dynamic_pointer_cast<Collider>(GetShared()));
 }
 
 void Collider::Render()

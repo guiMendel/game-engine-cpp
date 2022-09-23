@@ -47,7 +47,7 @@ void Minion::Start()
                                                              {
     auto ExplosionRecipe = MainState::OneShotAnimationRecipe("./assets/image/miniondeath.png", Vector2(63.75f, 67), 0.25f);
     
-    gameObject.gameState.CreateObject("Minion Explosion", ExplosionRecipe, gameObject.GetPosition()); });
+    gameState.CreateObject("Minion Explosion", ExplosionRecipe, gameObject.GetPosition()); });
 }
 
 void Minion::Update(float deltaTime)
@@ -95,7 +95,7 @@ void Minion::Shoot(Vector2 target)
   float targetAngle = Vector2::AngleBetween(gameObject.GetPosition(), target);
 
   // Create the projectile
-  gameObject.gameState
+  gameState
       .CreateObject(
           "Minion Projectile",
           MainState::ProjectileRecipe(

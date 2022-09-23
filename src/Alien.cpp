@@ -22,19 +22,28 @@ const int Alien::totalMinions{1};
 // Total health points
 const float Alien::healthPoints{500.0f};
 
+const Vector2 Alien::idleTime{Vector2(0.5f, 4.0f)};
+
 // Helper functions
 shared_ptr<GameObject> NearestMinion(vector<weak_ptr<GameObject>> &minions, Vector2 position);
 
+Alien::Alien(GameObject &associatedObject, int minionCount)
+    : Component(associatedObject), minionCount(minionCount)
+{
+}
+
 void Alien::Start()
 {
-  gameObject.RequireComponent<Movement>();
+  movementWeak = gameObject.RequireComponent<Movement>();
+  penguinWeak = gameState.FindObjectOfType<PenguinBody>();
 
   // Explosion on death
-  gameObject.RequireComponent<Health>()->OnDeath.AddListener("alienExplosion", [this]()
-                                                             {
+  gameObject.RequireComponent<Health>()
+      ->OnDeath.AddListener("alienExplosion", [this]()
+                            {
     auto ExplosionRecipe = MainState::OneShotAnimationRecipe("./assets/image/aliendeath.png", Vector2(127.25f, 133), 0.4f);
     
-    gameObject.gameState.CreateObject("Alien Explosion", ExplosionRecipe, gameObject.GetPosition()); });
+    gameState.CreateObject("Alien Explosion", ExplosionRecipe, gameObject.GetPosition()); });
 
   // Get game state reference
   auto &gameState = Game::GetInstance().GetState();
@@ -51,80 +60,74 @@ void Alien::Start()
 
 void Alien::Update([[maybe_unused]] float deltaTime)
 {
-  auto checkButtonLinkedToAction = [this](int button, Action::Type actionType)
+  // If idle, check if timer is up
+  if (state == State::idle)
   {
-    auto inputManager = InputManager::GetInstance();
+    // If it's up, move
+    if (gameObject.timer.Get("idle") >= 0)
+      Chase();
+  }
 
-    if (inputManager.MousePress(button))
-      AddAction(actionType);
-  };
-
-  // Link mouse buttons to actions
-  checkButtonLinkedToAction(LEFT_MOUSE_BUTTON, Action::Type::shoot);
-  checkButtonLinkedToAction(RIGHT_MOUSE_BUTTON, Action::Type::move);
+  // If it's chasing, do nothing
 
   // Rotate slowly
   gameObject.localRotation += rotationSpeed * deltaTime;
 }
 
-void Alien::Render()
+void Alien::Chase()
 {
-}
-
-void Alien::AddAction(Action::Type actionType)
-{
-  bool wasEmpty = actionQueue.empty();
-
-  actionQueue.emplace(actionType, inputManager.GetMouseWorldCoordinates());
-
-  // Execute them
-  if (wasEmpty)
-    ExecuteActions();
-}
-
-void Alien::AdvanceActionQueue()
-{
-  actionQueue.pop();
-
-  ExecuteActions();
-}
-
-void Alien::ExecuteActions()
-{
-  if (actionQueue.empty())
+  // Ignore if no penguin
+  if (penguinWeak.expired())
     return;
 
-  // Next action in queue
-  auto currentAction = actionQueue.front();
+  // Switch state
+  state = State::moving;
 
-  // If move action
-  if (currentAction.type == Action::Type::move)
+  // Get movement component
+  LOCK(movementWeak, movement);
+
+  // Get penguin
+  LOCK(penguinWeak, penguin);
+
+  // Move towards player
+  movement->MoveTo(
+      penguin->gameObject.GetPosition(), [this]()
+      { Arrive(); });
+}
+
+void Alien::Arrive()
+{
+  // Switch to idle state
+  state = State::moving;
+
+  // Get penguin
+  if (penguinWeak.expired() == false)
   {
-    gameObject.GetComponent<Movement>()->MoveTo(
-        // Upon arrival, pop this action
-        currentAction.position, [this]()
-        { AdvanceActionQueue(); });
+    LOCK(penguinWeak, penguin);
+
+    // Shoot at player
+    Shoot(penguin->gameObject.GetPosition());
   }
 
-  // If shoot action
-  else if (currentAction.type == Action::Type::shoot)
-  {
-    // Ignore if no minions
-    if (!minions.empty())
-    {
-      // Pick nearest minion
-      auto minion = NearestMinion(minions, currentAction.position);
+  // Start timer
+  gameObject.timer.Reset("idle", -RandomRange(idleTime.x, idleTime.y));
+}
 
-      // Check that it's valid
-      if (minion)
-      {
-        // Tell it to shoot at the target
-        minion->GetComponent<Minion>()->Shoot(currentAction.position);
-      }
-    }
+void Alien::Shoot(Vector2 position)
+{
+  // Ignore if no minions
+  if (minions.empty())
+    return;
 
-    AdvanceActionQueue();
-  }
+  // Pick nearest minion
+  auto minion = NearestMinion(minions, position);
+
+  // Check that it's valid
+  if (!minion)
+    return;
+
+  // Tell it to shoot at the target
+  minion->GetComponent<Minion>()->Shoot(position);
 }
 
 shared_ptr<GameObject> NearestMinion(vector<weak_ptr<GameObject>> &minions, Vector2 position)

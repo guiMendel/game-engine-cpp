@@ -4,6 +4,9 @@
 
 using namespace std;
 
+Component::Component(GameObject &associatedObject)
+    : gameObject(associatedObject), gameState(gameObject.gameState), inputManager(InputManager::GetInstance()) {}
+
 void Component::StartAndRegisterLayer()
 {
   if (started)

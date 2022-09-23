@@ -68,6 +68,21 @@ public:
 
   std::shared_ptr<GameObject> GetObject(int id);
 
+  template <class T>
+  auto FindObjectOfType() -> std::shared_ptr<T>
+  {
+    // Find the position of the object that is of the requested type
+    for (auto &objectPair : gameObjects)
+    {
+      auto component = objectPair.second->GetComponent<T>();
+
+      if (component != nullptr)
+        return component;
+    }
+
+    return nullptr;
+  }
+
   void Start();
 
   // Initializes the state's objects

@@ -62,7 +62,7 @@ public:
 
     // Detect if not present
     if (componentIterator == components.end())
-      return std::shared_ptr<T>();
+      return nullptr;
 
     return std::dynamic_pointer_cast<T>(*componentIterator);
   }
