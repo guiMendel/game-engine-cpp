@@ -98,7 +98,7 @@ void Alien::Chase()
 void Alien::Arrive()
 {
   // Switch to idle state
-  state = State::moving;
+  state = State::idle;
 
   // Get penguin
   if (penguinWeak.expired() == false)
