@@ -13,6 +13,15 @@
 using namespace std;
 using namespace Helper;
 
+// Defines the maximum frames per second
+const int Game::frameRate{30};
+
+// Defines the resolution width
+const int Game::screenWidth{1024};
+
+// Defines the resolution height
+const int Game::screenHeight{600};
+
 // === EXTERNAL METHODS =================================
 
 // Initializes SDL
@@ -115,8 +124,9 @@ Game::Game(string title, int width, int height)
 
 Game::~Game()
 {
-  // Shut down the game state before shutting down sdl
-  state.reset();
+  // Shut down the states before shutting down sdl
+  while (loadedStates.size() > 0)
+    loadedStates.pop();
 
   // Quit SDL
   // Release the pointers, as we will destroy them in the method
@@ -146,14 +156,14 @@ Game &Game::GetInstance()
     gameInstance.reset(new Game("GuilhermeMendel-170143970", screenWidth, screenHeight));
 
     // Set a starting state
-    gameInstance->state = gameInstance->GetInitialState();
+    gameInstance->PushState(gameInstance->GetInitialState());
   }
 
   // Return the instance
   return *Game::gameInstance;
 }
 
-void Game::Run()
+void Game::Start()
 {
   // Find out how many ms to wait to achieve the configured framerate
   const int frameDelay = 1000 / Game::frameRate;
@@ -161,12 +171,35 @@ void Game::Run()
   // Get the input manager
   InputManager &inputManager = InputManager::GetInstance();
 
-  // Start the state
-  state->Start();
+  started = true;
+
+  // Start the initial state
+  GetState().Start();
 
   // Loop while exit not requested
-  while (state->QuitRequested() == false)
+  while (GetState().QuitRequested() == false)
   {
+    // Check if state needs to be popped
+    // Throws when it's the last state (and no nextState is set)
+    try
+    {
+      if (GetState().PopRequested())
+        PopState();
+    }
+
+    // If last state was popped, stop game
+    catch (const runtime_error &)
+    {
+      break;
+    }
+
+    // Load next state if necessary
+    if (nextState != nullptr)
+      PushNextState();
+
+    // Get reference to current state
+    GameState &state{GetState()};
+
     // Calculate frame's delta time
     CalculateDeltaTime();
 
@@ -174,10 +207,12 @@ void Game::Run()
     inputManager.Update();
 
     // Update the state
-    state->Update(deltaTime);
+    state.Update(deltaTime);
 
     // Render the state
-    state->Render();
+    state.Render();
+
+    // WARNING: DO NOT USE state FROM HERE UNTIL END OF LOOP
 
     // Render the window
     SDL_RenderPresent(GetRenderer());
@@ -192,12 +227,47 @@ void Game::Run()
 
 GameState &Game::GetState() const
 {
-  if (!state)
+  Assert(loadedStates.size() > 0, "No game state loaded");
+
+  return *loadedStates.top();
+}
+
+void Game::PushState(std::unique_ptr<GameState> &&state)
+{
+  // Store this state for next frame
+  nextState.reset(state.release());
+}
+
+void Game::PushNextState()
+{
+  // Put current state on hold
+  if (loadedStates.size() > 0)
+    GetState().Pause();
+
+  // Move this state to the stack
+  loadedStates.emplace(nextState);
+
+  // Start it if necessary
+  if (started)
+    GetState().Start();
+}
+
+void Game::PopState()
+{
+  // Remove the state
+  loadedStates.pop();
+
+  // If this is the last state
+  if (loadedStates.size() == 0)
   {
-    throw runtime_error("No game state defined");
+    // Throws if there is no nextState
+    Assert(nextState != nullptr, "Game was left without any loaded states");
+
+    return;
   }
 
-  return *state;
+  // Resume next state
+  GetState().Resume();
 }
 
 unique_ptr<GameState> Game::GetInitialState() const

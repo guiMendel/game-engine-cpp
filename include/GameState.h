@@ -31,9 +31,18 @@ public:
   // Whether the game should exit
   bool QuitRequested() { return quitRequested; }
 
-  void Update(float deltaTime);
+  // Whether to remove this state from the queue
+  bool PopRequested() { return popRequested; }
 
-  void Render();
+  virtual void Update(float deltaTime);
+
+  virtual void Render();
+
+  virtual void Start();
+
+  virtual void Pause();
+
+  virtual void Resume();
 
   // Removes an object from the object list
   void RemoveObject(int id);
@@ -64,7 +73,7 @@ public:
     return object;
   }
 
-  std::weak_ptr<GameObject> GetPointer(const GameObject *gameObject);
+  std::shared_ptr<GameObject> GetPointer(const GameObject *gameObject);
 
   std::shared_ptr<GameObject> GetObject(int id);
 
@@ -82,8 +91,6 @@ public:
 
     return nullptr;
   }
-
-  void Start();
 
   // Initializes the state's objects
   virtual void InitializeObjects() = 0;
@@ -124,6 +131,9 @@ private:
 
   // Indicates that the game must exit
   bool quitRequested{false};
+
+  // Indicates that the state mus tbe removed from queue
+  bool popRequested{false};
 
   // Whether the state has executed the start method
   bool started{false};

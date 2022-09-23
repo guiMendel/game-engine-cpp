@@ -59,6 +59,18 @@ void GameObject::Update(float deltaTime)
   }
 }
 
+void GameObject::OnStatePause()
+{
+  for (auto component : components)
+    component->OnStatePause();
+}
+
+void GameObject::OnStateResume()
+{
+  for (auto component : components)
+    component->OnStateResume();
+}
+
 void GameObject::RemoveComponent(Component *component)
 {
   // Find it's position

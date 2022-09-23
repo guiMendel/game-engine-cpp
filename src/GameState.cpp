@@ -9,6 +9,8 @@
 #include "SatCollision.h"
 #include <iostream>
 
+#define CASCADE_OBJECTS(method, param) CascadeDown(rootObject, [param](GameObject &object) { object.method(param); });
+
 using namespace std;
 
 // Whether the two collider lists have some pair of colliders which are colliding
@@ -113,8 +115,7 @@ void GameState::Update(float deltaTime)
   Camera::GetInstance().Update(deltaTime);
 
   // Update game objects
-  CascadeDown(rootObject, [deltaTime](GameObject &object)
-              { object.Update(deltaTime); });
+  CASCADE_OBJECTS(Update, deltaTime);
 
   // Delete dead ones
   DeleteObjects();
@@ -155,35 +156,6 @@ void GameState::Render()
   }
 }
 
-void GameState::RemoveObject(int id)
-{
-  gameObjects.erase(id);
-}
-
-shared_ptr<GameObject> GameState::RegisterObject(GameObject *gameObject)
-{
-  gameObjects[gameObject->id] = shared_ptr<GameObject>(gameObject);
-  return gameObjects[gameObject->id];
-}
-
-weak_ptr<GameObject> GameState::GetPointer(const GameObject *targetObject)
-{
-  // Find this pointer in the list
-  auto foundObjectIterator = find_if(
-      gameObjects.begin(), gameObjects.end(),
-      [targetObject](const auto objectPair)
-      { return objectPair.second.get() == targetObject; });
-
-  // Catch nonexistent
-  if (foundObjectIterator == gameObjects.end())
-  {
-    // Return empty pointer
-    return weak_ptr<GameObject>();
-  }
-
-  return weak_ptr<GameObject>(foundObjectIterator->second);
-}
-
 void GameState::Start()
 {
   if (started)
@@ -197,8 +169,49 @@ void GameState::Start()
 
   started = true;
 
-  CascadeDown(rootObject, [](GameObject &object)
-              { object.Start(); });
+  // Start objects
+  CASCADE_OBJECTS(Start, );
+}
+
+void GameState::Pause()
+{
+  // Communicate to objects
+  CASCADE_OBJECTS(OnStatePause, );
+}
+
+void GameState::Resume()
+{
+  // Communicate to objects
+  CASCADE_OBJECTS(OnStateResume, );
+}
+
+void GameState::RemoveObject(int id)
+{
+  gameObjects.erase(id);
+}
+
+shared_ptr<GameObject> GameState::RegisterObject(GameObject *gameObject)
+{
+  gameObjects[gameObject->id] = shared_ptr<GameObject>(gameObject);
+  return gameObjects[gameObject->id];
+}
+
+shared_ptr<GameObject> GameState::GetPointer(const GameObject *targetObject)
+{
+  // Find this pointer in the list
+  auto foundObjectIterator = find_if(
+      gameObjects.begin(), gameObjects.end(),
+      [targetObject](const auto objectPair)
+      { return objectPair.second.get() == targetObject; });
+
+  // Catch nonexistent
+  if (foundObjectIterator == gameObjects.end())
+  {
+    // Return empty pointer
+    return nullptr;
+  }
+
+  return foundObjectIterator->second;
 }
 
 void GameState::RegisterLayerRenderer(shared_ptr<Component> component)

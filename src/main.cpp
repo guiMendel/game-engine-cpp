@@ -11,7 +11,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
   {
     Game &gameInstance = Game::GetInstance();
 
-    gameInstance.Run();
+    gameInstance.Start();
   }
   // Catch any runtime errors
   catch (const runtime_error &error)

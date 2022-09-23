@@ -22,14 +22,9 @@ class GameState;
 class Component
 {
   friend GameObject;
+  friend GameState;
 
 public:
-  // Called once per frame
-  virtual void Update([[maybe_unused]] float deltaTime) {}
-
-  // Called once per frame to render to the screen
-  virtual void Render() {}
-
   Component(GameObject &associatedObject);
 
   // In which render layer this component is
@@ -57,6 +52,15 @@ public:
 
 protected:
   virtual void Start() {}
+
+  // Called once per frame
+  virtual void Update([[maybe_unused]] float deltaTime) {}
+
+  // Called once per frame to render to the screen
+  virtual void Render() {}
+
+  virtual void OnStateResume() {}
+  virtual void OnStatePause() {}
 
   // Reference to input manager
   InputManager &inputManager;

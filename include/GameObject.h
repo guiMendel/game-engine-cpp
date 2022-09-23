@@ -7,7 +7,6 @@
 #include <memory>
 #include <algorithm>
 #include <utility>
-#include "GameObject.h"
 #include "Component.h"
 #include "Vector2.h"
 #include "Helper.h"
@@ -23,8 +22,14 @@ public:
   // With dimensions
   GameObject(std::string name, Vector2 coordinates = Vector2(0, 0), double rotation = 0.0, std::shared_ptr<GameObject> parent = nullptr);
 
+  // Initialize
+  void Start();
+
   // Called once per frame
   void Update(float deltaTime);
+
+  void OnStatePause();
+  void OnStateResume();
 
   // Whether is dead
   bool DestroyRequested() const { return destroyRequested; }
@@ -86,11 +91,9 @@ public:
   // Temporary method to play sound & destroy after done playing
   void DestroyAfterSoundPlay();
 
-  // Initialize
-  void Start();
+  std::string GetName() const { return name; }
 
-  // State reference
-  GameState &gameState;
+  std::vector<std::shared_ptr<GameObject>> GetChildren();
 
   // Returns this object's shared pointer
   std::shared_ptr<GameObject> GetShared() const;
@@ -100,6 +103,7 @@ public:
 
   // Set the parent
   void SetParent(std::shared_ptr<GameObject> newParent);
+
   // === ABSOLUTE VALUES
 
   // Where this object exists in game space, in absolute coordinates
@@ -113,10 +117,6 @@ public:
   // Absolute rotation in radians
   double GetRotation() const;
   void SetRotation(const double newRotation);
-
-  std::string GetName() const { return name; }
-
-  std::vector<std::shared_ptr<GameObject>> GetChildren();
 
   // A timer helper
   class
@@ -133,6 +133,9 @@ public:
         entry.second += deltaTime;
     }
   } timer;
+
+  // State reference
+  GameState &gameState;
 
   // Where this object exists in game space, relative to it's parent's position
   Vector2 localPosition;

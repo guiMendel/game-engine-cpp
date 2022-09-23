@@ -3,7 +3,7 @@
 
 #include <SDL.h>
 #include <memory>
-// #include "GameObject.h"
+#include <stack>
 #include "Helper.h"
 
 class GameState;
@@ -15,12 +15,13 @@ public:
   // === CONFIGURATION
 
   // Defines the maximum frames per second
-  static const int frameRate = 30;
+  static const int frameRate;
 
   // Defines the resolution width
-  static const int screenWidth = 1024;
+  static const int screenWidth;
+
   // Defines the resolution height
-  static const int screenHeight = 600;
+  static const int screenHeight;
 
   // === FUNCTIONS
 
@@ -34,9 +35,12 @@ public:
   SDL_Renderer *GetRenderer() const { return renderer.get(); }
 
   // Starts the game
-  void Run();
+  void Start();
 
   float GetDeltaTime() const { return deltaTime; }
+
+  // Requests the push of a new state to the queue
+  void PushState(std::unique_ptr<GameState> &&state);
 
   // Creates and returns the initial state
   std::unique_ptr<GameState> GetInitialState() const;
@@ -45,8 +49,18 @@ public:
   ~Game();
 
 private:
+  // Singleton constructor
+  Game(std::string title, int width, int height);
+
   // Calculates the delta time
   void CalculateDeltaTime();
+
+  // Removes current state from stack
+  // Throws if stack is left empty
+  void PopState();
+
+  // Actually pushes the next state to stack
+  void PushNextState();
 
   // Game instance
   static std::unique_ptr<Game> gameInstance;
@@ -57,17 +71,20 @@ private:
   // Time elapsed since last frame
   float deltaTime;
 
-  // Current state
-  std::unique_ptr<GameState> state;
+  // Whether game has started
+  bool started{false};
+
+  // State to push next frame
+  std::unique_ptr<GameState> nextState;
+
+  // Stack of loaded states
+  std::stack<std::unique_ptr<GameState>> loadedStates;
 
   // The window we'll be rendering to (with destructor function)
   Helper::auto_ptr<SDL_Window> window;
 
   // Renderer for the window (with destructor function)
   Helper::auto_ptr<SDL_Renderer> renderer;
-
-  // Singleton constructor
-  Game(std::string title, int width, int height);
 };
 
 #include "GameState.h"
