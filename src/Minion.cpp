@@ -1,3 +1,4 @@
+#include "Recipes.h"
 #include "Minion.h"
 #include "Projectile.h"
 #include "Game.h"
@@ -45,7 +46,7 @@ void Minion::Start()
   // Explosion on death
   gameObject.RequireComponent<Health>()->OnDeath.AddListener("minionExplosion", [this]()
                                                              {
-    auto ExplosionRecipe = MainState::OneShotAnimationRecipe("./assets/image/miniondeath.png", Vector2(63.75f, 67), 0.25f);
+    auto ExplosionRecipe = Recipes::OneShotAnimation("./assets/image/miniondeath.png", Vector2(63.75f, 67), 0.25f);
     
     gameState.CreateObject("Minion Explosion", ExplosionRecipe, gameObject.GetPosition()); });
 }
@@ -98,7 +99,7 @@ void Minion::Shoot(Vector2 target)
   gameState
       .CreateObject(
           "Minion Projectile",
-          MainState::ProjectileRecipe(
+          Recipes::Projectile(
               "./assets/image/minionbullet2.png", Vector2(33, 12), 0.2f, true,
               Tag::Player, targetAngle, projectileSpeed, projectileTimeToLive, projectileDamage),
           gameObject.GetPosition());

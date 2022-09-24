@@ -78,7 +78,7 @@ private:
   Camera(){};
 
   // World coordinates of camera's top left corner
-  Vector2 rawPosition{-Game::screenWidth / 2, -Game::screenHeight / 2};
+  Vector2 rawPosition{-Game::screenWidth / 2.0f, -Game::screenHeight / 2.0f};
 
   // Which game object to follow
   std::weak_ptr<GameObject> weakFocus;

@@ -1,3 +1,4 @@
+#include "Recipes.h"
 #include "Alien.h"
 #include "Sprite.h"
 #include "InputManager.h"
@@ -41,7 +42,7 @@ void Alien::Start()
   gameObject.RequireComponent<Health>()
       ->OnDeath.AddListener("alienExplosion", [this]()
                             {
-    auto ExplosionRecipe = MainState::OneShotAnimationRecipe("./assets/image/aliendeath.png", Vector2(127.25f, 133), 0.4f);
+    auto ExplosionRecipe = Recipes::OneShotAnimation("./assets/image/aliendeath.png", Vector2(127.25f, 133), 0.4f);
     
     gameState.CreateObject("Alien Explosion", ExplosionRecipe, gameObject.GetPosition()); });
 
@@ -53,7 +54,7 @@ void Alien::Start()
   {
     gameState.CreateObject(
         "Minion",
-        MainState::MinionRecipe(
+        Recipes::Minion(
             dynamic_pointer_cast<Alien>(GetShared()), 2 * M_PI * i / minionCount));
   }
 }

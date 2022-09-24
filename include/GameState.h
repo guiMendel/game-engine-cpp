@@ -109,8 +109,6 @@ protected:
   // Reference to input manager
   InputManager &inputManager;
 
-  Music music;
-
   // Array with all of the state's objects
   std::unordered_map<int, std::shared_ptr<GameObject>> gameObjects;
 

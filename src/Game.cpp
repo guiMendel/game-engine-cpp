@@ -155,7 +155,7 @@ Game &Game::GetInstance()
     // Create it
     gameInstance.reset(new Game("GuilhermeMendel-170143970", screenWidth, screenHeight));
 
-    // Set a starting state
+    // Set a starting state as next state
     gameInstance->PushState(gameInstance->GetInitialState());
   }
 
@@ -170,6 +170,10 @@ void Game::Start()
 
   // Get the input manager
   InputManager &inputManager = InputManager::GetInstance();
+
+  // Push next state in if necessary
+  if (nextState != nullptr)
+    PushNextState();
 
   started = true;
 
@@ -234,18 +238,24 @@ GameState &Game::GetState() const
 
 void Game::PushState(std::unique_ptr<GameState> &&state)
 {
+  // Alert if next is overridden
+  if (nextState != nullptr)
+    cout << "WARNING: call to " << __FUNCTION__ << " will override previous call in the same frame" << endl;
+
   // Store this state for next frame
-  nextState.reset(state.release());
+  nextState = move(state);
 }
 
 void Game::PushNextState()
 {
+  Assert(nextState != nullptr, "Failed to push next state: it was nullptr");
+
   // Put current state on hold
   if (loadedStates.size() > 0)
     GetState().Pause();
 
   // Move this state to the stack
-  loadedStates.emplace(nextState);
+  loadedStates.emplace(move(nextState));
 
   // Start it if necessary
   if (started)

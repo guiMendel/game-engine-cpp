@@ -1,3 +1,4 @@
+#include "Recipes.h"
 #include "PenguinCannon.h"
 #include "InputManager.h"
 #include "SpriteAnimator.h"
@@ -50,7 +51,7 @@ void PenguinCannon::Shoot()
   gameState
       .CreateObject(
           "Penguin Projectile",
-          MainState::ProjectileRecipe(
+          Recipes::Projectile(
               "./assets/image/penguinbullet.png", Vector2(30, 29), 0.2f, false,
               Tag::Enemy, gameObject.GetRotation(), projectileSpeed, projectileTimeToLive, projectileDamage),
           GunPointPosition());
