@@ -25,9 +25,6 @@ class GameState
 public:
   GameState();
 
-  // Clear objects on destroy
-  ~GameState() { gameObjects.clear(); }
-
   // Whether the game should exit
   bool QuitRequested() { return quitRequested; }
 
@@ -115,6 +112,12 @@ protected:
   // Root object reference
   std::shared_ptr<GameObject> rootObject;
 
+  // Indicates that the state mus tbe removed from queue
+  bool popRequested{false};
+
+  // Indicates that the game must exit
+  bool quitRequested{false};
+
 private:
   // Executes this function for each object, cascading down the hierarchy
   void CascadeDown(std::shared_ptr<GameObject> object, std::function<void(GameObject &)> callback, bool topDown = true);
@@ -127,19 +130,13 @@ private:
   // Removes any expired colliders from structure & returns the remaining ones as shared
   std::unordered_map<int, std::vector<std::shared_ptr<Collider>>> ValidateColliders();
 
-  // Indicates that the game must exit
-  bool quitRequested{false};
-
-  // Indicates that the state mus tbe removed from queue
-  bool popRequested{false};
-
   // Whether the state has executed the start method
   bool started{false};
 
   // ID counter for game objects
   int nextObjectId{1};
 
-  // Structure that maps each component that renders to it's corresponding render layer
+  // Structure that maps each render layer to the components set to render in it
   std::unordered_map<RenderLayer, std::vector<std::weak_ptr<Component>>>
       layerStructure;
 

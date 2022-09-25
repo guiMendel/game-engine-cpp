@@ -9,7 +9,6 @@ class Recipes
 {
 public:
   // Map
-  static void Background(std::shared_ptr<GameObject> background);
   static void Tilemap(std::shared_ptr<GameObject> tilemap);
 
   // Penguins
@@ -21,6 +20,7 @@ public:
   static auto Minion(std::shared_ptr<::Alien> alien, float startingArc) -> std::function<void(std::shared_ptr<GameObject>)>;
 
   // General
+  static auto Background(std::string imagePath) -> std::function<void(std::shared_ptr<GameObject>)>;
   static auto OneShotAnimation(std::string spritePath, Vector2 animationFrame, float animationSpeed) -> std::function<void(std::shared_ptr<GameObject>)>;
 
   // Projectile

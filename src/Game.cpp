@@ -8,7 +8,7 @@
 #include "Helper.h"
 #include "Resources.h"
 #include "InputManager.h"
-#include "MainState.h"
+#include "TitleState.h"
 
 using namespace std;
 using namespace Helper;
@@ -264,6 +264,7 @@ void Game::PushNextState()
 
 void Game::PopState()
 {
+
   // Remove the state
   loadedStates.pop();
 
@@ -282,5 +283,5 @@ void Game::PopState()
 
 unique_ptr<GameState> Game::GetInitialState() const
 {
-  return make_unique<MainState>();
+  return make_unique<TitleState>();
 }

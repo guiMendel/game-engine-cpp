@@ -50,13 +50,16 @@ void Recipes::PenguinCannon(shared_ptr<GameObject> penguin)
   penguin->tag = Tag::Player;
 }
 
-void Recipes::Background(shared_ptr<GameObject> background)
+auto Recipes::Background(string imagePath) -> function<void(shared_ptr<GameObject>)>
 {
-  // Get a background sprite
-  background->AddComponent<Sprite>("./assets/image/ocean.jpg", RenderLayer::Background, 0, false);
+  return [imagePath](shared_ptr<GameObject> background)
+  {
+    // Get a background sprite
+    background->AddComponent<Sprite>(imagePath, RenderLayer::Background, 0, false);
 
-  // Make it follow the camera
-  background->AddComponent<CameraFollower>(true);
+    // Make it follow the camera
+    background->AddComponent<CameraFollower>(true);
+  };
 }
 
 void Recipes::Tilemap(shared_ptr<GameObject> tilemap)

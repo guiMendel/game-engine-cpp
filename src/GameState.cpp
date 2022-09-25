@@ -106,7 +106,7 @@ void GameState::DetectCollisions()
 void GameState::Update(float deltaTime)
 {
   // Quit if necessary
-  if (inputManager.KeyRelease(ESCAPE_KEY) || inputManager.QuitRequested())
+  if (inputManager.QuitRequested())
   {
     quitRequested = true;
   }

@@ -19,7 +19,7 @@ void PenguinBody::Start()
 {
   // Explosion on death
   gameObject.RequireComponent<Health>()->OnDeath.AddListener("penguinExplosion", [this]()
-                                                  {
+                                                             {
     auto ExplosionRecipe = Recipes::OneShotAnimation("./assets/image/penguindeath.png", Vector2(128, 128), 0.6f);
     
     gameObject.gameState.CreateObject("Penguin Explosion", ExplosionRecipe, gameObject.GetPosition()); });
@@ -80,6 +80,4 @@ void PenguinBody::Rotate(float deltaTime)
 
 void PenguinBody::OnCollision(GameObject &other)
 {
-  if (other.GetName() != "Penguin Cannon")
-    cout << "Body collision with " << other.GetName() << endl;
 }

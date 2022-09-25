@@ -12,6 +12,8 @@ class MainState : public GameState
 public:
   void InitializeObjects() override;
 
+  void Update(float deltaTime) override;
+
 private:
   Music music;
 };

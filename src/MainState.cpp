@@ -7,7 +7,7 @@ using namespace std;
 void MainState::InitializeObjects()
 {
   // Add a background
-  CreateObject("Background", Recipes::Background);
+  CreateObject("Background", Recipes::Background("./assets/image/ocean.jpg"));
 
   // Add a tilemap
   CreateObject("Tilemap", Recipes::Tilemap);
@@ -26,4 +26,16 @@ void MainState::InitializeObjects()
 
   // Play music
   // music.Play("./assets/music/main.mp3");
+}
+
+void MainState::Update(float deltaTime)
+{
+  // Call base
+  GameState::Update(deltaTime);
+
+  // Pop this state on esc key
+  if (inputManager.KeyRelease(ESCAPE_KEY))
+  {
+    popRequested = true;
+  }
 }
