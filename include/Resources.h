@@ -6,11 +6,16 @@
 #include <memory>
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include <SDL_ttf.h>
 #include "Helper.h"
 
 class Resources
 {
 public:
+  // Type of resource table
+  template <class T>
+  using table = std::unordered_map<std::string, std::shared_ptr<T>>;
+
   // Get an image texture
   static std::shared_ptr<SDL_Texture> GetTexture(std::string filename);
 
@@ -19,6 +24,9 @@ public:
 
   // Get an sfx
   static std::shared_ptr<Mix_Chunk> GetSound(std::string filename);
+
+  // Get a font
+  static std::shared_ptr<TTF_Font> GetFont(std::string filename, int size);
 
   // Clear everything
   static void ClearAll()
@@ -33,13 +41,13 @@ private:
   template <class Resource>
   static std::shared_ptr<Resource> GetResource(
       std::string resourceType,
-      std::string filename,
-      std::unordered_map<std::string, std::shared_ptr<Resource>> &table,
+      std::string resourceKey,
+      table<Resource> &table,
       std::function<Resource *(std::string)> resourceLoader,
       void (*resourceDestructor)(Resource *))
   {
     // Check if it's already loaded
-    auto resourceIterator = table.find(filename);
+    auto resourceIterator = table.find(resourceKey);
 
     // If so, return the loaded asset
     if (resourceIterator != table.end())
@@ -48,23 +56,23 @@ private:
     // At this point, we know the asset isn't loaded yet
 
     // Load it
-    Resource *resourcePointer = resourceLoader(filename);
+    Resource *resourcePointer = resourceLoader(resourceKey);
 
     // Catch any errors
-    Assert(resourcePointer != nullptr, "Failed to load " + resourceType + " at " + filename);
+    Assert(resourcePointer != nullptr, "Failed to load " + resourceType + " at " + resourceKey);
 
     // Store the texture (create the pointer with the destructor)
     table.emplace(
         std::piecewise_construct,
-        std::forward_as_tuple(filename),
+        std::forward_as_tuple(resourceKey),
         std::forward_as_tuple(resourcePointer, resourceDestructor));
 
     // Now that it's loaded, return it
-    return table[filename];
+    return table[resourceKey];
   }
 
   template <class Resource>
-  static void ClearTable(std::unordered_map<std::string, std::shared_ptr<Resource>> &table)
+  static void ClearTable(table<Resource> &table)
   {
     // Iterate through it
     auto entryIterator = table.begin();
@@ -84,13 +92,16 @@ private:
   }
 
   // Store textures
-  static std::unordered_map<std::string, std::shared_ptr<SDL_Texture>> textureTable;
+  static table<SDL_Texture> textureTable;
 
   // Store music
-  static std::unordered_map<std::string, std::shared_ptr<Mix_Music>> musicTable;
+  static table<Mix_Music> musicTable;
 
   // Store sfx
-  static std::unordered_map<std::string, std::shared_ptr<Mix_Chunk>> soundTable;
+  static table<Mix_Chunk> soundTable;
+
+  // Store fonts
+  static table<TTF_Font> fontTable;
 };
 
 #endif

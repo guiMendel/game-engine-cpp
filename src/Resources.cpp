@@ -8,13 +8,15 @@
 using namespace std;
 using namespace Helper;
 
-unordered_map<string, std::shared_ptr<SDL_Texture>> Resources::textureTable;
+Resources::table<SDL_Texture> Resources::textureTable;
 
-unordered_map<string, std::shared_ptr<Mix_Music>> Resources::musicTable;
+Resources::table<Mix_Music> Resources::musicTable;
 
-unordered_map<string, std::shared_ptr<Mix_Chunk>> Resources::soundTable;
+Resources::table<Mix_Chunk> Resources::soundTable;
 
-std::shared_ptr<SDL_Texture> Resources::GetTexture(string filename)
+Resources::table<TTF_Font> Resources::fontTable;
+
+shared_ptr<SDL_Texture> Resources::GetTexture(string filename)
 {
   function<SDL_Texture *(string)> textureLoader = [](string filename)
   {
@@ -28,7 +30,7 @@ std::shared_ptr<SDL_Texture> Resources::GetTexture(string filename)
   return GetResource<SDL_Texture>("texture", filename, textureTable, textureLoader, SDL_DestroyTexture);
 }
 
-std::shared_ptr<Mix_Music> Resources::GetMusic(string filename)
+shared_ptr<Mix_Music> Resources::GetMusic(string filename)
 {
   function<Mix_Music *(string)> musicLoader = [](string filename)
   {
@@ -38,7 +40,7 @@ std::shared_ptr<Mix_Music> Resources::GetMusic(string filename)
   return GetResource<Mix_Music>("music", filename, musicTable, musicLoader, Mix_FreeMusic);
 }
 
-std::shared_ptr<Mix_Chunk> Resources::GetSound(std::string filename)
+shared_ptr<Mix_Chunk> Resources::GetSound(string filename)
 {
   function<Mix_Chunk *(string)> chunkLoader = [](string filename)
   {
@@ -46,4 +48,26 @@ std::shared_ptr<Mix_Chunk> Resources::GetSound(std::string filename)
   };
 
   return GetResource<Mix_Chunk>("sound chunk", filename, soundTable, chunkLoader, Mix_FreeChunk);
+}
+
+shared_ptr<TTF_Font> Resources::GetFont(string filename, int size)
+{
+  function<TTF_Font *(string)> fontLoader = [](string fontKey)
+  {
+    // Get the filename and the size
+    size_t delimiter = fontKey.find_first_of("$");
+
+    // Get the size from the key
+    int size = stoi(string(fontKey, 0, delimiter));
+
+    // Get the file name
+    string filename = string(fontKey, delimiter + 1);
+
+    return TTF_OpenFont(filename.c_str(), size);
+  };
+
+  // Build the table key
+  string fontKey = to_string(size) + "$" + filename;
+
+  return GetResource<TTF_Font>("font", fontKey, fontTable, fontLoader, TTF_CloseFont);
 }

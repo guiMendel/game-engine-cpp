@@ -17,6 +17,20 @@ struct Color
   // Default to white
   Color() : Color(White()) {}
 
+  // From SDL
+  Color(const SDL_Color &other) : Color(other.r, other.g, other.b, other.a) {}
+
+  // === OPERATORS
+
+  Color &operator=(const Color &other)
+  {
+    red = other.red;
+    green = other.green;
+    blue = other.blue;
+    alpha = other.alpha;
+    return *this;
+  }
+
   // === PREFAB COLORS
 
   static Color White() { return Color(255, 255, 255); }
