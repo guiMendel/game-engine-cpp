@@ -10,6 +10,7 @@
 #include "SpriteAnimator.h"
 #include "Projectile.h"
 #include "Sound.h"
+#include "Hazard.h"
 #include <iostream>
 
 using namespace std;
@@ -94,6 +95,9 @@ void Recipes::Alien(shared_ptr<GameObject> alien)
   // Get health
   alien->AddComponent<Health>(Alien::healthPoints);
 
+  // Kill player on contact
+  alien->AddComponent<Hazard>(Tag::Player, 500, false);
+
   // Give it an enemy tag
   alien->tag = Tag::Enemy;
 }
@@ -113,6 +117,9 @@ auto Recipes::Minion(shared_ptr<::Alien> alien, float startingArc) -> function<v
 
     // Make it mortal
     minion->AddComponent<Health>(Minion::healthPoints);
+
+    // Hurt player on contact (but also die)
+    minion->AddComponent<Hazard>(Tag::Player, 40);
 
     // Add to minions
     alien->minions.emplace_back(minion);
@@ -168,7 +175,9 @@ auto Recipes::Projectile(string spritePath, Vector2 animationFrame, float animat
     projectile->AddComponent<Collider>(animator);
 
     // Add projectile behavior
-    projectile->AddComponent<::Projectile>(
-        targetTag, startingAngle, speed, timeToLive, damage, target, chaseSteering);
+    projectile->AddComponent<::Projectile>(startingAngle, speed, timeToLive, target, chaseSteering);
+
+    // Add hazard
+    projectile->AddComponent<Hazard>(targetTag, damage);
   };
 }

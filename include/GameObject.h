@@ -11,6 +11,7 @@
 #include "Vector2.h"
 #include "Helper.h"
 #include "Tag.h"
+#include "Timer.h"
 
 class GameState;
 
@@ -21,6 +22,7 @@ class GameObject
 public:
   // With dimensions
   GameObject(std::string name, Vector2 coordinates = Vector2(0, 0), double rotation = 0.0, std::shared_ptr<GameObject> parent = nullptr);
+  ~GameObject();
 
   // Initialize
   void Start();
@@ -53,7 +55,7 @@ public:
   }
 
   // Removes an existing component
-  void RemoveComponent(Component *component);
+  void RemoveComponent(std::shared_ptr<Component> component);
 
   // Gets pointer to a component of the given type
   // Needs to be in header file so the compiler knows how to build the necessary methods
@@ -88,9 +90,6 @@ public:
 
   auto GetComponent(const Component *componentPointer) const -> std::shared_ptr<Component>;
 
-  // Temporary method to play sound & destroy after done playing
-  void DestroyAfterSoundPlay();
-
   std::string GetName() const { return name; }
 
   std::vector<std::shared_ptr<GameObject>> GetChildren();
@@ -122,20 +121,7 @@ public:
   bool IsEnabled() const { return enabled; }
 
   // A timer helper
-  class
-  {
-    std::unordered_map<std::string, float> timers;
-
-  public:
-    void Reset(std::string name, float value = 0) { timers[name] = value; }
-    float Get(std::string name) { return timers[name]; }
-    void Stop(std::string name) { timers.erase(name); }
-    void Update(float deltaTime)
-    {
-      for (auto &entry : timers)
-        entry.second += deltaTime;
-    }
-  } timer;
+  Timer timer;
 
   // State reference
   GameState &gameState;

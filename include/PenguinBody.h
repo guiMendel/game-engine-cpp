@@ -21,11 +21,12 @@ public:
   PenguinBody(GameObject &associatedObject, std::weak_ptr<Movement> movementWeak)
       : Component(associatedObject), movementWeak(movementWeak) {}
 
+  virtual ~PenguinBody() {}
+
   RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 
-  void Start() override;
   void Update(float deltaTime) override;
-  void OnCollision(GameObject &other) override;
+  void OnBeforeDestroy() override;
 
 private:
   void Accelerate(float deltaTime);

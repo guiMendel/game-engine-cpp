@@ -13,6 +13,7 @@ class TileSet
 public:
   // Default constructor
   TileSet(int tileWidth, int tileHeight, std::string filename);
+  ~TileSet();
 
   // Render a tile
   void RenderTile(unsigned index, Vector2 position);
@@ -28,7 +29,7 @@ private:
   int tileHeight;
 
   // A game object with a sprite which contains the tile set
-  GameObject tileSetObject;
+  std::weak_ptr<GameObject> objectWeak;
 
   // The tileset sprite reference
   std::weak_ptr<Sprite> tileSpriteWeak;

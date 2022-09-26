@@ -36,6 +36,13 @@ public:
 
   void SetRawPosition(Vector2 newPosition) { rawPosition = newPosition; }
 
+  void Reset()
+  {
+    SetPosition(Vector2::Zero());
+    speed = Vector2::Zero();
+    weakFocus.reset();
+  }
+
   // Start following new object
   void Follow(std::shared_ptr<GameObject> newFocus) { weakFocus = newFocus; }
 

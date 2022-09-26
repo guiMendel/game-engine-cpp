@@ -6,6 +6,8 @@
 class TitleState : public GameState
 {
 public:
+  virtual ~TitleState() {}
+
   // How long the instructions takes to switch between visible and non visible
   static const float instructionFlashTime;
 

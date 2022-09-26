@@ -7,6 +7,8 @@
 class EndState : public GameState
 {
 public:
+  virtual ~EndState() {}
+
   void InitializeObjects() override;
 
   void Update(float deltaTime) override;

@@ -23,7 +23,7 @@ public:
   }
 
   // Fades out the currently playing music. Thw fade out window is in ms
-  void FadeOut(const int fadeWindow = 1500) { Mix_FadeOutMusic(fadeWindow); }
+  void FadeOut([[maybe_unused]] const int fadeWindow = 1500) { Mix_HaltMusic(); }
 
   // Declare custom destructor
   ~Music();

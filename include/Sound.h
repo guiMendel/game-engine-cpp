@@ -15,7 +15,7 @@ public:
   Sound(GameObject &associatedObject, const std::string fileName, bool playOnStart = true);
 
   // Ensure sound stops if destroyed
-  ~Sound() { Stop(); }
+  virtual ~Sound() { Stop(); }
 
   // Plays audio
   void Play(const int times = 1);

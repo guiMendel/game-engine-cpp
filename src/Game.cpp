@@ -214,6 +214,9 @@ void Game::Start()
     // Get input
     inputManager.Update();
 
+    // Update the state's timer
+    state.timer.Update(deltaTime);
+    
     // Update the state
     state.Update(deltaTime);
 
@@ -272,7 +275,6 @@ void Game::PushNextState()
 
 void Game::PopState()
 {
-
   // Remove the state
   loadedStates.pop();
 

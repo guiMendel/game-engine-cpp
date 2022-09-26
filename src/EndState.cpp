@@ -12,14 +12,14 @@ void EndState::InitializeObjects()
   bool playerWon = GameData::GetInstance().playerWon;
 
   string background = playerWon ? "./assets/image/win.jpg" : "./assets/image/lose.jpg";
-  string text = playerWon ? "You win!" : "You lose!";
+  string text = playerWon ? "Well done!" : "Try again!";
   string musicPath = playerWon ? "./assets/music/endStateWin.ogg" : "./assets/music/endStateLose.ogg";
 
   // Add a background
   CreateObject("Background", Recipes::Background(background));
 
   // Add a message
-  CreateObject("Instruction", Recipes::Text(text, 50, Color(192, 180, 16)), Vector2(0, 200));
+  CreateObject("Instruction", Recipes::Text(text, 50, Color(192, 180, 16)), Vector2(0, 250));
 
   // Play music
   music.Play(musicPath);

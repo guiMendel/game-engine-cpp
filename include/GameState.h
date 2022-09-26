@@ -25,7 +25,7 @@ class GameState
 public:
   GameState();
 
-  ~GameState();
+  virtual ~GameState();
 
   // Whether the game should exit
   bool QuitRequested() { return quitRequested; }
@@ -53,7 +53,7 @@ public:
   // Creates a new game object
   template <typename... Args>
   std::shared_ptr<GameObject> CreateObject(
-      std::string name, std::function<void(std::shared_ptr<GameObject>)> recipe, Args &&...args)
+      std::string name, std::function<void(std::shared_ptr<GameObject>)> recipe = nullptr, Args &&...args)
   {
     // Create the object, which automatically registers it's pointer to the state's list
     int objectId = (new GameObject(name, std::forward<Args>(args)...))->id;
@@ -103,6 +103,9 @@ public:
   void RegisterLayerRenderer(std::shared_ptr<Component> component);
 
   std::shared_ptr<GameObject> GetRootObject() { return rootObject; }
+
+  // A timer helper
+  Timer timer;
 
 protected:
   // Reference to input manager

@@ -26,6 +26,8 @@ public:
       GameObject &associatedObject, std::string text, std::string fontPath,
       int size = 10, Style style = Style::solid, Color color = Color::White());
 
+  virtual ~Text() {}
+
   void Render() override;
   RenderLayer GetRenderLayer() override { return RenderLayer::UI; }
 

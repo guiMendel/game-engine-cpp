@@ -15,14 +15,14 @@ const float PenguinBody::totalHealth{100.0f};
 // In radians per second
 const float PenguinBody::rotationSpeed{M_PI / 2.0f};
 
-void PenguinBody::Start()
+void PenguinBody::OnBeforeDestroy()
 {
-  // Explosion on death
-  gameObject.RequireComponent<Health>()->OnDeath.AddListener("penguinExplosion", [this]()
-                                                             {
-    auto ExplosionRecipe = Recipes::OneShotAnimation("./assets/image/penguindeath.png", Vector2(128, 128), 0.6f);
-    
-    gameObject.gameState.CreateObject("Penguin Explosion", ExplosionRecipe, gameObject.GetPosition()); });
+  auto ExplosionRecipe = Recipes::OneShotAnimation("./assets/image/penguindeath.png", Vector2(128, 128), 0.6f);
+
+  gameObject.gameState.CreateObject("Penguin Explosion", ExplosionRecipe, gameObject.GetPosition());
+
+  // Start advance state timer
+  gameObject.gameState.timer.Start("advanceState");
 }
 
 void PenguinBody::Update(float deltaTime)
@@ -76,8 +76,4 @@ void PenguinBody::Rotate(float deltaTime)
     gameObject.localRotation += deltaTime * rotationSpeed;
     movement->Move(Vector2::Angled(gameObject.GetRotation(), speedProportion));
   }
-}
-
-void PenguinBody::OnCollision(GameObject &other)
-{
 }

@@ -22,6 +22,8 @@ public:
       std::shared_ptr<TileSet> tileSet, int onlyLayer = -1,
       RenderLayer renderLayer = RenderLayer::Tilemap);
 
+  virtual ~TileMap() {}
+
   // Loads a map configuration file
   void Load(std::string filename);
 

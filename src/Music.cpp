@@ -1,8 +1,10 @@
 #include "Music.h"
 #include "Helper.h"
 #include "Resources.h"
+#include <iostream>
 
 using namespace Helper;
+using namespace std;
 
 void Music::Play(const int times)
 {

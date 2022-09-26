@@ -22,6 +22,8 @@ public:
   {
     Load(fileName);
   }
+  
+  virtual ~Sprite() {}
 
   // Loads the file image to the sprite
   void Load(const std::string fileName);

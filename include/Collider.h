@@ -21,6 +21,8 @@ public:
   // Use sprite animator's frame size
   Collider(GameObject &associatedObject, std::shared_ptr<SpriteAnimator> animator, Vector2 scale = Vector2::One());
 
+  virtual ~Collider() {}
+
   void Start() override;
   void Render() override;
 

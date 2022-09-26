@@ -14,8 +14,8 @@ using namespace std;
 const float Alien::rotationSpeed{0.2f};
 
 // Movement acceleration
-const float Alien::acceleration{1.0f};
-const float Alien::maxSpeed{100.0f};
+const float Alien::acceleration{1.5f};
+const float Alien::maxSpeed{150.0f};
 
 // Total minion count
 const Vector2 Alien::totalMinions{2, 7};
@@ -30,18 +30,17 @@ shared_ptr<GameObject> NearestMinion(vector<weak_ptr<GameObject>> &minions, Vect
 
 Alien::Alien(GameObject &associatedObject) : Component(associatedObject) {}
 
+void Alien::OnBeforeDestroy()
+{
+  auto ExplosionRecipe = Recipes::OneShotAnimation("./assets/image/aliendeath.png", Vector2(127.25f, 133), 0.4f);
+
+  gameState.CreateObject("Alien Explosion", ExplosionRecipe, gameObject.GetPosition());
+}
+
 void Alien::Start()
 {
   movementWeak = gameObject.RequireComponent<Movement>();
   penguinWeak = gameState.FindObjectOfType<PenguinBody>();
-
-  // Explosion on death
-  gameObject.RequireComponent<Health>()
-      ->OnDeath.AddListener("alienExplosion", [this]()
-                            {
-    auto ExplosionRecipe = Recipes::OneShotAnimation("./assets/image/aliendeath.png", Vector2(127.25f, 133), 0.4f);
-    
-    gameState.CreateObject("Alien Explosion", ExplosionRecipe, gameObject.GetPosition()); });
 
   // Get game state reference
   auto &gameState = Game::GetInstance().GetState();
@@ -56,6 +55,9 @@ void Alien::Start()
         Recipes::Minion(
             dynamic_pointer_cast<Alien>(GetShared()), 2 * M_PI * i / minionCount));
   }
+
+  // Start timer
+  gameObject.timer.Reset("idle", -RandomRange(idleTime.x, idleTime.y));
 }
 
 void Alien::Update([[maybe_unused]] float deltaTime)

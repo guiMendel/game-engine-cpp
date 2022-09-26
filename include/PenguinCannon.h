@@ -22,6 +22,8 @@ public:
 
   PenguinCannon(GameObject &associatedObject) : Component(associatedObject) {}
 
+  virtual ~PenguinCannon() {}
+
   void Start() override;
   void Update([[maybe_unused]] float deltaTime) override;
 

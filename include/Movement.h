@@ -12,6 +12,8 @@ public:
   Movement(GameObject &associatedObject, float acceleration = 0.0f, float targetSpeed = 0.0f)
       : Component(associatedObject), acceleration(acceleration), targetSpeed(targetSpeed) {}
 
+  virtual ~Movement() {}
+
   void Update(float deltaTime) override;
   RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 

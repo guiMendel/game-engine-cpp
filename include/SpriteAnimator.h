@@ -17,6 +17,8 @@ public:
     ConfigureSpriteFrames();
   }
 
+  virtual ~SpriteAnimator() {}
+  
   void Update(float deltaTime) override;
 
   // Get how many frames the animation has

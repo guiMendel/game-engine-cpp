@@ -36,6 +36,10 @@ GameObject::GameObject(string name, Vector2 coordinates, double rotation, shared
   SetRotation(rotation);
 }
 
+GameObject::~GameObject()
+{
+}
+
 void GameObject::Start()
 {
   if (started)
@@ -74,16 +78,19 @@ void GameObject::OnStateResume()
     component->OnStateResume();
 }
 
-void GameObject::RemoveComponent(Component *component)
+void GameObject::RemoveComponent(shared_ptr<Component> component)
 {
   // Find it's position
   auto componentPosition = find_if(
       components.begin(), components.end(), [component](shared_ptr<Component> otherComponent)
-      { return otherComponent.get() == component; });
+      { return otherComponent == component; });
 
   // Detect if not present
   if (componentPosition == components.end())
     return;
+
+  // Wrap it up
+  (*componentPosition)->OnBeforeDestroy();
 
   // Remove it
   components.erase(componentPosition);
@@ -219,6 +226,10 @@ vector<shared_ptr<GameObject>> GameObject::GetChildren()
 
 void GameObject::InternalDestroy()
 {
+  // Wrap all components up
+  for (auto &component : components)
+    component->OnBeforeDestroy();
+
   // Get pointer to self
   auto shared = GetShared();
 

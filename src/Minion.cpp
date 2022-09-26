@@ -7,6 +7,8 @@
 #include "MainState.h"
 #include <math.h>
 
+using namespace std;
+
 // Speed at which to orbit the host alien, in radians
 const float Minion::angularSpeed{0.5f};
 
@@ -30,7 +32,7 @@ const float Minion::projectileDamage{35};
 
 const float Minion::healthPoints{100.0f};
 
-Minion::Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPointer, float startingArc)
+Minion::Minion(GameObject &associatedObject, weak_ptr<GameObject> hostPointer, float startingArc)
     : Component(associatedObject), hostPointer(hostPointer), arc(startingArc)
 {
   // Initialize radius
@@ -41,14 +43,11 @@ Minion::Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPoint
   gameObject.localScale = {scale, scale};
 }
 
-void Minion::Start()
+void Minion::OnBeforeDestroy()
 {
-  // Explosion on death
-  gameObject.RequireComponent<Health>()->OnDeath.AddListener("minionExplosion", [this]()
-                                                             {
-    auto ExplosionRecipe = Recipes::OneShotAnimation("./assets/image/miniondeath.png", Vector2(63.75f, 67), 0.25f);
-    
-    gameState.CreateObject("Minion Explosion", ExplosionRecipe, gameObject.GetPosition()); });
+  auto ExplosionRecipe = Recipes::OneShotAnimation("./assets/image/miniondeath.png", Vector2(63.75f, 67), 0.25f);
+
+  gameState.CreateObject("Minion Explosion", ExplosionRecipe, gameObject.GetPosition());
 }
 
 void Minion::Update(float deltaTime)

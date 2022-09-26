@@ -10,7 +10,7 @@
 #define LOCK(weak, shared)   \
   auto shared = weak.lock(); \
   Assert(shared != nullptr,  \
-         "Unexpectedly failed to lock shared pointer at " __FILE__ ":" + std::to_string(__LINE__));
+         "Unexpectedly failed to lock shared pointer at " __FILE__ ":" + std::to_string(__LINE__) + " ");
 
 #define LOCK_MESSAGE(weak, shared, message) \
   auto shared = weak.lock();                \
@@ -26,6 +26,7 @@ class Component
 
 public:
   Component(GameObject &associatedObject);
+  virtual ~Component() {}
 
   // In which render layer this component is
   // If None, then it's Render method will never be called
@@ -62,6 +63,9 @@ protected:
 
   virtual void OnStateResume() {}
   virtual void OnStatePause() {}
+
+  // Called on the frame it is destroyed, right before being destroyed
+  virtual void OnBeforeDestroy() {}
 
   // Reference to input manager
   InputManager &inputManager;

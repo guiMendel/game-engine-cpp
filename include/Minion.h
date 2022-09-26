@@ -35,8 +35,10 @@ public:
   static const float healthPoints;
 
   Minion(GameObject &associatedObject, std::weak_ptr<GameObject> hostPointer, float startingArc = 0);
+  
+  virtual ~Minion() {}
 
-  void Start() override;
+  void OnBeforeDestroy() override;
   void Update(float deltaTime) override;
   RenderLayer GetRenderLayer() override { return RenderLayer::None; }
 

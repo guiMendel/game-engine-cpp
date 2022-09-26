@@ -8,12 +8,15 @@
 class Health : public Component
 {
 public:
+  Health(GameObject &associatedObject, float totalHealth, bool destroyOnDeath = true);
+
+  virtual ~Health() {}
+  
   // Death event
   Event OnDeath;
 
   void TakeDamage(float damage);
 
-  Health(GameObject &associatedObject, float totalHealth, bool destroyOnDeath = true);
 
 private:
   // Current health status

@@ -43,6 +43,9 @@ GameState::~GameState()
 {
   // Clear unused resources
   Resources::ClearAll();
+
+  // Reset camera
+  Camera::GetInstance().Reset();
 }
 
 void GameState::CascadeDown(shared_ptr<GameObject> object, function<void(GameObject &)> callback, bool topDown)
@@ -70,7 +73,9 @@ void GameState::DeleteObjects()
   {
     // If is dead, collect
     if (objectPair.second->DestroyRequested())
+    {
       deadObjects.push_back(objectPair.second);
+    }
 
     // Not a good idea to delete them here directly, as it would invalidate this loop's iterator
   }

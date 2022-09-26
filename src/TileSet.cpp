@@ -1,16 +1,21 @@
 #include <iostream>
 #include "TileSet.h"
 #include "Sprite.h"
+#include "Game.h"
 #include "Helper.h"
 
 using namespace std;
 using namespace Helper;
 
-TileSet::TileSet(int tileWidth, int tileHeight, std::string filename) : tileWidth(tileWidth), tileHeight(tileHeight), tileSetObject("Tileset")
+TileSet::TileSet(int tileWidth, int tileHeight, std::string filename) : tileWidth(tileWidth), tileHeight(tileHeight)
 {
+  // Create tileset object
+  auto object = Game::GetInstance().GetState().CreateObject("Tileset");
+  objectWeak = object;
+
   // Add the sprite component
   // Don't give it a render layer. It must only be directly rendered by the tilemap method
-  auto tileSprite = tileSetObject.AddComponent<Sprite>(filename, RenderLayer::None);
+  auto tileSprite = object->AddComponent<Sprite>(filename, RenderLayer::None);
 
   tileSpriteWeak = tileSprite;
 
@@ -21,6 +26,15 @@ TileSet::TileSet(int tileWidth, int tileHeight, std::string filename) : tileWidt
   // Get the rows & columns
   rows = tileSprite->GetUnscaledHeight() / tileHeight;
   columns = tileSprite->GetUnscaledWidth() / tileWidth;
+}
+
+TileSet::~TileSet()
+{
+  if (objectWeak.expired())
+    return;
+
+  LOCK(objectWeak, object);
+  object->RequestDestroy();
 }
 
 void TileSet::RenderTile(unsigned index, Vector2 position)

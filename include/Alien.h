@@ -31,7 +31,9 @@ public:
   static const Vector2 idleTime;
 
   Alien(GameObject &associatedObject);
+  virtual ~Alien() {}
 
+  void OnBeforeDestroy() override;
   void Start() override;
   void Update(float deltaTime) override;
 
