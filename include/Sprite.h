@@ -59,7 +59,7 @@ public:
 
 private:
   // The loaded texture
-  SDL_Texture *texture{nullptr};
+  std::shared_ptr<SDL_Texture> texture;
 
   // Real dimensions of the loaded image
   int width{0}, height{0};

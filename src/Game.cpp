@@ -2,6 +2,7 @@
 #include <string>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include <SDL_ttf.h>
 #include <cstdlib>
 #include <ctime>
 #include "Game.h"
@@ -59,6 +60,11 @@ auto InitializeSDL(string title, int width, int height) -> pair<SDL_Window *, SD
   // Allocate more sound channels
   Mix_AllocateChannels(32);
 
+  // === SDL FONTS
+
+  // Ensure initializing works
+  Assert(TTF_Init() == 0, "Failed to initialize SDL-ttf", TTF_GetError());
+
   // === GAME WINDOW
 
   auto gameWindow = SDL_CreateWindow(
@@ -81,6 +87,8 @@ void ExitSDL(SDL_Window *window, SDL_Renderer *renderer)
   SDL_DestroyRenderer(renderer);
 
   SDL_DestroyWindow(window);
+
+  TTF_Quit();
 
   Mix_CloseAudio();
 
@@ -124,10 +132,6 @@ Game::Game(string title, int width, int height)
 
 Game::~Game()
 {
-  // Shut down the states before shutting down sdl
-  while (loadedStates.size() > 0)
-    loadedStates.pop();
-
   // Quit SDL
   // Release the pointers, as we will destroy them in the method
   ExitSDL(window.release(), renderer.release());
@@ -225,8 +229,12 @@ void Game::Start()
     SDL_Delay(frameDelay);
   }
 
+  // Make sure state pile is empty
+  while (loadedStates.size() > 0)
+    loadedStates.pop();
+
   // Clear resources
-  Resources::ClearAllResources();
+  Resources::ClearAll();
 }
 
 GameState &Game::GetState() const

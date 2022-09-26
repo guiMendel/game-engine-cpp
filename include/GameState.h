@@ -25,6 +25,8 @@ class GameState
 public:
   GameState();
 
+  ~GameState();
+
   // Whether the game should exit
   bool QuitRequested() { return quitRequested; }
 

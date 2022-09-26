@@ -6,6 +6,7 @@
 #include "TileMap.h"
 #include "TileSet.h"
 #include "Camera.h"
+#include "Resources.h"
 #include "SatCollision.h"
 #include <iostream>
 
@@ -36,6 +37,12 @@ bool CheckForCollision(vector<shared_ptr<Collider>> colliders1, vector<shared_pt
 // Initialize root object
 GameState::GameState() : inputManager(InputManager::GetInstance()), rootObject(new GameObject("Root", *this))
 {
+}
+
+GameState::~GameState()
+{
+  // Clear unused resources
+  Resources::ClearAll();
 }
 
 void GameState::CascadeDown(shared_ptr<GameObject> object, function<void(GameObject &)> callback, bool topDown)

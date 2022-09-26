@@ -81,10 +81,10 @@ private:
   std::stack<std::unique_ptr<GameState>> loadedStates;
 
   // The window we'll be rendering to (with destructor function)
-  Helper::auto_ptr<SDL_Window> window;
+  Helper::auto_unique_ptr<SDL_Window> window;
 
   // Renderer for the window (with destructor function)
-  Helper::auto_ptr<SDL_Renderer> renderer;
+  Helper::auto_unique_ptr<SDL_Renderer> renderer;
 };
 
 #include "GameState.h"

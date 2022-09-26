@@ -29,6 +29,9 @@ private:
   // The chunk path
   std::string chunkPath;
 
+  // Chunk resource
+  std::shared_ptr<Mix_Chunk> chunk;
+
   // Whther to play on Start callback
   bool playOnStart;
 

@@ -9,9 +9,9 @@ void Music::Play(const int times)
   Assert(musicPath.size() > 0, "Tried playing music without providing it's file path");
 
   // Get music
-  Mix_Music &music = Resources::GetMusic(musicPath);
+  music = Resources::GetMusic(musicPath);
 
-  auto encounteredError = Mix_PlayMusic(&music, times);
+  auto encounteredError = Mix_PlayMusic(music.get(), times);
 
   // Catch weird errors
   Assert(!encounteredError, "Failed to play a music track");

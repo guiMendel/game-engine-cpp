@@ -31,6 +31,9 @@ public:
 private:
   // The currently loaded music track
   std::string musicPath{""};
+
+  // Music resource
+  std::shared_ptr<Mix_Music> music;
 };
 
 #endif

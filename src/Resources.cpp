@@ -3,17 +3,18 @@
 #include "Helper.h"
 #include <utility>
 #include <tuple>
+#include <memory>
 
 using namespace std;
 using namespace Helper;
 
-unordered_map<string, Helper::auto_ptr<SDL_Texture>> Resources::textureTable;
+unordered_map<string, std::shared_ptr<SDL_Texture>> Resources::textureTable;
 
-unordered_map<string, Helper::auto_ptr<Mix_Music>> Resources::musicTable;
+unordered_map<string, std::shared_ptr<Mix_Music>> Resources::musicTable;
 
-unordered_map<string, Helper::auto_ptr<Mix_Chunk>> Resources::soundTable;
+unordered_map<string, std::shared_ptr<Mix_Chunk>> Resources::soundTable;
 
-SDL_Texture &Resources::GetTexture(string filename)
+std::shared_ptr<SDL_Texture> Resources::GetTexture(string filename)
 {
   function<SDL_Texture *(string)> textureLoader = [](string filename)
   {
@@ -27,7 +28,7 @@ SDL_Texture &Resources::GetTexture(string filename)
   return GetResource<SDL_Texture>("texture", filename, textureTable, textureLoader, SDL_DestroyTexture);
 }
 
-Mix_Music &Resources::GetMusic(string filename)
+std::shared_ptr<Mix_Music> Resources::GetMusic(string filename)
 {
   function<Mix_Music *(string)> musicLoader = [](string filename)
   {
@@ -37,7 +38,7 @@ Mix_Music &Resources::GetMusic(string filename)
   return GetResource<Mix_Music>("music", filename, musicTable, musicLoader, Mix_FreeMusic);
 }
 
-Mix_Chunk &Resources::GetSound(std::string filename)
+std::shared_ptr<Mix_Chunk> Resources::GetSound(std::string filename)
 {
   function<Mix_Chunk *(string)> chunkLoader = [](string filename)
   {

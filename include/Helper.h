@@ -12,7 +12,7 @@ namespace Helper
 {
   // Alias for unique pointer with destructor function
   template <class T>
-  using auto_ptr = std::unique_ptr<T, void (*)(T *)>;
+  using auto_unique_ptr = std::unique_ptr<T, void (*)(T *)>;
 
   // Throws exception if condition is false
   [[maybe_unused]] static void Assert(bool condition, std::string message, std::string explanation)

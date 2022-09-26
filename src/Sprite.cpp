@@ -10,10 +10,10 @@ using namespace Helper;
 void Sprite::Load(const string fileName)
 {
   // Get texture from resource manager
-  texture = &Resources::GetTexture(fileName);
+  texture = Resources::GetTexture(fileName);
 
   // Get it's dimensions
-  SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+  SDL_QueryTexture(texture.get(), nullptr, nullptr, &width, &height);
 
   // Set the clip to the full image
   SetClip(0, 0, width, height);
@@ -42,7 +42,7 @@ void Sprite::Render(Vector2 position)
   // Put the texture in the renderer
   SDL_RenderCopyEx(
       Game::GetInstance().GetRenderer(),
-      texture,
+      texture.get(),
       &clipRect,
       &destinationRect,
       Helper::RadiansToDegrees(gameObject.GetRotation()),
