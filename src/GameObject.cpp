@@ -52,6 +52,9 @@ void GameObject::Update(float deltaTime)
   // Update timers
   timer.Update(deltaTime);
 
+  if (enabled == false)
+    return;
+
   for (const auto &component : components)
   {
     if (component->IsEnabled())

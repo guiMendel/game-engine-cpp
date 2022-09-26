@@ -50,6 +50,15 @@ void Recipes::PenguinCannon(shared_ptr<GameObject> penguin)
   penguin->tag = Tag::Player;
 }
 
+auto Recipes::Text(string text, int size, Color color, Text::Style style) -> function<void(shared_ptr<GameObject>)>
+{
+  return [text, size, style, color](shared_ptr<GameObject> textObject)
+  {
+    // Get text component
+    textObject->AddComponent<::Text>(text, "./assets/font/call_me_maybe.ttf", size, style, color);
+  };
+}
+
 auto Recipes::Background(string imagePath) -> function<void(shared_ptr<GameObject>)>
 {
   return [imagePath](shared_ptr<GameObject> background)

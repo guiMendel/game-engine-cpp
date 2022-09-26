@@ -4,6 +4,7 @@
 #include <memory>
 #include "GameObject.h"
 #include "Alien.h"
+#include "Text.h"
 
 class Recipes
 {
@@ -20,6 +21,7 @@ public:
   static auto Minion(std::shared_ptr<::Alien> alien, float startingArc) -> std::function<void(std::shared_ptr<GameObject>)>;
 
   // General
+  static auto Text(std::string text, int size = 10, Color color = Color::White(), Text::Style style = Text::Style::solid) -> std::function<void(std::shared_ptr<GameObject>)>;
   static auto Background(std::string imagePath) -> std::function<void(std::shared_ptr<GameObject>)>;
   static auto OneShotAnimation(std::string spritePath, Vector2 animationFrame, float animationSpeed) -> std::function<void(std::shared_ptr<GameObject>)>;
 

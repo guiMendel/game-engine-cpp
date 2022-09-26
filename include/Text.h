@@ -27,6 +27,7 @@ public:
       int size = 10, Style style = Style::solid, Color color = Color::White());
 
   void Render() override;
+  RenderLayer GetRenderLayer() override { return RenderLayer::UI; }
 
   void SetFontFile(const std::string fontPath);
 

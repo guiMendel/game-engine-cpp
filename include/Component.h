@@ -39,7 +39,8 @@ public:
   // Returns this component's shared pointer
   std::shared_ptr<Component> GetShared() const;
 
-  bool IsEnabled() const { return enabled; }
+  void SetEnabled(bool enabled) { this->enabled = enabled; }
+  bool IsEnabled() const;
 
   // The associated game object
   GameObject &gameObject;

@@ -12,6 +12,7 @@ enum class RenderLayer
   VFX,
   Projectiles,
   Foreground,
+  UI,
   Debug,
   None
 };

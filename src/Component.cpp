@@ -26,3 +26,5 @@ shared_ptr<Component> Component::GetShared() const
 {
   return gameObject.GetComponent(this);
 }
+
+bool Component::IsEnabled() const { return enabled && gameObject.IsEnabled(); }

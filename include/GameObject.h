@@ -118,6 +118,9 @@ public:
   double GetRotation() const;
   void SetRotation(const double newRotation);
 
+  void SetEnabled(bool enabled) { this->enabled = enabled; }
+  bool IsEnabled() const { return enabled; }
+
   // A timer helper
   class
   {
@@ -188,6 +191,9 @@ private:
 
   // The game object's name (not necessarily unique)
   std::string name;
+
+  // Whether this object is enabled (updating & rendering)
+  bool enabled{true};
 };
 
 #include "GameState.h"
