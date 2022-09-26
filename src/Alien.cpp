@@ -18,20 +18,17 @@ const float Alien::acceleration{1.0f};
 const float Alien::maxSpeed{100.0f};
 
 // Total minion count
-const int Alien::totalMinions{1};
+const Vector2 Alien::totalMinions{2, 7};
 
 // Total health points
 const float Alien::healthPoints{500.0f};
 
-const Vector2 Alien::idleTime{Vector2(0.5f, 4.0f)};
+const Vector2 Alien::idleTime{0.5f, 4.0f};
 
 // Helper functions
 shared_ptr<GameObject> NearestMinion(vector<weak_ptr<GameObject>> &minions, Vector2 position);
 
-Alien::Alien(GameObject &associatedObject, int minionCount)
-    : Component(associatedObject), minionCount(minionCount)
-{
-}
+Alien::Alien(GameObject &associatedObject) : Component(associatedObject) {}
 
 void Alien::Start()
 {
@@ -50,6 +47,8 @@ void Alien::Start()
   auto &gameState = Game::GetInstance().GetState();
 
   // Add minions
+  int minionCount = RandomRange(totalMinions.x, totalMinions.y);
+
   for (int i = 0; i < minionCount; i++)
   {
     gameState.CreateObject(

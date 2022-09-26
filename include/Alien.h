@@ -21,8 +21,8 @@ public:
   static const float acceleration;
   static const float maxSpeed;
 
-  // Total minion count
-  static const int totalMinions;
+  // Min and max total minion count
+  static const Vector2 totalMinions;
 
   // Total health points
   static const float healthPoints;
@@ -30,7 +30,7 @@ public:
   // Min and max time to stay idle
   static const Vector2 idleTime;
 
-  Alien(GameObject &associatedObject, int minionCount);
+  Alien(GameObject &associatedObject);
 
   void Start() override;
   void Update(float deltaTime) override;
@@ -50,9 +50,6 @@ private:
   };
 
   State state{State::idle};
-
-  // How many minions it should start with
-  int minionCount;
 
   std::weak_ptr<Movement> movementWeak;
   std::weak_ptr<PenguinBody> penguinWeak;

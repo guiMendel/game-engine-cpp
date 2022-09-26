@@ -73,6 +73,9 @@ void TileMap::Load(std::string filename)
 
 void TileMap::RenderTileLayer(int layer)
 {
+  // Offset to center tilemap
+  Vector2 centerOffset = Vector2(-GetWidth() / 2, -GetHeight() / 2);
+
   // Offset to apply to matrix index to account for layer
   int layerOffset = layer * mapWidth * mapHeight;
 
@@ -101,7 +104,7 @@ void TileMap::RenderTileLayer(int layer)
     float y = (i / mapWidth) * tileSet->GetTileHeight() - parallaxY;
 
     // Render it
-    tileSet->RenderTile(tileMatrix[matrixIndex], {x, y});
+    tileSet->RenderTile(tileMatrix[matrixIndex], Vector2(x, y) + centerOffset);
   }
 }
 
@@ -121,3 +124,6 @@ void TileMap::Render()
     RenderTileLayer(layer);
   }
 }
+
+float TileMap::GetWidth() const { return HorizontalTileCount() * tileSet->GetTileWidth(); }
+float TileMap::GetHeight() const { return VerticalTileCount() * tileSet->GetTileHeight(); }

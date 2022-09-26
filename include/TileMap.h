@@ -36,9 +36,12 @@ public:
   // Renders a given layer
   void RenderTileLayer(int layer);
 
-  int GetWidth() const { return mapWidth; }
-  int GetHeight() const { return mapHeight; }
+  int HorizontalTileCount() const { return mapWidth; }
+  int VerticalTileCount() const { return mapHeight; }
   int GetDepth() const { return mapDepth; }
+
+  float GetWidth() const;
+  float GetHeight() const;
 
   // === OVERRIDES
 
@@ -54,8 +57,13 @@ private:
   // Reference to the tileset
   std::shared_ptr<TileSet> tileSet;
 
+  // Width in tiles
   int mapWidth;
+
+  // Height in tiles
   int mapHeight;
+
+  // How many layers it has
   int mapDepth;
 
   // Which render layer to render to

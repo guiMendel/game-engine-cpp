@@ -40,14 +40,8 @@ void Recipes::PenguinCannon(shared_ptr<GameObject> penguin)
   // Get sprite (put it on render order 1 to show ahead)
   auto sprite = penguin->AddComponent<Sprite>("./assets/image/cubngun.png", RenderLayer::Player, 1);
 
-  // Get collider
-  penguin->AddComponent<Collider>(sprite);
-
   // Add behavior
   penguin->AddComponent<::PenguinCannon>();
-
-  // Give it a player tag
-  penguin->tag = Tag::Player;
 }
 
 auto Recipes::Text(string text, int size, Color color, Text::Style style) -> function<void(shared_ptr<GameObject>)>
@@ -92,7 +86,7 @@ void Recipes::Alien(shared_ptr<GameObject> alien)
   alien->AddComponent<Collider>(sprite);
 
   // Get alien behavior
-  alien->AddComponent<::Alien>(Alien::totalMinions);
+  alien->AddComponent<::Alien>();
 
   // Get movement
   alien->AddComponent<Movement>(Alien::acceleration, Alien::maxSpeed);
